@@ -46,9 +46,9 @@ class MainActivity : AppCompatActivity() {
         var firstRun = prefs?.getBoolean("firstRun", true)
 
         if(firstRun!!){
-            val intent = Intent(this, FirstRunActivity::class.java)
+            val intent = Intent(this, FirstRunStepOneActivity::class.java)
             startActivity(intent)
-            prefs?.edit()?.putBoolean("firstRun", false)?.apply()
+            //TODO: prefs?.edit()?.putBoolean("firstRun", false)?.apply()
         }
     }
 }
