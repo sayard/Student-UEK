@@ -7,7 +7,7 @@
     tools:context="pl.c0.sayard.uekplan.FirstRunStepOneActivity">
 
     <TextView
-        android:id="@+id/choose_your_degree_course_text_view"
+        android:id="@+id/choose_your_group_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -18,13 +18,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ListView
-        android:layout_width="wrap_content"
+
+    <SearchView
+        android:id="@+id/group_search_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/group_list_view"
+        app:layout_constraintTop_toBottomOf="@id/choose_your_group_text_view" />
+
+    <ListView
+        android:id="@+id/group_list_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/next_step_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/choose_your_degree_course_text_view" />
+        app:layout_constraintTop_toBottomOf="@id/group_search_view" />
 
     <Button
         android:id="@+id/next_step_button"
