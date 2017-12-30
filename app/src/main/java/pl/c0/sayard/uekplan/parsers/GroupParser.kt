@@ -26,13 +26,10 @@ class GroupParser: AsyncTask<Void, Void, List<String>>() {
             val document = documentBuilder.parse(InputSource(url.openStream()))
             document.documentElement.normalize()
             val nodeList = document.getElementsByTagName(RESOURCE_TAG)
-            for(i in 0 until nodeList.length-1){
-                val element = nodeList.item(i) as Element
-                val groupName = element.getAttribute(NAME_ATTRIBUTE)
-                if(!groupName.startsWith(SJO_PREFIX)){
-                    groupList.add(groupName)
-                }
-            }
+            (0 until nodeList.length)
+                    .map { nodeList.item(it) as Element }
+                    .map { it.getAttribute(NAME_ATTRIBUTE) }
+                    .filterNotTo(groupList) { it.startsWith(SJO_PREFIX) }
             return groupList
         }catch (e: Exception){
             Log.v("GROUP_PARSER_EXCEPTION", e.toString())

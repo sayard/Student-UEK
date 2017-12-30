@@ -19,11 +19,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <SearchView
-        android:id="@+id/group_search_view"
+    <EditText
+        android:id="@+id/step_one_search_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:drawableRight="@android:drawable/ic_menu_search"
+        android:drawableEnd="@android:drawable/ic_menu_search"
         app:layout_constraintBottom_toTopOf="@+id/group_list_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/choose_your_group_text_view" />
 
     <ListView
@@ -33,7 +37,7 @@
         app:layout_constraintBottom_toTopOf="@+id/next_step_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/group_search_view" />
+        app:layout_constraintTop_toBottomOf="@id/step_one_search_box" />
 
     <Button
         android:id="@+id/next_step_button"
