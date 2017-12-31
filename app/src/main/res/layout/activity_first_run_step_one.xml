@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pl.c0.sayard.uekplan.FirstRunStepOneActivity">
+    tools:context="pl.c0.sayard.uekplan.FirstRunStepOneActivity"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
 
     <TextView
         android:id="@+id/choose_your_group_text_view"
@@ -23,12 +25,22 @@
         android:id="@+id/step_one_search_box"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableRight="@android:drawable/ic_menu_search"
         android:drawableEnd="@android:drawable/ic_menu_search"
-        app:layout_constraintBottom_toTopOf="@+id/group_list_view"
+        android:drawableRight="@android:drawable/ic_menu_search"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/choose_your_group_text_view" />
+
+    <ProgressBar
+        android:id="@+id/first_step_progress_bar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/next_step_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/step_one_search_box"
+        android:visibility="gone"/>
 
     <ListView
         android:id="@+id/group_list_view"
@@ -37,7 +49,8 @@
         app:layout_constraintBottom_toTopOf="@+id/next_step_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/step_one_search_box" />
+        app:layout_constraintTop_toBottomOf="@id/step_one_search_box"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/next_step_button"
@@ -53,6 +66,24 @@
         android:text="@string/next_step"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/group_retry_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginStart="0dp"
+        android:background="@color/colorPrimary"
+        android:clickable="false"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/retry"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"/>
 
 </android.support.constraint.ConstraintLayout>

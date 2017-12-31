@@ -1,5 +1,6 @@
 package pl.c0.sayard.uekplan.adapters
 
+import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -14,9 +15,9 @@ import pl.c0.sayard.uekplan.parsers.GroupParser
 /**
  * Created by karol on 29.12.17.
  */
-class GroupListAdapter(context: Context) : BaseAdapter(), Filterable {
+class GroupListAdapter(context: Context, activity: Activity) : BaseAdapter(), Filterable {
 
-    private var groupListOriginal = GroupParser().execute().get()
+    private var groupListOriginal = GroupParser(activity).execute().get()
     private var groupListDisplay = groupListOriginal
     private val mInflator: LayoutInflater = LayoutInflater.from(context)
 
