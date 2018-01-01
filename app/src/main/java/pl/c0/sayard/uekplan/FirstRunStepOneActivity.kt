@@ -12,19 +12,21 @@ import pl.c0.sayard.uekplan.adapters.GroupListAdapter
 
 class FirstRunStepOneActivity : AppCompatActivity() {
 
+    private var nextStepButton: Button? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_first_run_step_one)
         val retryButton = findViewById<Button>(R.id.group_retry_button)
-        val nextStepButton = findViewById<Button>(R.id.next_step_button)
+        nextStepButton = findViewById<Button>(R.id.next_step_button)
         val adapter = getAdapter(this, this)
         if(adapter.count <= 0){
             Toast.makeText(this, getText(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
             retryButton.visibility = View.VISIBLE
-            nextStepButton.visibility = View.GONE
+            nextStepButton!!.visibility = View.GONE
         }else{
             retryButton.visibility = View.GONE
-            nextStepButton.visibility = View.VISIBLE
+            nextStepButton!!.visibility = View.VISIBLE
         }
 
         retryButton.setOnClickListener {
@@ -47,9 +49,27 @@ class FirstRunStepOneActivity : AppCompatActivity() {
 
         val listView = findViewById<ListView>(R.id.group_list_view)
         listView.adapter = adapter
+        var selectedGroup: Group?
+        listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+            selectedGroup = parent.getItemAtPosition(position) as Group
+            updateSelectedGroupTvAndActivateNextButton(selectedGroup!!)
+        }
     }
 
     private fun getAdapter(context: Context, activity: Activity): GroupListAdapter {
         return GroupListAdapter(context, activity)
+    }
+
+    private fun updateSelectedGroupTvAndActivateNextButton(group: Group){
+        val selectedGroupTV = findViewById<TextView>(R.id.selected_group_text_view)
+        if(selectedGroupTV.visibility == View.GONE){
+            selectedGroupTV.visibility = View.VISIBLE
+        }
+        selectedGroupTV.text = group.name
+        nextStepButton!!.isClickable = true
+        nextStepButton!!.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+        nextStepButton!!.setOnClickListener {
+            Toast.makeText(this, group.name, Toast.LENGTH_SHORT).show()
+        }
     }
 }

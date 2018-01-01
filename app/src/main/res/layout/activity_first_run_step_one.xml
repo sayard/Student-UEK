@@ -46,10 +46,23 @@
         android:id="@+id/group_list_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/next_step_button"
+        android:choiceMode="singleChoice"
+        app:layout_constraintBottom_toTopOf="@+id/selected_group_text_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/step_one_search_box"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/selected_group_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:padding="5dp"
+        android:background="@color/colorPrimary"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/next_step_button"
+        app:layout_constraintTop_toBottomOf="@id/group_list_view"
         android:visibility="gone"/>
 
     <Button

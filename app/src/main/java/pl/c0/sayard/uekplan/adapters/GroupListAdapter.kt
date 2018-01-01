@@ -9,6 +9,7 @@ import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
+import pl.c0.sayard.uekplan.Group
 import pl.c0.sayard.uekplan.R
 import pl.c0.sayard.uekplan.parsers.GroupParser
 
@@ -19,7 +20,7 @@ class GroupListAdapter(context: Context, activity: Activity) : BaseAdapter(), Fi
 
     private var groupListOriginal = GroupParser(activity).execute().get()
     private var groupListDisplay = groupListOriginal
-    private val mInflator: LayoutInflater = LayoutInflater.from(context)
+    private val mInflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun getItem(position: Int): Any {
         return groupListDisplay[position]
@@ -37,7 +38,7 @@ class GroupListAdapter(context: Context, activity: Activity) : BaseAdapter(), Fi
         val view: View
         val vh: ListRowHolder
         if(convertView == null){
-            view = this.mInflator.inflate(R.layout.list_row, parent, false)
+            view = this.mInflater.inflate(R.layout.list_row, parent, false)
             vh = ListRowHolder(view)
             view.tag = vh
         }else{
@@ -45,7 +46,7 @@ class GroupListAdapter(context: Context, activity: Activity) : BaseAdapter(), Fi
             vh = view.tag as ListRowHolder
         }
 
-        vh.tv.text = groupListDisplay[position]
+        vh.tv.text = groupListDisplay[position].name
         return view
     }
 
@@ -57,10 +58,10 @@ class GroupListAdapter(context: Context, activity: Activity) : BaseAdapter(), Fi
         return object: Filter(){
             override fun performFiltering(constraint: CharSequence?): FilterResults {
                 val results = FilterResults()
-                val filteredList = mutableListOf<String>()
+                val filteredList = mutableListOf<Group>()
 
                 if(groupListOriginal == null){
-                    groupListOriginal = mutableListOf<String>()
+                    groupListOriginal = mutableListOf()
                 }
 
                 if(constraint == null || constraint.isEmpty()){
@@ -68,9 +69,13 @@ class GroupListAdapter(context: Context, activity: Activity) : BaseAdapter(), Fi
                     results.values = groupListOriginal
                 }else{
                     val constraintLowerCase = constraint.toString().toLowerCase()
-                    (0 until groupListOriginal.size)
-                            .map { groupListOriginal[it] }
-                            .filterTo(filteredList) { it.toLowerCase().startsWith(constraintLowerCase) }
+                    for(i in 0 until groupListOriginal.size){
+                        val groupObject = groupListOriginal[i]
+                        val data = groupObject.name
+                        if(data.toLowerCase().startsWith(constraintLowerCase)){
+                            filteredList.add(Group(groupObject.id, groupObject.name))
+                        }
+                    }
                     results.count = filteredList.size
                     results.values = filteredList
                 }
@@ -78,7 +83,7 @@ class GroupListAdapter(context: Context, activity: Activity) : BaseAdapter(), Fi
             }
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                groupListDisplay = results?.values as List<String>?
+                groupListDisplay = results?.values as List<Group>?
                 notifyDataSetChanged()
             }
         }
