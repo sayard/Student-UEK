@@ -15,4 +15,13 @@ class ScheduleContract private constructor(){
             val GROUP_URL: String = "group_url"
         }
     }
+
+    class LanguageGroupsEntry : BaseColumns{
+        companion object {
+            val TABLE_NAME: String = "language_groups"
+            val _ID: String = BaseColumns._ID
+            val LANGUAGE_GROUP_NAME: String = "language_group_name"
+            val LANGUAGE_GROUP_URL: String = "language_group_url"
+        }
+    }
 }

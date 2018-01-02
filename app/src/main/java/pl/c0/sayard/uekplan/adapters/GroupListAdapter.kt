@@ -16,9 +16,9 @@ import pl.c0.sayard.uekplan.parsers.GroupParser
 /**
  * Created by karol on 29.12.17.
  */
-class GroupListAdapter(context: Context, activity: Activity) : BaseAdapter(), Filterable {
+class GroupListAdapter(context: Context, activity: Activity, getLanguageGroups: Boolean) : BaseAdapter(), Filterable {
 
-    private var groupListOriginal = GroupParser(activity).execute().get()
+    private var groupListOriginal = GroupParser(activity, getLanguageGroups).execute().get()
     private var groupListDisplay = groupListOriginal
     private val mInflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -72,7 +72,7 @@ class GroupListAdapter(context: Context, activity: Activity) : BaseAdapter(), Fi
                     for(i in 0 until groupListOriginal.size){
                         val groupObject = groupListOriginal[i]
                         val data = groupObject.name
-                        if(data.toLowerCase().startsWith(constraintLowerCase)){
+                        if(data.toLowerCase().contains(constraintLowerCase)){
                             filteredList.add(Group(groupObject.id, groupObject.name))
                         }
                     }

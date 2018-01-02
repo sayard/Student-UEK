@@ -3,6 +3,7 @@ package pl.c0.sayard.uekplan
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -21,7 +22,7 @@ class FirstRunStepOneActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_first_run_step_one)
         val retryButton = findViewById<Button>(R.id.group_retry_button)
-        nextStepButton = findViewById<Button>(R.id.next_step_button)
+        nextStepButton = findViewById(R.id.next_step_button)
         val adapter = getAdapter(this, this)
         if(adapter.count <= 0){
             Toast.makeText(this, getText(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
@@ -60,7 +61,7 @@ class FirstRunStepOneActivity : AppCompatActivity() {
     }
 
     private fun getAdapter(context: Context, activity: Activity): GroupListAdapter {
-        return GroupListAdapter(context, activity)
+        return GroupListAdapter(context, activity, false)
     }
 
     private fun updateSelectedGroupTvAndActivateNextButton(group: Group){
@@ -90,6 +91,8 @@ class FirstRunStepOneActivity : AppCompatActivity() {
                 )
             }
             cursor.close()
+            val intent = Intent(this, FirstRunStepTwoActivity::class.java)
+            startActivity(intent)
         }
     }
 }
