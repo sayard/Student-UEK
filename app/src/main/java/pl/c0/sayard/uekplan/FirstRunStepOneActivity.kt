@@ -1,6 +1,7 @@
 package pl.c0.sayard.uekplan
 
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +10,8 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.*
 import pl.c0.sayard.uekplan.adapters.GroupListAdapter
+import pl.c0.sayard.uekplan.data.ScheduleContract
+import pl.c0.sayard.uekplan.data.ScheduleDbHelper
 
 class FirstRunStepOneActivity : AppCompatActivity() {
 
@@ -69,7 +72,24 @@ class FirstRunStepOneActivity : AppCompatActivity() {
         nextStepButton!!.isClickable = true
         nextStepButton!!.setBackgroundColor(resources.getColor(R.color.colorPrimary))
         nextStepButton!!.setOnClickListener {
-            Toast.makeText(this, group.name, Toast.LENGTH_SHORT).show()
+            val dbHelper = ScheduleDbHelper(this)
+            val db = dbHelper.readableDatabase
+            val contentValues = ContentValues()
+            contentValues.put(ScheduleContract.GroupEntry.GROUP_NAME, group.name)
+            contentValues.put(ScheduleContract.GroupEntry.GROUP_URL, Utils.getGroupURL(group))
+            val cursor = db.rawQuery("SELECT COUNT(*) FROM " + ScheduleContract.GroupEntry.TABLE_NAME, null)
+            cursor.moveToFirst()
+            if(cursor.getInt(0)==0){
+                db.insert(ScheduleContract.GroupEntry.TABLE_NAME, null, contentValues)
+            }else{
+                db.update(
+                        ScheduleContract.GroupEntry.TABLE_NAME,
+                        contentValues,
+                        ScheduleContract.GroupEntry._ID+"=1",
+                        null
+                )
+            }
+            cursor.close()
         }
     }
 }
