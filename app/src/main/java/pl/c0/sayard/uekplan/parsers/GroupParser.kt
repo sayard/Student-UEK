@@ -2,19 +2,17 @@ package pl.c0.sayard.uekplan.parsers
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.Context
 import android.os.AsyncTask
 import android.util.Log
 import android.view.View
 import android.widget.ListView
 import android.widget.ProgressBar
-import org.w3c.dom.Element
-import org.xml.sax.InputSource
+import org.xmlpull.v1.XmlPullParser
+import org.xmlpull.v1.XmlPullParserFactory
 import pl.c0.sayard.uekplan.Group
 import pl.c0.sayard.uekplan.R
-import java.net.ConnectException
+import java.io.InputStream
 import java.net.URL
-import javax.xml.parsers.DocumentBuilderFactory
 
 /**
  * Created by karol on 29.12.17.
@@ -48,23 +46,27 @@ class GroupParser(@SuppressLint("StaticFieldLeak") private val activity: Activit
         val groupList = mutableListOf<Group>()
         try {
             val url = URL(GROUP_URL)
-            val documentBuilderFactory = DocumentBuilderFactory.newInstance()
-            val documentBuilder = documentBuilderFactory.newDocumentBuilder()
-            val document = documentBuilder.parse(InputSource(url.openStream()))
-            document.documentElement.normalize()
-            val nodeList = document.getElementsByTagName(RESOURCE_TAG)
-            for(i in 0 until nodeList.length){
-                val item = nodeList.item(i) as Element
-                val name = item.getAttribute(NAME_ATTRIBUTE)
-                var predicate = !name.startsWith(SJO_PREFIX)
-                if(getLanguageGroups){
-                   predicate = name.startsWith(SJO_PREFIX)
+            val factory = XmlPullParserFactory.newInstance()
+            factory.isNamespaceAware = false
+            val xpp = factory.newPullParser()
+            xpp.setInput(getInputStream(url), "UTF_8")
+            var eventType = xpp.eventType
+            while(eventType != XmlPullParser.END_DOCUMENT){
+                if(eventType == XmlPullParser.START_TAG){
+                    if(xpp.name.equals(RESOURCE_TAG, true)){
+                        val name = xpp.getAttributeValue(null, NAME_ATTRIBUTE)
+                        var predicate = !name.startsWith(SJO_PREFIX)
+                        if(getLanguageGroups){
+                            predicate = name.startsWith(SJO_PREFIX)
+                        }
+                        if(predicate){
+                            val id = xpp.getAttributeValue(null, ID_ATTRIBUTE).toInt()
+                            val group = Group(id, name)
+                            groupList.add(group)
+                        }
+                    }
                 }
-                if(predicate){
-                    val id = item.getAttribute(ID_ATTRIBUTE).toInt()
-                    val group = Group(id, name)
-                    groupList.add(group)
-                }
+                eventType = xpp.next()
             }
             return groupList
         }catch (e: Exception){
@@ -77,6 +79,10 @@ class GroupParser(@SuppressLint("StaticFieldLeak") private val activity: Activit
         super.onPostExecute(result)
         progressBar?.visibility = View.GONE
         list?.visibility = View.VISIBLE
+    }
+
+    private fun getInputStream(url: URL): InputStream{
+        return url.openConnection().getInputStream()
     }
 
 }
