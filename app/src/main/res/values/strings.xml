@@ -8,4 +8,20 @@
     <string name="error_try_again_later">An error has occurred. Try again later.</string>
     <string name="retry">Retry</string>
     <string name="choose_your_language_group_s">Choose your language group(s)</string>
+    <string-array name="days_of_week">
+        <item>(None)</item>
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
+    <string name="cancel">Cancel</string>
+    <string name="p_e_day">P.E. Day</string>
+    <string name="select">Select</string>
+    <string name="start_hour">Start hour</string>
+    <string name="end_hour">End hour</string>
+    <string name="p_e_settings">P.E. Settings</string>
 </resources>

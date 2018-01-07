@@ -3,6 +3,7 @@ package pl.c0.sayard.uekplan
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -58,7 +59,26 @@ class FirstRunStepTwoActivity : AppCompatActivity() {
             if(!selectedGroups.remove(group) && selectedGroups.count()<2){
                 selectedGroups.add(group)
             }
-            updateSelectedGroupsAndActivateNextButton(selectedGroups)
+            updateSelectedGroups(selectedGroups)
+        }
+        nextStepButton!!.setOnClickListener{
+            val dbHelper = ScheduleDbHelper(this)
+            val db = dbHelper.readableDatabase
+            val contentValues = ContentValues()
+            db.execSQL("DELETE FROM " + ScheduleContract.LanguageGroupsEntry.TABLE_NAME)
+            selectedGroups.forEach({
+                contentValues.put(
+                        ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_NAME,
+                        it.name
+                )
+                contentValues.put(
+                        ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_URL,
+                        Utils.getGroupURL(it)
+                )
+                db.insert(ScheduleContract.LanguageGroupsEntry.TABLE_NAME, null, contentValues)
+            })
+            val intent = Intent(this, FirstRunStepThreeActivity::class.java)
+            startActivity(intent)
         }
     }
 
@@ -66,7 +86,7 @@ class FirstRunStepTwoActivity : AppCompatActivity() {
         return GroupListAdapter(context, activity, true)
     }
 
-    private fun updateSelectedGroupsAndActivateNextButton(groups: List<Group>){
+    private fun updateSelectedGroups(groups: List<Group>){
         val selectedGroupsTV = findViewById<TextView>(R.id.selected_language_group_s_text_view)
         if(selectedGroupsTV.visibility == View.GONE){
             selectedGroupsTV.visibility = View.VISIBLE
@@ -78,22 +98,5 @@ class FirstRunStepTwoActivity : AppCompatActivity() {
             groupNames.add(it.name)
         })
         selectedGroupsTV.text = groupNames.joinToString()
-        nextStepButton!!.setOnClickListener{
-            val dbHelper = ScheduleDbHelper(this)
-            val db = dbHelper.readableDatabase
-            val contentValues = ContentValues()
-            db.execSQL("DELETE FROM " + ScheduleContract.LanguageGroupsEntry.TABLE_NAME)
-            groups.forEach({
-                contentValues.put(
-                        ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_NAME,
-                        it.name
-                )
-                contentValues.put(
-                        ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_URL,
-                        Utils.getGroupURL(it)
-                )
-                db.insert(ScheduleContract.LanguageGroupsEntry.TABLE_NAME, null, contentValues)
-            })
-        }
     }
 }

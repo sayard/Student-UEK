@@ -21,8 +21,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".FirstRunStepOneActivity" android:screenOrientation="portrait" />
-        <activity android:name=".FirstRunStepTwoActivity" android:screenOrientation="portrait" />
+        <activity
+            android:name=".FirstRunStepOneActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FirstRunStepTwoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".FirstRunStepThreeActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
