@@ -9,7 +9,6 @@
     <string name="retry">Retry</string>
     <string name="choose_your_language_group_s">Choose your language group(s)</string>
     <string-array name="days_of_week">
-        <item>(None)</item>
         <item>Monday</item>
         <item>Tuesday</item>
         <item>Wednesday</item>
@@ -24,4 +23,8 @@
     <string name="start_hour">Start hour</string>
     <string name="end_hour">End hour</string>
     <string name="p_e_settings">P.E. Settings</string>
+    <string name="p_e">P.E.</string>
+    <string name="p_e_start">P.E. Start</string>
+    <string name="p_e_end">P.E. End</string>
+    <string name="name">Name</string>
 </resources>
