@@ -1,6 +1,5 @@
 package pl.c0.sayard.uekplan.adapters
 
-import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -11,14 +10,12 @@ import android.widget.Filterable
 import android.widget.TextView
 import pl.c0.sayard.uekplan.Group
 import pl.c0.sayard.uekplan.R
-import pl.c0.sayard.uekplan.parsers.GroupParser
 
 /**
  * Created by karol on 29.12.17.
  */
-class GroupListAdapter(context: Context, activity: Activity, getLanguageGroups: Boolean) : BaseAdapter(), Filterable {
+class GroupListAdapter(context: Context, var groupListOriginal: List<Group>) : BaseAdapter(), Filterable {
 
-    private var groupListOriginal = GroupParser(activity, getLanguageGroups).execute().get()
     private var groupListDisplay = groupListOriginal
     private val mInflater: LayoutInflater = LayoutInflater.from(context)
 
@@ -83,7 +80,7 @@ class GroupListAdapter(context: Context, activity: Activity, getLanguageGroups: 
             }
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                groupListDisplay = results?.values as List<Group>?
+                groupListDisplay = results?.values as List<Group>
                 notifyDataSetChanged()
             }
         }

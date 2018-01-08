@@ -17,7 +17,7 @@ import java.net.URL
 /**
  * Created by karol on 29.12.17.
  */
-class GroupParser(@SuppressLint("StaticFieldLeak") private val activity: Activity, private val getLanguageGroups: Boolean) : AsyncTask<Void, Void, List<Group>>() {
+class GroupParser(@SuppressLint("StaticFieldLeak") private val activity: Activity, private val getLanguageGroups: Boolean, val onTaskCompleted: OnTaskCompleted) : AsyncTask<Void, Void, List<Group>>() {
 
     private val GROUP_URL = "http://planzajec.uek.krakow.pl/index.php?xml&typ=G"
     private val RESOURCE_TAG = "zasob"
@@ -28,6 +28,10 @@ class GroupParser(@SuppressLint("StaticFieldLeak") private val activity: Activit
     private var progressBar: ProgressBar? = null
     @SuppressLint("StaticFieldLeak")
     private var list: ListView? = null
+
+    interface OnTaskCompleted{
+        fun onTaskCompleted(result: List<Group>?, activity: Activity)
+    }
 
     override fun onPreExecute() {
         super.onPreExecute()
@@ -77,6 +81,7 @@ class GroupParser(@SuppressLint("StaticFieldLeak") private val activity: Activit
 
     override fun onPostExecute(result: List<Group>?) {
         super.onPostExecute(result)
+        onTaskCompleted.onTaskCompleted(result, activity)
         progressBar?.visibility = View.GONE
         list?.visibility = View.VISIBLE
     }

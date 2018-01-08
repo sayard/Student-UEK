@@ -13,6 +13,7 @@ import android.widget.*
 import pl.c0.sayard.uekplan.adapters.GroupListAdapter
 import pl.c0.sayard.uekplan.data.ScheduleContract
 import pl.c0.sayard.uekplan.data.ScheduleDbHelper
+import pl.c0.sayard.uekplan.parsers.GroupParser
 
 class FirstRunStepOneActivity : AppCompatActivity() {
 
@@ -23,45 +24,49 @@ class FirstRunStepOneActivity : AppCompatActivity() {
         setContentView(R.layout.activity_first_run_step_one)
         val retryButton = findViewById<Button>(R.id.group_retry_button)
         nextStepButton = findViewById(R.id.next_step_button)
-        val adapter = getAdapter(this, this)
-        if(adapter.count <= 0){
-            Toast.makeText(this, getText(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
-            retryButton.visibility = View.VISIBLE
-            nextStepButton!!.visibility = View.GONE
-        }else{
-            retryButton.visibility = View.GONE
-            nextStepButton!!.visibility = View.VISIBLE
-        }
+        GroupParser(this, false, object: GroupParser.OnTaskCompleted{
+            override fun onTaskCompleted(result: List<Group>?, activity: Activity) {
+                val adapter = getAdapter(activity, result!!)
+                if(adapter.count <= 0){
+                    Toast.makeText(activity, getText(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
+                    retryButton.visibility = View.VISIBLE
+                    nextStepButton!!.visibility = View.GONE
+                }else{
+                    retryButton.visibility = View.GONE
+                    nextStepButton!!.visibility = View.VISIBLE
+                }
 
-        retryButton.setOnClickListener {
-            this.recreate()
-        }
+                retryButton.setOnClickListener {
+                    activity.recreate()
+                }
 
-        val searchBox = findViewById<EditText>(R.id.step_one_search_box)
-        searchBox.addTextChangedListener(object: TextWatcher{
-            override fun afterTextChanged(p0: Editable?) {
+                val searchBox = findViewById<EditText>(R.id.step_one_search_box)
+                searchBox.addTextChangedListener(object: TextWatcher{
+                    override fun afterTextChanged(p0: Editable?) {
+                    }
+
+                    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    }
+
+                    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        adapter.filter.filter(p0.toString())
+                    }
+
+                })
+
+                val listView = findViewById<ListView>(R.id.group_list_view)
+                listView.adapter = adapter
+                var selectedGroup: Group?
+                listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+                    selectedGroup = parent.getItemAtPosition(position) as Group
+                    updateSelectedGroupTvAndActivateNextButton(selectedGroup!!)
+                }
             }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                adapter.filter.filter(p0.toString())
-            }
-
-        })
-
-        val listView = findViewById<ListView>(R.id.group_list_view)
-        listView.adapter = adapter
-        var selectedGroup: Group?
-        listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-            selectedGroup = parent.getItemAtPosition(position) as Group
-            updateSelectedGroupTvAndActivateNextButton(selectedGroup!!)
-        }
+        }).execute()
     }
 
-    private fun getAdapter(context: Context, activity: Activity): GroupListAdapter {
-        return GroupListAdapter(context, activity, false)
+    private fun getAdapter(context: Context, groupListOriginal: List<Group>): GroupListAdapter {
+        return GroupListAdapter(context, groupListOriginal)
     }
 
     private fun updateSelectedGroupTvAndActivateNextButton(group: Group){

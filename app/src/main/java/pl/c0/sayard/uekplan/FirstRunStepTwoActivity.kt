@@ -13,6 +13,7 @@ import android.widget.*
 import pl.c0.sayard.uekplan.adapters.GroupListAdapter
 import pl.c0.sayard.uekplan.data.ScheduleContract
 import pl.c0.sayard.uekplan.data.ScheduleDbHelper
+import pl.c0.sayard.uekplan.parsers.GroupParser
 
 class FirstRunStepTwoActivity : AppCompatActivity() {
 
@@ -23,67 +24,72 @@ class FirstRunStepTwoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_first_run_step_two)
         val retryButton = findViewById<Button>(R.id.language_group_retry_button)
         nextStepButton = findViewById(R.id.next_step_button_two)
-        val adapter = getAdapter(this, this)
-        if(adapter.count <= 0){
-            Toast.makeText(this, getText(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
-            retryButton.visibility = View.VISIBLE
-            nextStepButton!!.visibility = View.GONE
-        }else{
-            retryButton.visibility = View.GONE
-            nextStepButton!!.visibility = View.VISIBLE
-        }
+        GroupParser(this, true, object: GroupParser.OnTaskCompleted{
+            override fun onTaskCompleted(result: List<Group>?, activity: Activity) {
+                var groupListOriginal = result!!
+                val adapter = getAdapter(activity, groupListOriginal)
+                if(adapter.count <= 0){
+                    Toast.makeText(activity, getText(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
+                    retryButton.visibility = View.VISIBLE
+                    nextStepButton!!.visibility = View.GONE
+                }else{
+                    retryButton.visibility = View.GONE
+                    nextStepButton!!.visibility = View.VISIBLE
+                }
 
-        retryButton.setOnClickListener{
-            this.recreate()
-        }
+                retryButton.setOnClickListener{
+                    activity.recreate()
+                }
 
-        val searchBox = findViewById<EditText>(R.id.step_two_search_box)
-        searchBox.addTextChangedListener(object: TextWatcher{
-            override fun afterTextChanged(p0: Editable?) {
+                val searchBox = findViewById<EditText>(R.id.step_two_search_box)
+                searchBox.addTextChangedListener(object: TextWatcher{
+                    override fun afterTextChanged(p0: Editable?) {
+                    }
+
+                    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    }
+
+                    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        adapter.filter.filter(p0.toString())
+                    }
+
+                })
+
+                val listView = findViewById<ListView>(R.id.language_group_list_view)
+                listView.adapter = adapter
+                val selectedGroups = mutableListOf<Group>()
+                listView.onItemClickListener = AdapterView.OnItemClickListener{ parent, view, position, id ->
+                    val group = parent.getItemAtPosition(position) as Group
+                    if(!selectedGroups.remove(group) && selectedGroups.count()<2){
+                        selectedGroups.add(group)
+                    }
+                    updateSelectedGroups(selectedGroups)
+                }
+                nextStepButton!!.setOnClickListener{
+                    val dbHelper = ScheduleDbHelper(activity)
+                    val db = dbHelper.readableDatabase
+                    val contentValues = ContentValues()
+                    db.execSQL("DELETE FROM " + ScheduleContract.LanguageGroupsEntry.TABLE_NAME)
+                    selectedGroups.forEach({
+                        contentValues.put(
+                                ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_NAME,
+                                it.name
+                        )
+                        contentValues.put(
+                                ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_URL,
+                                Utils.getGroupURL(it)
+                        )
+                        db.insert(ScheduleContract.LanguageGroupsEntry.TABLE_NAME, null, contentValues)
+                    })
+                    val intent = Intent(activity, FirstRunStepThreeActivity::class.java)
+                    startActivity(intent)
+                }
             }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                adapter.filter.filter(p0.toString())
-            }
-
-        })
-
-        val listView = findViewById<ListView>(R.id.language_group_list_view)
-        listView.adapter = adapter
-        val selectedGroups = mutableListOf<Group>()
-        listView.onItemClickListener = AdapterView.OnItemClickListener{ parent, view, position, id ->
-            val group = parent.getItemAtPosition(position) as Group
-            if(!selectedGroups.remove(group) && selectedGroups.count()<2){
-                selectedGroups.add(group)
-            }
-            updateSelectedGroups(selectedGroups)
-        }
-        nextStepButton!!.setOnClickListener{
-            val dbHelper = ScheduleDbHelper(this)
-            val db = dbHelper.readableDatabase
-            val contentValues = ContentValues()
-            db.execSQL("DELETE FROM " + ScheduleContract.LanguageGroupsEntry.TABLE_NAME)
-            selectedGroups.forEach({
-                contentValues.put(
-                        ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_NAME,
-                        it.name
-                )
-                contentValues.put(
-                        ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_URL,
-                        Utils.getGroupURL(it)
-                )
-                db.insert(ScheduleContract.LanguageGroupsEntry.TABLE_NAME, null, contentValues)
-            })
-            val intent = Intent(this, FirstRunStepThreeActivity::class.java)
-            startActivity(intent)
-        }
+        }).execute()
     }
 
-    private fun getAdapter(context: Context, activity: Activity): GroupListAdapter {
-        return GroupListAdapter(context, activity, true)
+    private fun getAdapter(context: Context, groupListOriginal: List<Group>): GroupListAdapter {
+        return GroupListAdapter(context, groupListOriginal)
     }
 
     private fun updateSelectedGroups(groups: List<Group>){
