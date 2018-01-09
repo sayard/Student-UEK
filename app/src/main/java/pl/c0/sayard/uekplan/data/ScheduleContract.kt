@@ -24,4 +24,15 @@ class ScheduleContract private constructor(){
             val LANGUAGE_GROUP_URL: String = "language_group_url"
         }
     }
+
+    class PeEntry: BaseColumns{
+        companion object {
+            val TABLE_NAME: String = "pe"
+            val _ID: String = BaseColumns._ID
+            val PE_NAME: String = "pe_name"
+            val PE_DAY: String = "pe_day"
+            val PE_START_HOUR = "pe_start_hour"
+            val PE_END_HOUR = "pe_end_hour"
+        }
+    }
 }

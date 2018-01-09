@@ -27,4 +27,6 @@
     <string name="p_e_start">P.E. Start</string>
     <string name="p_e_end">P.E. End</string>
     <string name="name">Name</string>
+    <string name="pe_name_field_error">Name field must not be empty</string>
+    <string name="pe_hour_error">Start hour must be earlier than end hour</string>
 </resources>

@@ -43,12 +43,11 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        var firstRun = prefs?.getBoolean("firstRun", true)
+        val firstRun = prefs?.getBoolean("firstRun", true)
 
         if(firstRun!!){
             val intent = Intent(this, FirstRunStepOneActivity::class.java)
             startActivity(intent)
-            //TODO: prefs?.edit()?.putBoolean("firstRun", false)?.apply()
         }
     }
 }
