@@ -31,8 +31,8 @@ class ScheduleContract private constructor(){
             val _ID: String = BaseColumns._ID
             val PE_NAME: String = "pe_name"
             val PE_DAY: String = "pe_day"
-            val PE_START_HOUR = "pe_start_hour"
-            val PE_END_HOUR = "pe_end_hour"
+            val PE_START_HOUR: String = "pe_start_hour"
+            val PE_END_HOUR: String = "pe_end_hour"
         }
     }
 }

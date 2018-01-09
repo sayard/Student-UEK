@@ -4,9 +4,34 @@
     android:layout_height="match_parent"
     tools:context="pl.c0.sayard.uekplan.fragments.ScheduleFragment">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Schedule fragment" />
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/schedule"
+            android:textSize="24sp"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:background="@color/colorPrimary"/>
+
+        <ProgressBar
+            android:id="@+id/schedule_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+
+        <ListView
+            android:id="@+id/schedule_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:choiceMode="singleChoice"
+            android:visibility="gone" />
+
+    </LinearLayout>
 
 </FrameLayout>

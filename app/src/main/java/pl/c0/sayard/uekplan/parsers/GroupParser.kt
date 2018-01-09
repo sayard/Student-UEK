@@ -17,7 +17,7 @@ import java.net.URL
 /**
  * Created by karol on 29.12.17.
  */
-class GroupParser(@SuppressLint("StaticFieldLeak") private val activity: Activity, private val getLanguageGroups: Boolean, val onTaskCompleted: OnTaskCompleted) : AsyncTask<Void, Void, List<Group>>() {
+class GroupParser(@SuppressLint("StaticFieldLeak") private val activity: Activity, private val getLanguageGroups: Boolean, private val onTaskCompleted: OnTaskCompleted) : AsyncTask<Void, Void, List<Group>>() {
 
     private val GROUP_URL = "http://planzajec.uek.krakow.pl/index.php?xml&typ=G"
     private val RESOURCE_TAG = "zasob"
