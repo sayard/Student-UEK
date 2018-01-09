@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="pl.c0.sayard.uekplan.FirstRunStepTwoActivity"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
+
+    <TextView
+        android:id="@+id/choose_your_language_group_s_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/choose_your_language_group_s"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <EditText
+        android:id="@+id/step_two_search_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableEnd="@android:drawable/ic_menu_search"
+        android:drawableRight="@android:drawable/ic_menu_search"
+        android:maxLines="1"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/choose_your_language_group_s_text_view" />
+
+    <ProgressBar
+        android:id="@+id/second_step_progress_bar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/next_step_button_two"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/step_two_search_box"
+        android:visibility="gone"/>
+
+    <ListView
+        android:id="@+id/language_group_list_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:choiceMode="singleChoice"
+        app:layout_constraintBottom_toTopOf="@+id/selected_language_group_s_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/step_two_search_box"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/selected_language_group_s_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/next_step_button_two"
+        app:layout_constraintTop_toBottomOf="@id/language_group_list_view">
+
+        <TextView
+            android:id="@+id/selected_language_group_s_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.9"
+            android:textSize="20sp"
+            android:paddingTop="10dp"
+            android:paddingBottom="11dp"
+            android:background="@color/colorPrimary"
+            android:textColor="@android:color/white"
+            android:visibility="visible"/>
+
+        <Button
+            android:id="@+id/clear_selected_language_group_s"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:textSize="19sp"
+            android:background="@color/colorPrimary"
+            android:text="X"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+
+
+    <Button
+        android:id="@+id/next_step_button_two"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginStart="0dp"
+        android:background="@color/colorPrimary"
+        android:clickable="false"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/next_step"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/language_group_retry_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginStart="0dp"
+        android:background="@color/colorPrimary"
+        android:clickable="false"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/retry"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"/>
+
+</android.support.constraint.ConstraintLayout>

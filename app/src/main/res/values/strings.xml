@@ -3,4 +3,30 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="next_step">Next step</string>
+    <string name="choose_your_group">Choose your group</string>
+    <string name="error_try_again_later">An error has occurred. Try again later.</string>
+    <string name="retry">Retry</string>
+    <string name="choose_your_language_group_s">Choose your language group(s)</string>
+    <string-array name="days_of_week">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
+    <string name="cancel">Cancel</string>
+    <string name="p_e_day">P.E. Day</string>
+    <string name="select">Select</string>
+    <string name="start_hour">Start hour</string>
+    <string name="end_hour">End hour</string>
+    <string name="p_e_settings">P.E. Settings</string>
+    <string name="p_e">P.E.</string>
+    <string name="p_e_start">P.E. Start</string>
+    <string name="p_e_end">P.E. End</string>
+    <string name="name">Name</string>
+    <string name="pe_name_field_error">Name field must not be empty</string>
+    <string name="pe_hour_error">Start hour must be earlier than end hour</string>
 </resources>
