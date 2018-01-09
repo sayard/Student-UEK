@@ -29,4 +29,11 @@
     <string name="name">Name</string>
     <string name="pe_name_field_error">Name field must not be empty</string>
     <string name="pe_hour_error">Start hour must be earlier than end hour</string>
+    <string name="settings">Settings</string>
+    <string name="notes">Notes</string>
+    <string name="schedule">Schedule</string>
+    <string name="search">Search</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
