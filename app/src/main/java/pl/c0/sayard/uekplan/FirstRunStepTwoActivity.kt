@@ -26,7 +26,7 @@ class FirstRunStepTwoActivity : AppCompatActivity() {
         nextStepButton = findViewById(R.id.next_step_button_two)
         GroupParser(this, true, object: GroupParser.OnTaskCompleted{
             override fun onTaskCompleted(result: List<Group>?, activity: Activity) {
-                var groupListOriginal = result!!
+                val groupListOriginal = result!!
                 val adapter = getAdapter(activity, groupListOriginal)
                 if(adapter.count <= 0){
                     Toast.makeText(activity, getText(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
@@ -84,6 +84,11 @@ class FirstRunStepTwoActivity : AppCompatActivity() {
                     val intent = Intent(activity, FirstRunStepThreeActivity::class.java)
                     startActivity(intent)
                 }
+                val clearSelectedGroups = findViewById<Button>(R.id.clear_selected_language_group_s)
+                clearSelectedGroups.setOnClickListener {
+                    selectedGroups.clear()
+                    updateSelectedGroups(selectedGroups)
+                }
             }
         }).execute()
     }
@@ -94,10 +99,13 @@ class FirstRunStepTwoActivity : AppCompatActivity() {
 
     private fun updateSelectedGroups(groups: List<Group>){
         val selectedGroupsTV = findViewById<TextView>(R.id.selected_language_group_s_text_view)
-        if(selectedGroupsTV.visibility == View.GONE){
+        val clearSelectedGroups = findViewById<Button>(R.id.clear_selected_language_group_s)
+        if(selectedGroupsTV.visibility == View.GONE || clearSelectedGroups.visibility == View.GONE){
             selectedGroupsTV.visibility = View.VISIBLE
+            clearSelectedGroups.visibility = View.VISIBLE
         }else if(groups.isEmpty()){
             selectedGroupsTV.visibility = View.GONE
+            clearSelectedGroups.visibility = View.GONE
         }
         val groupNames = mutableListOf<String>()
         groups.forEach({
