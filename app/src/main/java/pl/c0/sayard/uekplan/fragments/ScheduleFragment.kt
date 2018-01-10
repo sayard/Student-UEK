@@ -28,10 +28,24 @@ class ScheduleFragment : Fragment() {
         super.onCreate(savedInstanceState)
         val dbHelper = ScheduleDbHelper(activity)
         val db = dbHelper.readableDatabase
-        val group = getGroup(db)
-        val languageGroups = getLanguageGroups(db)
-        val pe = getPe(db)
-        ScheduleParser().execute(group.url)
+        val cursor = db.query(
+                ScheduleContract.LessonEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                ScheduleContract.LessonEntry.START_DATE + " ASC"
+        )
+        if(cursor.count == 0){
+            val group = getGroup(db)
+            val languageGroups = getLanguageGroups(db)
+            val urls = mutableListOf(group.url)
+            languageGroups.mapTo(urls) { it.url }
+            ScheduleParser(context, activity).execute(urls)
+        }else{
+            val pe = getPe(db)
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
@@ -60,15 +74,19 @@ class ScheduleFragment : Fragment() {
         return languageGroups
     }
 
-    private fun getPe(db: SQLiteDatabase): SchedulePE{
+    private fun getPe(db: SQLiteDatabase): SchedulePE?{
         val cursor = db.query(ScheduleContract.PeEntry.TABLE_NAME, null, null, null, null, null, null)
-        cursor.moveToLast()
-        val peName = cursor.getString(cursor.getColumnIndex(ScheduleContract.PeEntry.PE_NAME))
-        val peDay = cursor.getInt(cursor.getColumnIndex(ScheduleContract.PeEntry.PE_DAY))
-        val peStartHour = cursor.getString(cursor.getColumnIndex(ScheduleContract.PeEntry.PE_START_HOUR))
-        val peEndHour = cursor.getString(cursor.getColumnIndex(ScheduleContract.PeEntry.PE_END_HOUR))
+        if(cursor.count > 0){
+            cursor.moveToLast()
+            val peName = cursor.getString(cursor.getColumnIndex(ScheduleContract.PeEntry.PE_NAME))
+            val peDay = cursor.getInt(cursor.getColumnIndex(ScheduleContract.PeEntry.PE_DAY))
+            val peStartHour = cursor.getString(cursor.getColumnIndex(ScheduleContract.PeEntry.PE_START_HOUR))
+            val peEndHour = cursor.getString(cursor.getColumnIndex(ScheduleContract.PeEntry.PE_END_HOUR))
+            cursor.close()
+            return SchedulePE(peName, peDay, peStartHour, peEndHour)
+        }
         cursor.close()
-        return SchedulePE(peName, peDay, peStartHour, peEndHour)
+        return null
     }
 
 }

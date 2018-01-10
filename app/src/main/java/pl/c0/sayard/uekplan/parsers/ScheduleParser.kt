@@ -1,17 +1,23 @@
 package pl.c0.sayard.uekplan.parsers
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.ContentValues
+import android.content.Context
 import android.os.AsyncTask
 import android.util.Log
 import org.w3c.dom.Element
 import org.xml.sax.InputSource
 import pl.c0.sayard.uekplan.Lesson
+import pl.c0.sayard.uekplan.data.ScheduleContract
+import pl.c0.sayard.uekplan.data.ScheduleDbHelper
 import java.net.URL
 import javax.xml.parsers.DocumentBuilderFactory
 
 /**
  * Created by karol on 09.01.18.
  */
-class ScheduleParser : AsyncTask<String, Void, List<Lesson>>() {
+class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context, val activity: Activity) : AsyncTask<List<String>, Void, List<Lesson>>() {
 
     private val CLASSES_TAG = "zajecia"
     private val DATE_TAG = "termin"
@@ -30,34 +36,36 @@ class ScheduleParser : AsyncTask<String, Void, List<Lesson>>() {
         super.onPreExecute()
     }
 
-    override fun doInBackground(vararg groupUrl: String?): List<Lesson> {
+    override fun doInBackground(vararg groupUrls: List<String>?): List<Lesson>? {
         val lessonList = mutableListOf<Lesson>()
         try{
-            val url = URL(groupUrl[0])
-            val dbf = DocumentBuilderFactory.newInstance()
-            val db = dbf.newDocumentBuilder()
-            val document = db.parse(InputSource(url.openStream()))
-            document.documentElement.normalize()
-            val nodeList = document.getElementsByTagName(CLASSES_TAG)
-            for(i in 0 until nodeList.length){
-                val node = nodeList.item(i)
-                val element = node as Element
-                val type = element.getElementsByTagName(TYPE_TAG).item(0).textContent
-                if(type != LECTURESHIP){
-                    val date = element.getElementsByTagName(DATE_TAG).item(0).textContent
-                    val weekDay = element.getElementsByTagName(WEEK_DAY_TAG).item(0).textContent
-                    val startHour = element.getElementsByTagName(START_HOUR_TAG).item(0).textContent
-                    val endHour = element.getElementsByTagName(END_HOUR_TAG).item(0).textContent
-                    val subject = element.getElementsByTagName(SUBJECT_TAG).item(0).textContent
-                    val teacher = element.getElementsByTagName(TEACHER_TAG).item(0).textContent
-                    val teacherId = (element.getElementsByTagName(TEACHER_TAG).item(0) as Element).getAttribute(MOODLE_TAG)
+            for(i in 0 until groupUrls[0]!!.size){
+                val url = URL(groupUrls[0]!![i])
+                val dbf = DocumentBuilderFactory.newInstance()
+                val db = dbf.newDocumentBuilder()
+                val document = db.parse(InputSource(url.openStream()))
+                document.documentElement.normalize()
+                val nodeList = document.getElementsByTagName(CLASSES_TAG)
+                for(j in 0 until nodeList.length){
+                    val node = nodeList.item(j)
+                    val element = node as Element
                     val classroom = element.getElementsByTagName(CLASSROOM_TAG).item(0).textContent
-                    var comments = ""
-                    if(element.getElementsByTagName(COMMENTS_TAG).length > 0){
-                        comments = element.getElementsByTagName(COMMENTS_TAG).item(0).textContent
+                    if(classroom.isNotEmpty()){
+                        val date = element.getElementsByTagName(DATE_TAG).item(0).textContent
+                        val weekDay = element.getElementsByTagName(WEEK_DAY_TAG).item(0).textContent
+                        val startHour = element.getElementsByTagName(START_HOUR_TAG).item(0).textContent
+                        val endHour = element.getElementsByTagName(END_HOUR_TAG).item(0).textContent
+                        val subject = element.getElementsByTagName(SUBJECT_TAG).item(0).textContent
+                        val type = element.getElementsByTagName(TYPE_TAG).item(0).textContent
+                        val teacher = element.getElementsByTagName(TEACHER_TAG).item(0).textContent
+                        val teacherId = (element.getElementsByTagName(TEACHER_TAG).item(0) as Element).getAttribute(MOODLE_TAG)
+                        var comments = ""
+                        if(element.getElementsByTagName(COMMENTS_TAG).length > 0){
+                            comments = element.getElementsByTagName(COMMENTS_TAG).item(0).textContent
+                        }
+                        val lesson = Lesson(context, date, weekDay, startHour, endHour, subject, type, teacher, teacherId, classroom, comments)
+                        lessonList.add(lesson)
                     }
-                    val lesson = Lesson(date, weekDay, startHour, endHour, subject, type, teacher, teacherId, classroom, comments)
-                    lessonList.add(lesson)
                 }
             }
             return lessonList
@@ -67,7 +75,26 @@ class ScheduleParser : AsyncTask<String, Void, List<Lesson>>() {
         }
     }
 
-    override fun onPostExecute(result: List<Lesson>?) {
-        super.onPostExecute(result)
+    override fun onPostExecute(lessons: List<Lesson>?) {
+        super.onPostExecute(lessons)
+        if (lessons != null) {
+            val dbHelper = ScheduleDbHelper(context)
+            val db = dbHelper.writableDatabase
+            db.execSQL("DELETE FROM " + ScheduleContract.LessonEntry.TABLE_NAME)
+            val contentValues = ContentValues()
+            for(lesson in lessons){
+                contentValues.put(ScheduleContract.LessonEntry.SUBJECT, lesson.subject)
+                contentValues.put(ScheduleContract.LessonEntry.TYPE, lesson.type)
+                contentValues.put(ScheduleContract.LessonEntry.TEACHER, lesson.teacher)
+                contentValues.put(ScheduleContract.LessonEntry.TEACHER_ID, lesson.teacherIdParsed)
+                contentValues.put(ScheduleContract.LessonEntry.CLASSROOM, lesson.classroom)
+                contentValues.put(ScheduleContract.LessonEntry.COMMENTS, lesson.comments)
+                contentValues.put(ScheduleContract.LessonEntry.DATE, lesson.date)
+                contentValues.put(ScheduleContract.LessonEntry.START_DATE, lesson.startDate)
+                contentValues.put(ScheduleContract.LessonEntry.END_DATE, lesson.endDate)
+                db.insert(ScheduleContract.LessonEntry.TABLE_NAME, null, contentValues)
+            }
+        }
+        activity.recreate()
     }
 }
