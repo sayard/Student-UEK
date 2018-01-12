@@ -6,9 +6,12 @@ import android.content.ContentValues
 import android.content.Context
 import android.os.AsyncTask
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
 import org.w3c.dom.Element
 import org.xml.sax.InputSource
 import pl.c0.sayard.uekplan.Lesson
+import pl.c0.sayard.uekplan.R
 import pl.c0.sayard.uekplan.data.ScheduleContract
 import pl.c0.sayard.uekplan.data.ScheduleDbHelper
 import java.net.URL
@@ -17,11 +20,10 @@ import javax.xml.parsers.DocumentBuilderFactory
 /**
  * Created by karol on 09.01.18.
  */
-class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context, val activity: Activity) : AsyncTask<List<String>, Void, List<Lesson>>() {
+class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context, val activity: Activity, val progressBar: ProgressBar) : AsyncTask<List<String>, Void, List<Lesson>>() {
 
     private val CLASSES_TAG = "zajecia"
     private val DATE_TAG = "termin"
-    private val WEEK_DAY_TAG = "dzien"
     private val START_HOUR_TAG = "od-godz"
     private val END_HOUR_TAG = "do-godz"
     private val SUBJECT_TAG = "przedmiot"
@@ -34,6 +36,7 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context, val 
 
     override fun onPreExecute() {
         super.onPreExecute()
+        progressBar.visibility = View.VISIBLE
     }
 
     override fun doInBackground(vararg groupUrls: List<String>?): List<Lesson>? {
@@ -49,21 +52,20 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context, val 
                 for(j in 0 until nodeList.length){
                     val node = nodeList.item(j)
                     val element = node as Element
+                    val type = element.getElementsByTagName(TYPE_TAG).item(0).textContent
                     val classroom = element.getElementsByTagName(CLASSROOM_TAG).item(0).textContent
-                    if(classroom.isNotEmpty()){
+                    if(!(type == LECTURESHIP && classroom.isEmpty())){
                         val date = element.getElementsByTagName(DATE_TAG).item(0).textContent
-                        val weekDay = element.getElementsByTagName(WEEK_DAY_TAG).item(0).textContent
                         val startHour = element.getElementsByTagName(START_HOUR_TAG).item(0).textContent
                         val endHour = element.getElementsByTagName(END_HOUR_TAG).item(0).textContent
                         val subject = element.getElementsByTagName(SUBJECT_TAG).item(0).textContent
-                        val type = element.getElementsByTagName(TYPE_TAG).item(0).textContent
                         val teacher = element.getElementsByTagName(TEACHER_TAG).item(0).textContent
                         val teacherId = (element.getElementsByTagName(TEACHER_TAG).item(0) as Element).getAttribute(MOODLE_TAG)
                         var comments = ""
                         if(element.getElementsByTagName(COMMENTS_TAG).length > 0){
                             comments = element.getElementsByTagName(COMMENTS_TAG).item(0).textContent
                         }
-                        val lesson = Lesson(context, date, weekDay, startHour, endHour, subject, type, teacher, teacherId, classroom, comments)
+                        val lesson = Lesson(date, startHour, endHour, subject, type, teacher, teacherId, classroom, comments)
                         lessonList.add(lesson)
                     }
                 }
@@ -83,6 +85,7 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context, val 
             db.execSQL("DELETE FROM " + ScheduleContract.LessonEntry.TABLE_NAME)
             val contentValues = ContentValues()
             for(lesson in lessons){
+                Log.v("LESSON_COMMENTS_VAL", lesson.comments)
                 contentValues.put(ScheduleContract.LessonEntry.SUBJECT, lesson.subject)
                 contentValues.put(ScheduleContract.LessonEntry.TYPE, lesson.type)
                 contentValues.put(ScheduleContract.LessonEntry.TEACHER, lesson.teacher)
@@ -92,8 +95,10 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context, val 
                 contentValues.put(ScheduleContract.LessonEntry.DATE, lesson.date)
                 contentValues.put(ScheduleContract.LessonEntry.START_DATE, lesson.startDate)
                 contentValues.put(ScheduleContract.LessonEntry.END_DATE, lesson.endDate)
+                Log.v("CV", contentValues.toString())
                 db.insert(ScheduleContract.LessonEntry.TABLE_NAME, null, contentValues)
             }
+            dbHelper.close()
         }
         activity.recreate()
     }

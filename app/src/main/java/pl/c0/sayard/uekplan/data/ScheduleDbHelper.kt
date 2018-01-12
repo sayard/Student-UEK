@@ -45,7 +45,7 @@ class ScheduleDbHelper(context: Context): SQLiteOpenHelper(context, "ScheduleUEK
             ScheduleContract.LessonEntry.TEACHER + " TEXT NOT NULL, " +
             ScheduleContract.LessonEntry.TEACHER_ID + " INTEGER NOT NULL, " +
             ScheduleContract.LessonEntry.CLASSROOM + " TEXT NOT NULL, " +
-            ScheduleContract.LessonEntry.COMMENTS + " TEXT, " +
+            ScheduleContract.LessonEntry.COMMENTS + " TEXT NOT NULL, " +
             ScheduleContract.LessonEntry.DATE + " TEXT ," +
             ScheduleContract.LessonEntry.START_DATE + " TEXT NOT NULL, " +
             ScheduleContract.LessonEntry.END_DATE + " TEXT NOT NULL)"

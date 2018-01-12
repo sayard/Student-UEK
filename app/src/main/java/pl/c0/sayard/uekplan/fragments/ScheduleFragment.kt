@@ -6,8 +6,12 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ListView
+import android.widget.ProgressBar
 
 import pl.c0.sayard.uekplan.R
+import pl.c0.sayard.uekplan.ScheduleItem
+import pl.c0.sayard.uekplan.adapters.ScheduleAdapter
 import pl.c0.sayard.uekplan.data.ScheduleContract
 import pl.c0.sayard.uekplan.data.ScheduleDbHelper
 import pl.c0.sayard.uekplan.parsers.ScheduleParser
@@ -16,7 +20,7 @@ import pl.c0.sayard.uekplan.parsers.ScheduleParser
 class ScheduleFragment : Fragment() {
 
     private class ScheduleGroup(var name: String, var url: String)
-    private class SchedulePE(var name: String, var day: Int, var startHour: String, var endHour: String)
+    class SchedulePE(var name: String, var day: Int, var startHour: String, var endHour: String)
 
     companion object {
         fun newInstance(): ScheduleFragment{
@@ -24,8 +28,11 @@ class ScheduleFragment : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+
+        val view = inflater!!.inflate(R.layout.fragment_schedule, container, false)
+
         val dbHelper = ScheduleDbHelper(activity)
         val db = dbHelper.readableDatabase
         val cursor = db.query(
@@ -35,22 +42,52 @@ class ScheduleFragment : Fragment() {
                 null,
                 null,
                 null,
-                ScheduleContract.LessonEntry.START_DATE + " ASC"
+                ScheduleContract.LessonEntry.START_DATE
         )
         if(cursor.count == 0){
             val group = getGroup(db)
             val languageGroups = getLanguageGroups(db)
             val urls = mutableListOf(group.url)
             languageGroups.mapTo(urls) { it.url }
-            ScheduleParser(context, activity).execute(urls)
+            val progressBar = view.findViewById<ProgressBar>(R.id.schedule_progress_bar)
+            ScheduleParser(context, activity, progressBar).execute(urls)
         }else{
             val pe = getPe(db)
-        }
-    }
+            val scheduleList = mutableListOf<ScheduleItem>()
+            cursor.moveToFirst()
+            do{
+                val dateStr = cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.DATE))
+                var isFirstOnTheDay = true
+                if(cursor.position != 0){
+                    cursor.moveToPrevious()
+                    if(dateStr == cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.DATE))){
+                        isFirstOnTheDay = false
+                    }
+                    cursor.moveToNext()
+                }
+                val comments = cursor.getString(cursor.getColumnIndexOrThrow(ScheduleContract.LessonEntry.COMMENTS))
+                val scheduleItem = ScheduleItem(
+                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.SUBJECT)),
+                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.TYPE)),
+                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.TEACHER)),
+                        cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.TEACHER_ID)),
+                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.CLASSROOM)),
+                        comments,
+                        dateStr,
+                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.START_DATE)),
+                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.END_DATE)),
+                        isFirstOnTheDay
+                )
+                scheduleList.add(scheduleItem)
+            }while(cursor.moveToNext())
+            val adapter = getAdapter(scheduleList, pe)
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_schedule, container, false)
+            val listView = view.findViewById<ListView>(R.id.schedule_list_view)
+            listView.adapter = adapter
+        }
+        cursor.close()
+
+        return view
     }
 
     private fun getGroup(db: SQLiteDatabase): ScheduleGroup{
@@ -87,6 +124,10 @@ class ScheduleFragment : Fragment() {
         }
         cursor.close()
         return null
+    }
+
+    private fun getAdapter(scheduleList: List<ScheduleItem>, pe: SchedulePE?): ScheduleAdapter{
+        return ScheduleAdapter(context, scheduleList, pe!!)
     }
 
 }

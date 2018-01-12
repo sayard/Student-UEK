@@ -45,7 +45,7 @@ class ScheduleContract private constructor(){
             val TEACHER: String = "teacher"
             val TEACHER_ID: String = "teacher_id"
             val CLASSROOM: String = "classroom"
-            val COMMENTS: String = " comments"
+            val COMMENTS: String = "comments"
             val DATE: String = "date"
             val START_DATE: String = "start_date"
             val END_DATE: String = "end_date"
