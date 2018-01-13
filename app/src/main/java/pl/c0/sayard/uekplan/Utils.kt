@@ -1,5 +1,11 @@
 package pl.c0.sayard.uekplan
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import pl.c0.sayard.uekplan.data.Group
@@ -7,6 +13,8 @@ import pl.c0.sayard.uekplan.data.ScheduleGroup
 import pl.c0.sayard.uekplan.data.ScheduleItem
 import pl.c0.sayard.uekplan.data.SchedulePE
 import pl.c0.sayard.uekplan.db.ScheduleContract
+import pl.c0.sayard.uekplan.receivers.BootReceiver
+import pl.c0.sayard.uekplan.receivers.ScheduleRefreshReceiver
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -15,6 +23,8 @@ import java.util.*
  */
 class Utils {
     companion object {
+        val SCHEDULE_REFRESH_TASK_REQUEST_CODE = 101
+
         fun getGroupURL(group: Group): String{
             return "http://planzajec.uek.krakow.pl/index.php?xml&typ=G&id=" +
                     group.id.toString() +
@@ -104,6 +114,45 @@ class Utils {
             val groupURL = cursor.getString(cursor.getColumnIndex(ScheduleContract.GroupEntry.GROUP_URL))
             cursor.close()
             return ScheduleGroup(groupName, groupURL)
+        }
+
+        fun getLanguageGroups(db: SQLiteDatabase): MutableList<ScheduleGroup> {
+            val cursor = db.query(ScheduleContract.LanguageGroupsEntry.TABLE_NAME, null, null, null, null, null, null)
+            val languageGroups = mutableListOf<ScheduleGroup>()
+            while(cursor.moveToNext()){
+                val languageGroupName = cursor.getString(cursor.getColumnIndex(ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_NAME))
+                val languageGroupURL = cursor.getString(cursor.getColumnIndex(ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_URL))
+                languageGroups.add(ScheduleGroup(languageGroupName, languageGroupURL))
+            }
+            cursor.close()
+            return languageGroups
+        }
+
+        fun startScheduleRefreshTask(context: Context){
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val intent = Intent(context, ScheduleRefreshReceiver::class.java)
+            val alarmIntent = PendingIntent.getBroadcast(context, SCHEDULE_REFRESH_TASK_REQUEST_CODE, intent, 0)
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.HOUR_OF_DAY, 1)
+            calendar.set(Calendar.MINUTE, 0)
+            alarmManager.setInexactRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    AlarmManager.INTERVAL_DAY,
+                    alarmIntent
+            )
+            enableBootReceiver(context)
+        }
+
+        private fun enableBootReceiver(context: Context){
+            val receiver = ComponentName(context, BootReceiver::class.java)
+            val packageManager = context.packageManager
+
+            packageManager.setComponentEnabledSetting(
+                    receiver,
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                    PackageManager.DONT_KILL_APP
+            )
         }
     }
 }

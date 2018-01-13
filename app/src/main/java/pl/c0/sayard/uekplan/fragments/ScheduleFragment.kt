@@ -1,6 +1,5 @@
 package pl.c0.sayard.uekplan.fragments
 
-import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -10,9 +9,9 @@ import android.widget.ListView
 import android.widget.ProgressBar
 
 import pl.c0.sayard.uekplan.R
-import pl.c0.sayard.uekplan.data.ScheduleGroup
 import pl.c0.sayard.uekplan.data.ScheduleItem
 import pl.c0.sayard.uekplan.Utils
+import pl.c0.sayard.uekplan.Utils.Companion.getLanguageGroups
 import pl.c0.sayard.uekplan.adapters.ScheduleAdapter
 import pl.c0.sayard.uekplan.db.ScheduleContract
 import pl.c0.sayard.uekplan.db.ScheduleDbHelper
@@ -59,18 +58,6 @@ class ScheduleFragment : Fragment() {
         cursor.close()
 
         return view
-    }
-
-    private fun getLanguageGroups(db: SQLiteDatabase): MutableList<ScheduleGroup> {
-        val cursor = db.query(ScheduleContract.LanguageGroupsEntry.TABLE_NAME, null, null, null, null, null, null)
-        val languageGroups = mutableListOf<ScheduleGroup>()
-        while(cursor.moveToNext()){
-            val languageGroupName = cursor.getString(cursor.getColumnIndex(ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_NAME))
-            val languageGroupURL = cursor.getString(cursor.getColumnIndex(ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_URL))
-            languageGroups.add(ScheduleGroup(languageGroupName, languageGroupURL))
-        }
-        cursor.close()
-        return languageGroups
     }
 
     private fun getAdapter(scheduleList: List<ScheduleItem>): ScheduleAdapter{

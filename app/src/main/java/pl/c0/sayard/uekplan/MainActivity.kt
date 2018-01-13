@@ -1,6 +1,5 @@
 package pl.c0.sayard.uekplan
 
-import android.app.Fragment
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -44,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }else{
             setContentView(R.layout.activity_main)
-
+            Utils.startScheduleRefreshTask(baseContext)
             navigation.selectedItemId = R.id.navigation_schedule
             navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
             val transaction = supportFragmentManager.beginTransaction()

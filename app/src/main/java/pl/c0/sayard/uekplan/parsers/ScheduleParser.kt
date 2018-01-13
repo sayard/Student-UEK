@@ -19,7 +19,7 @@ import javax.xml.parsers.DocumentBuilderFactory
 /**
  * Created by karol on 09.01.18.
  */
-class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context, val activity: Activity, val progressBar: ProgressBar) : AsyncTask<List<String>, Void, List<Lesson>>() {
+class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context, val activity: Activity?, val progressBar: ProgressBar?) : AsyncTask<List<String>, Void, List<Lesson>>() {
 
     private val CLASSES_TAG = "zajecia"
     private val DATE_TAG = "termin"
@@ -35,7 +35,11 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context, val 
 
     override fun onPreExecute() {
         super.onPreExecute()
-        progressBar.visibility = View.VISIBLE
+        progressBar?.visibility = View.VISIBLE
+        val dbHelper = ScheduleDbHelper(context)
+        val db = dbHelper.writableDatabase
+        db.execSQL("DELETE FROM " + ScheduleContract.LessonEntry.TABLE_NAME)
+        dbHelper.close()
     }
 
     override fun doInBackground(vararg groupUrls: List<String>?): List<Lesson>? {
@@ -81,10 +85,8 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context, val 
         if (lessons != null) {
             val dbHelper = ScheduleDbHelper(context)
             val db = dbHelper.writableDatabase
-            db.execSQL("DELETE FROM " + ScheduleContract.LessonEntry.TABLE_NAME)
             val contentValues = ContentValues()
             for(lesson in lessons){
-                Log.v("LESSON_COMMENTS_VAL", lesson.comments)
                 contentValues.put(ScheduleContract.LessonEntry.SUBJECT, lesson.subject)
                 contentValues.put(ScheduleContract.LessonEntry.TYPE, lesson.type)
                 contentValues.put(ScheduleContract.LessonEntry.TEACHER, lesson.teacher)
@@ -94,11 +96,10 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context, val 
                 contentValues.put(ScheduleContract.LessonEntry.DATE, lesson.date)
                 contentValues.put(ScheduleContract.LessonEntry.START_DATE, lesson.startDate)
                 contentValues.put(ScheduleContract.LessonEntry.END_DATE, lesson.endDate)
-                Log.v("CV", contentValues.toString())
                 db.insert(ScheduleContract.LessonEntry.TABLE_NAME, null, contentValues)
             }
             dbHelper.close()
         }
-        activity.recreate()
+        activity?.recreate()
     }
 }
