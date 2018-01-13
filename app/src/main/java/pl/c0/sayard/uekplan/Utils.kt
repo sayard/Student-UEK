@@ -144,6 +144,18 @@ class Utils {
             enableBootReceiver(context)
         }
 
+        fun getScheduleCursor(db: SQLiteDatabase): Cursor{
+            return db.query(
+                    ScheduleContract.LessonEntry.TABLE_NAME,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    ScheduleContract.LessonEntry.START_DATE
+            )
+        }
+
         private fun enableBootReceiver(context: Context){
             val receiver = ComponentName(context, BootReceiver::class.java)
             val packageManager = context.packageManager

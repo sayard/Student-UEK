@@ -5,11 +5,15 @@ import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
 import android.os.AsyncTask
+import android.support.v4.widget.SwipeRefreshLayout
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
+import android.widget.TextView
 import org.w3c.dom.Element
 import org.xml.sax.InputSource
+import pl.c0.sayard.uekplan.Utils
+import pl.c0.sayard.uekplan.adapters.ScheduleAdapter
 import pl.c0.sayard.uekplan.data.Lesson
 import pl.c0.sayard.uekplan.db.ScheduleContract
 import pl.c0.sayard.uekplan.db.ScheduleDbHelper
@@ -19,7 +23,12 @@ import javax.xml.parsers.DocumentBuilderFactory
 /**
  * Created by karol on 09.01.18.
  */
-class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context, val activity: Activity?, val progressBar: ProgressBar?) : AsyncTask<List<String>, Void, List<Lesson>>() {
+class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
+                     val activity: Activity?,
+                     val progressBar: ProgressBar?,
+                     val errorMessage: TextView?,
+                     val adapter: ScheduleAdapter?,
+                     val scheduleSwipe: SwipeRefreshLayout?) : AsyncTask<List<String>, Void, List<Lesson>>() {
 
     private val CLASSES_TAG = "zajecia"
     private val DATE_TAG = "termin"
@@ -98,8 +107,18 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context, val 
                 contentValues.put(ScheduleContract.LessonEntry.END_DATE, lesson.endDate)
                 db.insert(ScheduleContract.LessonEntry.TABLE_NAME, null, contentValues)
             }
+            if(adapter != null){
+                val cursor = Utils.getScheduleCursor(db)
+                val scheduleList = Utils.getScheduleList(cursor, db)
+                adapter.changeAdapterData(scheduleList)
+                adapter.notifyDataSetChanged()
+                scheduleSwipe?.isRefreshing = false
+            }
             dbHelper.close()
+            activity?.recreate()
+        }else{
+            progressBar?.visibility = View.GONE
+            errorMessage?.visibility = View.VISIBLE
         }
-        activity?.recreate()
     }
 }

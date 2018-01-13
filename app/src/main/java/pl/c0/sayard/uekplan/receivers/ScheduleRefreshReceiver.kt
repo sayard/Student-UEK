@@ -21,7 +21,7 @@ class ScheduleRefreshReceiver: BroadcastReceiver() {
             val languageGroups = getLanguageGroups(db)
             val urls = mutableListOf(group.url)
             languageGroups.mapTo(urls) { it.url }
-            ScheduleParser(context, null, null).execute(urls)
+            ScheduleParser(context, null, null, null, null, null).execute(urls)
         }
     }
 }

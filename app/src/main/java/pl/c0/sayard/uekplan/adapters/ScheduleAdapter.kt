@@ -97,4 +97,9 @@ class ScheduleAdapter(var context: Context, scheduleList:List<ScheduleItem>) : B
     override fun getCount(): Int {
         return scheduleOriginal!!.size
     }
+
+    fun changeAdapterData(scheduleList:List<ScheduleItem>){
+        scheduleOriginal = scheduleList
+        scheduleDisplay = scheduleOriginal
+    }
 }
