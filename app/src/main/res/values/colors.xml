@@ -3,11 +3,11 @@
     <color name="colorPrimary">#8D0126</color>
     <color name="colorPrimaryDark">#780020</color>
     <color name="colorAccent">#780020</color>
-    <color name="colorMonday">#660022</color>
-    <color name="colorTuesday">#881133</color>
-    <color name="colorWednesday">#A8002C</color>
-    <color name="colorThursday">#992244</color>
-    <color name="colorFriday">#7F3F50</color>
-    <color name="colorSaturday">#FF99B3</color>
-    <color name="colorSunday">#DDAABB</color>
+    <color name="colorMonday">#A33351</color>
+    <color name="colorTuesday">#AF4D67</color>
+    <color name="colorWednesday">#BA667C</color>
+    <color name="colorThursday">#C68092</color>
+    <color name="colorFriday">#D199A8</color>
+    <color name="colorSaturday">#DCB2BD</color>
+    <color name="colorSunday">#E8CCD3</color>
 </resources>
