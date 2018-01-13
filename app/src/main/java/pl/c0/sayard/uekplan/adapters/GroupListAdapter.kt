@@ -8,7 +8,7 @@ import android.widget.BaseAdapter
 import android.widget.Filter
 import android.widget.Filterable
 import android.widget.TextView
-import pl.c0.sayard.uekplan.Group
+import pl.c0.sayard.uekplan.data.Group
 import pl.c0.sayard.uekplan.R
 
 /**

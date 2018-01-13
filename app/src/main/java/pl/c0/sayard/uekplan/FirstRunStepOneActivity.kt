@@ -11,8 +11,9 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.*
 import pl.c0.sayard.uekplan.adapters.GroupListAdapter
-import pl.c0.sayard.uekplan.data.ScheduleContract
-import pl.c0.sayard.uekplan.data.ScheduleDbHelper
+import pl.c0.sayard.uekplan.data.Group
+import pl.c0.sayard.uekplan.db.ScheduleContract
+import pl.c0.sayard.uekplan.db.ScheduleDbHelper
 import pl.c0.sayard.uekplan.parsers.GroupParser
 
 class FirstRunStepOneActivity : AppCompatActivity() {

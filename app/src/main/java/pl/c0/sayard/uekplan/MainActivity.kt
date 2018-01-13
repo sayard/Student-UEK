@@ -1,6 +1,5 @@
 package pl.c0.sayard.uekplan
 
-import android.app.Fragment
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -37,23 +36,19 @@ class MainActivity : AppCompatActivity() {
 
         prefs = getSharedPreferences("pl.c0.sayard.uekplan", Context.MODE_PRIVATE)
 
-        setContentView(R.layout.activity_main)
-
-        navigation.selectedItemId = R.id.navigation_schedule
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.main_frame, ScheduleFragment.newInstance())
-        transaction.commit()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
         val firstRun = prefs?.getBoolean("firstRun", true)
 
         if(firstRun!!){
             val intent = Intent(this, FirstRunStepOneActivity::class.java)
             startActivity(intent)
+        }else{
+            setContentView(R.layout.activity_main)
+            Utils.startScheduleRefreshTask(baseContext)
+            navigation.selectedItemId = R.id.navigation_schedule
+            navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.main_frame, ScheduleFragment.newInstance())
+            transaction.commit()
         }
     }
 }

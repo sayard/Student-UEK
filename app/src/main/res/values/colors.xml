@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#8D0126</color>
+    <color name="colorPrimaryDark">#780020</color>
+    <color name="colorAccent">#780020</color>
+    <color name="colorMonday">#A33351</color>
+    <color name="colorTuesday">#AF4D67</color>
+    <color name="colorWednesday">#BA667C</color>
+    <color name="colorThursday">#C68092</color>
+    <color name="colorFriday">#D199A8</color>
+    <color name="colorSaturday">#DCB2BD</color>
+    <color name="colorSunday">#E8CCD3</color>
 </resources>
