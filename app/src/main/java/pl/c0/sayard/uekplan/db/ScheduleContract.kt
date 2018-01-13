@@ -1,4 +1,4 @@
-package pl.c0.sayard.uekplan.data
+package pl.c0.sayard.uekplan.db
 
 import android.provider.BaseColumns
 

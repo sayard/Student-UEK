@@ -9,8 +9,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import pl.c0.sayard.uekplan.data.ScheduleContract
-import pl.c0.sayard.uekplan.data.ScheduleDbHelper
+import pl.c0.sayard.uekplan.db.ScheduleContract
+import pl.c0.sayard.uekplan.db.ScheduleDbHelper
 import java.util.*
 
 class FirstRunStepThreeActivity : AppCompatActivity() {

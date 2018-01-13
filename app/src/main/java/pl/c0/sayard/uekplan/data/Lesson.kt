@@ -1,4 +1,4 @@
-package pl.c0.sayard.uekplan
+package pl.c0.sayard.uekplan.data
 
 
 

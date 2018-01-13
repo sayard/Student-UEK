@@ -1,4 +1,4 @@
-package pl.c0.sayard.uekplan
+package pl.c0.sayard.uekplan.data
 
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -17,7 +17,7 @@ class ScheduleItem(
         val dateStr: String,
         startDateStr: String,
         endDateStr: String,
-        val isFirstOnTheDay: Boolean
+        var isFirstOnTheDay: Boolean = false
 ){
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale("pl", "PL"))
     private val dateFormatShort = SimpleDateFormat("yyyy-MM-dd", Locale("pl", "PL"))
@@ -25,8 +25,9 @@ class ScheduleItem(
     var endDate: Date? = null
     private var date: Date? = null
     private val dayOfTheWeekFormat = SimpleDateFormat("EEEE")
-    val calendar = Calendar.getInstance()
-    var dayOfTheWeek: String? = null
+    val calendar = Calendar.getInstance()!!
+    var dayOfTheWeekStr: String? = null
+    var dayOfTheWeek: Int? = null
 
     init {
         try{
@@ -34,7 +35,8 @@ class ScheduleItem(
             endDate = dateFormat.parse(endDateStr)
             date = dateFormatShort.parse(dateStr)
             calendar.time = date
-            dayOfTheWeek = dayOfTheWeekFormat.format(calendar.time)
+            dayOfTheWeekStr = dayOfTheWeekFormat.format(calendar.time)
+            dayOfTheWeek = calendar.get(Calendar.DAY_OF_WEEK)
         }catch (e: ParseException) {
             e.printStackTrace()
         }

@@ -9,7 +9,7 @@ import android.widget.ListView
 import android.widget.ProgressBar
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
-import pl.c0.sayard.uekplan.Group
+import pl.c0.sayard.uekplan.data.Group
 import pl.c0.sayard.uekplan.R
 import java.io.InputStream
 import java.net.URL

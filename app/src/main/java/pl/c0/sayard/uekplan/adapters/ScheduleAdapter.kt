@@ -9,14 +9,13 @@ import android.widget.BaseAdapter
 import android.widget.LinearLayout
 import android.widget.TextView
 import pl.c0.sayard.uekplan.R
-import pl.c0.sayard.uekplan.ScheduleItem
-import pl.c0.sayard.uekplan.fragments.ScheduleFragment
+import pl.c0.sayard.uekplan.data.ScheduleItem
 import java.util.*
 
 /**
  * Created by karol on 11.01.18.
  */
-class ScheduleAdapter(var context: Context, scheduleList:List<ScheduleItem>, pe: ScheduleFragment.SchedulePE?) : BaseAdapter() {
+class ScheduleAdapter(var context: Context, scheduleList:List<ScheduleItem>) : BaseAdapter() {
 
 
     private var scheduleOriginal: List<ScheduleItem>? = null
@@ -45,7 +44,7 @@ class ScheduleAdapter(var context: Context, scheduleList:List<ScheduleItem>, pe:
         }
         val calendar = scheduleItemObj.calendar
         val dayString =
-                "${scheduleItemObj.dayOfTheWeek}, ${scheduleItemObj.dateStr}"
+                "${scheduleItemObj.dayOfTheWeekStr}, ${scheduleItemObj.dateStr}"
         vh.scheduleDayTv?.text = dayString
         when(calendar.get(Calendar.DAY_OF_WEEK)){
             Calendar.MONDAY -> vh.scheduleDayTv?.setBackgroundColor(ContextCompat.getColor(context, R.color.colorMonday))

@@ -10,10 +10,9 @@ import android.view.View
 import android.widget.ProgressBar
 import org.w3c.dom.Element
 import org.xml.sax.InputSource
-import pl.c0.sayard.uekplan.Lesson
-import pl.c0.sayard.uekplan.R
-import pl.c0.sayard.uekplan.data.ScheduleContract
-import pl.c0.sayard.uekplan.data.ScheduleDbHelper
+import pl.c0.sayard.uekplan.data.Lesson
+import pl.c0.sayard.uekplan.db.ScheduleContract
+import pl.c0.sayard.uekplan.db.ScheduleDbHelper
 import java.net.URL
 import javax.xml.parsers.DocumentBuilderFactory
 
