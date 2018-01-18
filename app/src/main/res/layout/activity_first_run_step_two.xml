@@ -72,7 +72,7 @@
             android:paddingBottom="11dp"
             android:background="@color/colorPrimary"
             android:textColor="@android:color/white"
-            android:visibility="visible"/>
+            android:visibility="gone"/>
 
         <Button
             android:id="@+id/clear_selected_language_group_s"
@@ -82,7 +82,8 @@
             android:textSize="19sp"
             android:background="@color/colorPrimary"
             android:text="X"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

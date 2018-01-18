@@ -1,4 +1,4 @@
-package pl.c0.sayard.uekplan.data
+package pl.c0.sayard.uekplan.db
 
 import android.provider.BaseColumns
 
@@ -31,8 +31,24 @@ class ScheduleContract private constructor(){
             val _ID: String = BaseColumns._ID
             val PE_NAME: String = "pe_name"
             val PE_DAY: String = "pe_day"
-            val PE_START_HOUR = "pe_start_hour"
-            val PE_END_HOUR = "pe_end_hour"
+            val PE_START_HOUR: String = "pe_start_hour"
+            val PE_END_HOUR: String = "pe_end_hour"
+        }
+    }
+
+    class LessonEntry: BaseColumns{
+        companion object {
+            val TABLE_NAME: String = "lesson"
+            val _ID: String = BaseColumns._ID
+            val SUBJECT: String = "subject"
+            val TYPE: String = "type"
+            val TEACHER: String = "teacher"
+            val TEACHER_ID: String = "teacher_id"
+            val CLASSROOM: String = "classroom"
+            val COMMENTS: String = "comments"
+            val DATE: String = "date"
+            val START_DATE: String = "start_date"
+            val END_DATE: String = "end_date"
         }
     }
 }

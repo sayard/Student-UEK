@@ -9,7 +9,7 @@ import android.widget.ListView
 import android.widget.ProgressBar
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
-import pl.c0.sayard.uekplan.Group
+import pl.c0.sayard.uekplan.data.Group
 import pl.c0.sayard.uekplan.R
 import java.io.InputStream
 import java.net.URL
@@ -17,7 +17,7 @@ import java.net.URL
 /**
  * Created by karol on 29.12.17.
  */
-class GroupParser(@SuppressLint("StaticFieldLeak") private val activity: Activity, private val getLanguageGroups: Boolean, val onTaskCompleted: OnTaskCompleted) : AsyncTask<Void, Void, List<Group>>() {
+class GroupParser(@SuppressLint("StaticFieldLeak") private val activity: Activity, private val getLanguageGroups: Boolean, private val onTaskCompleted: OnTaskCompleted) : AsyncTask<Void, Void, List<Group>>() {
 
     private val GROUP_URL = "http://planzajec.uek.krakow.pl/index.php?xml&typ=G"
     private val RESOURCE_TAG = "zasob"

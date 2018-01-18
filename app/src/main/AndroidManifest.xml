@@ -3,6 +3,7 @@
     package="pl.c0.sayard.uekplan">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:allowBackup="true"
@@ -30,6 +31,15 @@
         <activity
             android:name=".FirstRunStepThreeActivity"
             android:screenOrientation="portrait" />
+
+        <receiver android:name=".receivers.ScheduleRefreshReceiver" />
+        <receiver
+            android:name=".receivers.BootReceiver"
+            android:enabled="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
