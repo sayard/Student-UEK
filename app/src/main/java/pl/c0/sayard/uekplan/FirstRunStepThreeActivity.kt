@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import pl.c0.sayard.uekplan.Utils.Companion.AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY
+import pl.c0.sayard.uekplan.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
 import pl.c0.sayard.uekplan.db.ScheduleContract
 import pl.c0.sayard.uekplan.db.ScheduleDbHelper
 import java.util.*
@@ -94,7 +96,11 @@ class FirstRunStepThreeActivity : AppCompatActivity() {
                     db.insert(ScheduleContract.PeEntry.TABLE_NAME, null, contentValues)
                 }
                 val prefs = getSharedPreferences("pl.c0.sayard.uekplan", Context.MODE_PRIVATE)
-                prefs.edit()?.putBoolean("firstRun", false)?.apply()
+                if(prefs.getBoolean(FIRST_RUN_SHARED_PREFS_KEY, true)){
+                    Utils.startScheduleRefreshTask(this@FirstRunStepThreeActivity)
+                    prefs.edit()?.putBoolean(AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY, true)?.apply()
+                }
+                prefs.edit()?.putBoolean(FIRST_RUN_SHARED_PREFS_KEY, false)?.apply()
                 val intent = Intent(this@FirstRunStepThreeActivity, MainActivity::class.java)
                 startActivity(intent)
             }

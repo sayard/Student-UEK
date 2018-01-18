@@ -25,6 +25,9 @@ class Utils {
     companion object {
         val SCHEDULE_REFRESH_TASK_REQUEST_CODE = 101
 
+        val FIRST_RUN_SHARED_PREFS_KEY = "firstRun"
+        val AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY = "automaticScheduleRefresh"
+
         fun getGroupURL(group: Group): String{
             return "http://planzajec.uek.krakow.pl/index.php?xml&typ=G&id=" +
                     group.id.toString() +
