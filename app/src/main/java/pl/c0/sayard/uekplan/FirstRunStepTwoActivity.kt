@@ -1,5 +1,6 @@
 package pl.c0.sayard.uekplan
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.MotionEvent
 import android.view.View
 import android.widget.*
 import pl.c0.sayard.uekplan.adapters.GroupListAdapter
@@ -18,24 +20,23 @@ import pl.c0.sayard.uekplan.parsers.GroupParser
 
 class FirstRunStepTwoActivity : AppCompatActivity() {
 
-    private var nextStepButton: Button? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_first_run_step_two)
         val retryButton = findViewById<Button>(R.id.language_group_retry_button)
-        nextStepButton = findViewById(R.id.next_step_button_two)
+        val nextStepButton = findViewById<Button>(R.id.next_step_button_two)
         GroupParser(this, true, object: GroupParser.OnTaskCompleted{
+            @SuppressLint("ClickableViewAccessibility")
             override fun onTaskCompleted(result: List<Group>?, activity: Activity) {
                 val groupListOriginal = result!!
                 val adapter = getAdapter(activity, groupListOriginal)
                 if(adapter.count <= 0){
                     Toast.makeText(activity, getText(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
                     retryButton.visibility = View.VISIBLE
-                    nextStepButton!!.visibility = View.GONE
+                    nextStepButton.visibility = View.GONE
                 }else{
                     retryButton.visibility = View.GONE
-                    nextStepButton!!.visibility = View.VISIBLE
+                    nextStepButton.visibility = View.VISIBLE
                 }
 
                 retryButton.setOnClickListener{
@@ -66,7 +67,7 @@ class FirstRunStepTwoActivity : AppCompatActivity() {
                     }
                     updateSelectedGroups(selectedGroups)
                 }
-                nextStepButton!!.setOnClickListener{
+                nextStepButton.setOnClickListener{
                     val dbHelper = ScheduleDbHelper(activity)
                     val db = dbHelper.readableDatabase
                     val contentValues = ContentValues()
@@ -85,11 +86,18 @@ class FirstRunStepTwoActivity : AppCompatActivity() {
                     val intent = Intent(activity, FirstRunStepThreeActivity::class.java)
                     startActivity(intent)
                 }
-                val clearSelectedGroups = findViewById<Button>(R.id.clear_selected_language_group_s)
-                clearSelectedGroups.setOnClickListener {
-                    selectedGroups.clear()
-                    updateSelectedGroups(selectedGroups)
-                }
+                val selectedGroupsET = findViewById<EditText>(R.id.selected_language_group_s_edit_text)
+                selectedGroupsET.setOnTouchListener(View.OnTouchListener { view, event ->
+                    val DRAWABLE_RIGHT = 2
+                    if(event?.action == MotionEvent.ACTION_UP){
+                        if(event.rawX >= (selectedGroupsET.right - selectedGroupsET.compoundDrawables[DRAWABLE_RIGHT].bounds.width())){
+                            selectedGroups.clear()
+                            updateSelectedGroups(selectedGroups)
+                            return@OnTouchListener true
+                        }
+                    }
+                    false
+                })
             }
         }).execute()
     }
@@ -99,19 +107,16 @@ class FirstRunStepTwoActivity : AppCompatActivity() {
     }
 
     private fun updateSelectedGroups(groups: List<Group>){
-        val selectedGroupsTV = findViewById<TextView>(R.id.selected_language_group_s_text_view)
-        val clearSelectedGroups = findViewById<Button>(R.id.clear_selected_language_group_s)
-        if(selectedGroupsTV.visibility == View.GONE || clearSelectedGroups.visibility == View.GONE){
-            selectedGroupsTV.visibility = View.VISIBLE
-            clearSelectedGroups.visibility = View.VISIBLE
+        val selectedGroupsET = findViewById<EditText>(R.id.selected_language_group_s_edit_text)
+        if(selectedGroupsET.visibility == View.GONE){
+            selectedGroupsET.visibility = View.VISIBLE
         }else if(groups.isEmpty()){
-            selectedGroupsTV.visibility = View.GONE
-            clearSelectedGroups.visibility = View.GONE
+            selectedGroupsET.visibility = View.GONE
         }
         val groupNames = mutableListOf<String>()
         groups.forEach({
             groupNames.add(it.name)
         })
-        selectedGroupsTV.text = groupNames.joinToString()
+        selectedGroupsET.setText(groupNames.joinToString(", "))
     }
 }

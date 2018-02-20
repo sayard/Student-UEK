@@ -22,6 +22,10 @@ class Lesson(var date: String,
     init{
         startDate = "$date $startHour"
         endDate = "$date $endHour"
-        teacherIdParsed = teacherId.substring(1).toInt()
+        teacherIdParsed = try{
+            teacherId.substring(1).toInt()
+        }catch (e: Exception) {
+            0
+        }
     }
 }
