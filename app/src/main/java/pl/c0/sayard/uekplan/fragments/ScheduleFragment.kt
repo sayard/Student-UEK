@@ -39,8 +39,9 @@ class ScheduleFragment : Fragment() {
         val cursor = getScheduleCursor(db)
         val progressBar = view.findViewById<ProgressBar>(R.id.schedule_progress_bar)
         val errorMessage = view.findViewById<TextView>(R.id.schedule_error_message)
-        val group = Utils.getGroup(db)
-        val urls = mutableListOf(group.url)
+        val urls = mutableListOf<String>()
+        val groups = Utils.getGroups(db)
+        groups.mapTo(urls){it.url}
         val languageGroups = getLanguageGroups(db)
         languageGroups.mapTo(urls) { it.url }
         if(cursor.count == 0){
