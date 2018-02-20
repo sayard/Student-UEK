@@ -62,27 +62,20 @@
         app:layout_constraintBottom_toTopOf="@+id/next_step_button_two"
         app:layout_constraintTop_toBottomOf="@id/language_group_list_view">
 
-        <TextView
-            android:id="@+id/selected_language_group_s_text_view"
-            android:layout_width="0dp"
+        <EditText
+            android:id="@+id/selected_language_group_s_edit_text"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.9"
+            android:background="@color/colorPrimary"
             android:textSize="20sp"
-            android:paddingTop="10dp"
-            android:paddingBottom="11dp"
-            android:background="@color/colorPrimary"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:focusable="false"
             android:textColor="@android:color/white"
-            android:visibility="gone"/>
-
-        <Button
-            android:id="@+id/clear_selected_language_group_s"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            android:textSize="19sp"
-            android:background="@color/colorPrimary"
-            android:text="X"
-            android:textColor="@android:color/white"
+            android:padding="8dp"
+            android:focusableInTouchMode="false"
+            android:drawableRight="@drawable/ic_cancel_white_24dp"
+            android:drawableEnd="@drawable/ic_cancel_white_24dp"
             android:visibility="gone"/>
 
     </LinearLayout>
