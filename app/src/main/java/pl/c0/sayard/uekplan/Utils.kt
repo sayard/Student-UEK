@@ -110,13 +110,16 @@ class Utils {
             return null
         }
 
-        fun getGroup(db: SQLiteDatabase): ScheduleGroup {
+        fun getGroups(db: SQLiteDatabase): MutableList<ScheduleGroup> {
             val cursor = db.query(ScheduleContract.GroupEntry.TABLE_NAME, null, null, null, null, null, null)
-            cursor.moveToLast()
-            val groupName = cursor.getString(cursor.getColumnIndex(ScheduleContract.GroupEntry.GROUP_NAME))
-            val groupURL = cursor.getString(cursor.getColumnIndex(ScheduleContract.GroupEntry.GROUP_URL))
+            val groups = mutableListOf<ScheduleGroup>()
+            while(cursor.moveToNext()){
+                val groupName = cursor.getString(cursor.getColumnIndex(ScheduleContract.GroupEntry.GROUP_NAME))
+                val groupURL = cursor.getString(cursor.getColumnIndex(ScheduleContract.GroupEntry.GROUP_URL))
+                groups.add(ScheduleGroup(groupName, groupURL))
+            }
             cursor.close()
-            return ScheduleGroup(groupName, groupURL)
+            return groups
         }
 
         fun getLanguageGroups(db: SQLiteDatabase): MutableList<ScheduleGroup> {

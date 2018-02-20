@@ -4,7 +4,7 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="next_step">Next step</string>
-    <string name="choose_your_group">Choose your group</string>
+    <string name="choose_your_group_s">Choose your group(s)</string>
     <string name="error_try_again_later">An error has occurred. Try again later.</string>
     <string name="retry">Retry</string>
     <string name="choose_your_language_group_s">Choose your language group(s)</string>
