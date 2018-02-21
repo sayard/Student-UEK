@@ -24,13 +24,16 @@
         </activity>
         <activity
             android:name=".FirstRunStepOneActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:label="@string/choose_your_group_s"/>
         <activity
             android:name=".FirstRunStepTwoActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:label="@string/choose_your_language_group_s"/>
         <activity
             android:name=".FirstRunStepThreeActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:label="@string/weekly_p_e"/>
 
         <receiver android:name=".receivers.ScheduleRefreshReceiver" />
         <receiver

@@ -17,11 +17,11 @@ class MainActivity : AppCompatActivity() {
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         val selectedFragment: Any
         val transaction = supportFragmentManager.beginTransaction()
-        selectedFragment = when {
-            item.itemId == R.id.navigation_search -> SearchFragment.newInstance()
-            item.itemId == R.id.navigation_schedule -> ScheduleFragment.newInstance()
-            item.itemId == R.id.navigation_notes -> NotesFragment.newInstance()
-            item.itemId == R.id.navigation_settings -> SettingsFragment.newInstance()
+        when(item.itemId){
+            R.id.navigation_search -> {selectedFragment = SearchFragment.newInstance(); setTitle(R.string.search)}
+            R.id.navigation_schedule -> {selectedFragment = ScheduleFragment.newInstance(); setTitle(R.string.schedule)}
+            R.id.navigation_notes -> {selectedFragment = NotesFragment.newInstance(); setTitle(R.string.notes)}
+            R.id.navigation_settings -> {selectedFragment = SettingsFragment.newInstance(); setTitle(R.string.settings)}
             else -> return@OnNavigationItemSelectedListener false
         }
         transaction.replace(R.id.main_frame, selectedFragment as android.support.v4.app.Fragment?)
@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
             navigation.selectedItemId = R.id.navigation_schedule
             navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
             val transaction = supportFragmentManager.beginTransaction()
+            setTitle(R.string.schedule)
             transaction.replace(R.id.main_frame, ScheduleFragment.newInstance())
             transaction.commit()
         }

@@ -12,7 +12,7 @@
         android:id="@+id/pe_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/p_e"
+        android:text="@string/weekly_p_e"
         android:textAlignment="center"
         android:textSize="25sp"
         android:layout_marginRight="8dp"
