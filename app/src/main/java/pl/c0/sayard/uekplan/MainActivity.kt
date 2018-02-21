@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
+import android.view.Menu
+import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import pl.c0.sayard.uekplan.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
 import pl.c0.sayard.uekplan.fragments.NotesFragment
@@ -14,14 +16,33 @@ import pl.c0.sayard.uekplan.fragments.SettingsFragment
 
 class MainActivity : AppCompatActivity() {
 
+    private var menu: Menu? = null
+
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         val selectedFragment: Any
         val transaction = supportFragmentManager.beginTransaction()
+        val addNewScheduleItemMenuItem = menu?.findItem(R.id.new_schedule_item)
         when(item.itemId){
-            R.id.navigation_search -> {selectedFragment = SearchFragment.newInstance(); setTitle(R.string.search)}
-            R.id.navigation_schedule -> {selectedFragment = ScheduleFragment.newInstance(); setTitle(R.string.schedule)}
-            R.id.navigation_notes -> {selectedFragment = NotesFragment.newInstance(); setTitle(R.string.notes)}
-            R.id.navigation_settings -> {selectedFragment = SettingsFragment.newInstance(); setTitle(R.string.settings)}
+            R.id.navigation_search ->{
+                selectedFragment = SearchFragment.newInstance()
+                setTitle(R.string.search)
+                addNewScheduleItemMenuItem?.isVisible = false
+            }
+            R.id.navigation_schedule -> {
+                selectedFragment = ScheduleFragment.newInstance()
+                setTitle(R.string.schedule)
+                addNewScheduleItemMenuItem?.isVisible = true
+            }
+            R.id.navigation_notes -> {
+                selectedFragment = NotesFragment.newInstance()
+                setTitle(R.string.notes)
+                addNewScheduleItemMenuItem?.isVisible = false
+            }
+            R.id.navigation_settings -> {
+                selectedFragment = SettingsFragment.newInstance()
+                setTitle(R.string.settings)
+                addNewScheduleItemMenuItem?.isVisible = false
+            }
             else -> return@OnNavigationItemSelectedListener false
         }
         transaction.replace(R.id.main_frame, selectedFragment as android.support.v4.app.Fragment?)
@@ -47,5 +68,20 @@ class MainActivity : AppCompatActivity() {
             transaction.replace(R.id.main_frame, ScheduleFragment.newInstance())
             transaction.commit()
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.schedule_menu, menu)
+        this.menu = menu
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId){
+            R.id.new_schedule_item -> {
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }
