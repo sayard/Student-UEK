@@ -41,6 +41,9 @@ class ScheduleAdapter(var context: Context, scheduleList:List<ScheduleItem>) : B
             if(!scheduleItemObj.isFirstOnTheDay){
                 view.findViewById<TextView>(R.id.schedule_day_tv).visibility = View.GONE
             }
+            if(scheduleItemObj.comments == ""){
+                vh.scheduleLineFour?.visibility = View.GONE
+            }
         }
         val calendar = scheduleItemObj.calendar
         val dayString =
