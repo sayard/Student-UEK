@@ -4,14 +4,12 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
-
+import android.widget.*
 import pl.c0.sayard.uekplan.R
 import pl.c0.sayard.uekplan.data.ScheduleItem
 import pl.c0.sayard.uekplan.Utils
@@ -52,6 +50,18 @@ class ScheduleFragment : Fragment() {
         }else{
             val scheduleList = Utils.getScheduleList(cursor, db)
             val adapter = getAdapter(scheduleList)
+            val scheduleSearch = view.findViewById<EditText>(R.id.schedule_search)
+            scheduleSearch.addTextChangedListener(object: TextWatcher{
+                override fun afterTextChanged(p0: Editable?) {
+                }
+
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    adapter.filter.filter(p0.toString())
+                }
+            })
             val listView = view.findViewById<ListView>(R.id.schedule_list_view)
             listView.adapter = adapter
             val scheduleSwipe = view.findViewById<SwipeRefreshLayout>(R.id.schedule_swipe)
