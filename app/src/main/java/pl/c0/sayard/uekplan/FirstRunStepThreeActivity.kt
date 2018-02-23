@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.*
 import pl.c0.sayard.uekplan.Utils.Companion.AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY
 import pl.c0.sayard.uekplan.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
+import pl.c0.sayard.uekplan.Utils.Companion.getTime
 import pl.c0.sayard.uekplan.db.ScheduleContract
 import pl.c0.sayard.uekplan.db.ScheduleDbHelper
 import java.util.*
@@ -72,47 +73,36 @@ class FirstRunStepThreeActivity : AppCompatActivity() {
             timePicker.show()
         }
         val nextStepButton = findViewById<Button>(R.id.next_step_button_three)
-        nextStepButton.setOnClickListener(object: View.OnClickListener{
-            override fun onClick(p0: View?) {
-                val dbHelper = ScheduleDbHelper(this@FirstRunStepThreeActivity)
-                val db = dbHelper.readableDatabase
-                db.execSQL("DELETE FROM "+ScheduleContract.PeEntry.TABLE_NAME)
-                if(switch.isChecked){
-                    if(peName.text.isEmpty()){
-                        Toast.makeText(this@FirstRunStepThreeActivity, getString(R.string.pe_name_field_error), Toast.LENGTH_SHORT).show()
-                        return
-                    }
-                    val startTime = getTime(startHourTv)
-                    val endTime = getTime(endHourTv)
-                    if(startTime.timeInMillis > endTime.timeInMillis){
-                        Toast.makeText(this@FirstRunStepThreeActivity, getString(R.string.pe_hour_error), Toast.LENGTH_SHORT).show()
-                        return
-                    }
-                    val contentValues = ContentValues()
-                    contentValues.put(ScheduleContract.PeEntry.PE_NAME, peName.text.toString())
-                    contentValues.put(ScheduleContract.PeEntry.PE_DAY, dayOfWeekSpinner.selectedItemPosition)
-                    contentValues.put(ScheduleContract.PeEntry.PE_START_HOUR, startHourTv.text.toString())
-                    contentValues.put(ScheduleContract.PeEntry.PE_END_HOUR, endHourTv.text.toString())
-                    db.insert(ScheduleContract.PeEntry.TABLE_NAME, null, contentValues)
+        nextStepButton.setOnClickListener(View.OnClickListener {
+            val dbHelper = ScheduleDbHelper(this@FirstRunStepThreeActivity)
+            val db = dbHelper.readableDatabase
+            db.execSQL("DELETE FROM "+ScheduleContract.PeEntry.TABLE_NAME)
+            if(switch.isChecked){
+                if(peName.text.isEmpty()){
+                    Toast.makeText(this@FirstRunStepThreeActivity, getString(R.string.pe_name_field_error), Toast.LENGTH_SHORT).show()
+                    return@OnClickListener
                 }
-                val prefs = getSharedPreferences("pl.c0.sayard.uekplan", Context.MODE_PRIVATE)
-                if(prefs.getBoolean(FIRST_RUN_SHARED_PREFS_KEY, true)){
-                    Utils.startScheduleRefreshTask(this@FirstRunStepThreeActivity)
-                    prefs.edit()?.putBoolean(AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY, true)?.apply()
+                val startTime = getTime(startHourTv)
+                val endTime = getTime(endHourTv)
+                if(startTime.timeInMillis > endTime.timeInMillis){
+                    Toast.makeText(this@FirstRunStepThreeActivity, getString(R.string.hour_error), Toast.LENGTH_SHORT).show()
+                    return@OnClickListener
                 }
-                prefs.edit()?.putBoolean(FIRST_RUN_SHARED_PREFS_KEY, false)?.apply()
-                val intent = Intent(this@FirstRunStepThreeActivity, MainActivity::class.java)
-                startActivity(intent)
+                val contentValues = ContentValues()
+                contentValues.put(ScheduleContract.PeEntry.PE_NAME, peName.text.toString())
+                contentValues.put(ScheduleContract.PeEntry.PE_DAY, dayOfWeekSpinner.selectedItemPosition)
+                contentValues.put(ScheduleContract.PeEntry.PE_START_HOUR, startHourTv.text.toString())
+                contentValues.put(ScheduleContract.PeEntry.PE_END_HOUR, endHourTv.text.toString())
+                db.insert(ScheduleContract.PeEntry.TABLE_NAME, null, contentValues)
             }
+            val prefs = getSharedPreferences("pl.c0.sayard.uekplan", Context.MODE_PRIVATE)
+            if(prefs.getBoolean(FIRST_RUN_SHARED_PREFS_KEY, true)){
+                Utils.startScheduleRefreshTask(this@FirstRunStepThreeActivity)
+                prefs.edit()?.putBoolean(AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY, true)?.apply()
+            }
+            prefs.edit()?.putBoolean(FIRST_RUN_SHARED_PREFS_KEY, false)?.apply()
+            val intent = Intent(this@FirstRunStepThreeActivity, MainActivity::class.java)
+            startActivity(intent)
         })
-    }
-
-    private fun getTime(hourTv: TextView): Calendar{
-        val startHour = hourTv.text.substring(0, 2).toInt()
-        val startMinute = hourTv.text.substring(3).toInt()
-        val startTime = Calendar.getInstance()
-        startTime.set(Calendar.HOUR_OF_DAY, startHour)
-        startTime.set(Calendar.MINUTE, startMinute)
-        return startTime
     }
 }

@@ -55,7 +55,6 @@ class MainActivity : AppCompatActivity() {
 
         val prefs = getSharedPreferences("pl.c0.sayard.uekplan", Context.MODE_PRIVATE)
         val firstRun = prefs.getBoolean(FIRST_RUN_SHARED_PREFS_KEY, true)
-
         if(firstRun){
             val intent = Intent(this, FirstRunStepOneActivity::class.java)
             startActivity(intent)
@@ -65,7 +64,8 @@ class MainActivity : AppCompatActivity() {
             navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
             val transaction = supportFragmentManager.beginTransaction()
             setTitle(R.string.schedule)
-            transaction.replace(R.id.main_frame, ScheduleFragment.newInstance())
+            val scheduleFragment = ScheduleFragment.newInstance()
+            transaction.replace(R.id.main_frame, scheduleFragment)
             transaction.commit()
         }
     }
@@ -79,7 +79,8 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
             R.id.new_schedule_item -> {
-                return true
+                val newLessonIntent = Intent(this, AddLessonActivity::class.java)
+                startActivity(newLessonIntent)
             }
         }
         return super.onOptionsItemSelected(item)

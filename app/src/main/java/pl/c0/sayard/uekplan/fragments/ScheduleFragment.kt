@@ -1,6 +1,7 @@
 package pl.c0.sayard.uekplan.fragments
 
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.view.LayoutInflater
@@ -36,7 +37,6 @@ class ScheduleFragment : Fragment() {
 
         val dbHelper = ScheduleDbHelper(activity)
         val db = dbHelper.readableDatabase
-        val cursor = getScheduleCursor(db)
         val progressBar = view.findViewById<ProgressBar>(R.id.schedule_progress_bar)
         val errorMessage = view.findViewById<TextView>(R.id.schedule_error_message)
         val urls = mutableListOf<String>()
@@ -44,8 +44,11 @@ class ScheduleFragment : Fragment() {
         groups.mapTo(urls){it.url}
         val languageGroups = getLanguageGroups(db)
         languageGroups.mapTo(urls) { it.url }
-        if(cursor.count == 0){
+        val cursor = getScheduleCursor(db)
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        if(prefs.getBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false) || cursor.count == 0){
             ScheduleParser(context, activity, progressBar, errorMessage, null, null).execute(urls)
+            prefs.edit().putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false).apply()
         }else{
             val scheduleList = Utils.getScheduleList(cursor, db)
             val adapter = getAdapter(scheduleList)

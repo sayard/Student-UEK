@@ -82,6 +82,33 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
                     }
                 }
             }
+            val dbHelper = ScheduleDbHelper(context)
+            val db = dbHelper.writableDatabase
+            val userLessonsCursor = db.query(
+                    ScheduleContract.UserAddedLessonEntry.TABLE_NAME,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            )
+            while (userLessonsCursor.moveToNext()){
+                val lesson = Lesson(
+                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.DATE)),
+                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.START_HOUR)),
+                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.END_HOUR)),
+                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.SUBJECT)),
+                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.TYPE)),
+                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.TEACHER)),
+                        "0",
+                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.CLASSROOM)),
+                        ""
+                )
+                lessonList.add(lesson)
+            }
+            userLessonsCursor.close()
+            dbHelper.close()
             return lessonList
         }catch (e: Exception){
             Log.v("SCHEDULE_PARS_EXCEPTION", e.toString())

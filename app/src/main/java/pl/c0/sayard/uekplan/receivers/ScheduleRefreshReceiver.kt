@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import pl.c0.sayard.uekplan.Utils
 import pl.c0.sayard.uekplan.Utils.Companion.getLanguageGroups
+import pl.c0.sayard.uekplan.db.ScheduleContract
 import pl.c0.sayard.uekplan.db.ScheduleDbHelper
 import pl.c0.sayard.uekplan.parsers.ScheduleParser
 
@@ -17,6 +18,7 @@ class ScheduleRefreshReceiver: BroadcastReceiver() {
         if (context != null) {
             val dbHelper = ScheduleDbHelper(context)
             val db = dbHelper.readableDatabase
+            db.execSQL("DELETE FROM ${ScheduleContract.UserAddedLessonEntry.TABLE_NAME} WHERE ${ScheduleContract.UserAddedLessonEntry.DATE} < date('now')")
             val urls = mutableListOf<String>()
             val groups = Utils.getGroups(db)
             groups.mapTo(urls) { it.url }

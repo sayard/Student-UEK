@@ -61,8 +61,8 @@ class ScheduleContract private constructor(){
             val TEACHER: String = "teacher"
             val CLASSROOM: String = "classroom"
             val DATE: String = "date"
-            val START_DATE: String = "start_date"
-            val END_DATE: String = "end_date"
+            val START_HOUR: String = "start_hour"
+            val END_HOUR: String = "end_hour"
         }
     }
 }

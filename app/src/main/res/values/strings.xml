@@ -28,11 +28,19 @@
     <string name="p_e_end">P.E. End</string>
     <string name="name">Name</string>
     <string name="pe_name_field_error">Name field must not be empty</string>
-    <string name="pe_hour_error">Start hour must be earlier than end hour</string>
+    <string name="hour_error">Start hour must be earlier than end hour</string>
     <string name="settings">Settings</string>
     <string name="notes">Notes</string>
     <string name="schedule">Schedule</string>
     <string name="search">Search</string>
     <string name="an_error_has_occurred_when_loading_schedule_please_try_again_later">An error has occurred when loading schedule, please try again later</string>
     <string name="add_new_schedule_item">Add new schedule item</string>
+    <string name="add_lesson">Add lesson</string>
+    <string name="save">Save</string>
+    <string name="type">Type</string>
+    <string name="teacher">Teacher</string>
+    <string name="classroom">Classroom</string>
+    <string name="date">Date</string>
+    <string name="custom_lesson_name_error">Custom lesson name must not be empty</string>
+    <string name="PREFS_REFRESH_SCHEDULE">pl.c0.sayard.uekplan.PREFS_REFRESH_SCHEDULE</string>
 </resources>

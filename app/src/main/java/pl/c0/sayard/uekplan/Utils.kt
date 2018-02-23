@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.widget.TextView
 import pl.c0.sayard.uekplan.data.Group
 import pl.c0.sayard.uekplan.data.ScheduleGroup
 import pl.c0.sayard.uekplan.data.ScheduleItem
@@ -171,6 +172,15 @@ class Utils {
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                     PackageManager.DONT_KILL_APP
             )
+        }
+
+        fun getTime(hourTv: TextView): Calendar{
+            val startHour = hourTv.text.substring(0, 2).toInt()
+            val startMinute = hourTv.text.substring(3).toInt()
+            val startTime = Calendar.getInstance()
+            startTime.set(Calendar.HOUR_OF_DAY, startHour)
+            startTime.set(Calendar.MINUTE, startMinute)
+            return startTime
         }
     }
 }
