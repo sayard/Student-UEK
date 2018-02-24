@@ -68,6 +68,7 @@ class ScheduleFragment : Fragment() {
             val scheduleSwipe = view.findViewById<SwipeRefreshLayout>(R.id.schedule_swipe)
             scheduleSwipe.setOnRefreshListener{
                 ScheduleParser(context, null, null, errorMessage, adapter, scheduleSwipe).execute(urls)
+                scheduleSearch.setText("", TextView.BufferType.EDITABLE)
                 Toast.makeText(context, "Schedule refreshed", Toast.LENGTH_SHORT).show()
             }
         }
