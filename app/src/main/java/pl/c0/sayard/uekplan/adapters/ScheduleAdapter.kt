@@ -144,6 +144,17 @@ class ScheduleAdapter(var context: Context, var scheduleListOriginal:List<Schedu
 
             override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
                 scheduleListDisplay = results?.values as List<ScheduleItem>
+                for(i in 0 until scheduleListDisplay.size){
+                    val scheduleItem = scheduleListDisplay[i]
+                    if(i==0){
+                        scheduleItem.isFirstOnTheDay = true
+                    }else{
+                        val previousScheduleItem = scheduleListDisplay[i-1]
+                        if(scheduleItem.dateStr != previousScheduleItem.dateStr){
+                            scheduleItem.isFirstOnTheDay = true
+                        }
+                    }
+                }
                 notifyDataSetChanged()
             }
 

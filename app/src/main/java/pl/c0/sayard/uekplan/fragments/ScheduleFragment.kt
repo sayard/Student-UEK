@@ -62,6 +62,7 @@ class ScheduleFragment : Fragment() {
                     adapter.filter.filter(p0.toString())
                 }
             })
+            scheduleSearch.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus -> scheduleSearch.isCursorVisible = hasFocus }
             val listView = view.findViewById<ListView>(R.id.schedule_list_view)
             listView.adapter = adapter
             val scheduleSwipe = view.findViewById<SwipeRefreshLayout>(R.id.schedule_swipe)
