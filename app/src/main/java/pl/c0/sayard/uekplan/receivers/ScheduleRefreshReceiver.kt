@@ -18,7 +18,6 @@ class ScheduleRefreshReceiver: BroadcastReceiver() {
         if (context != null) {
             val dbHelper = ScheduleDbHelper(context)
             val db = dbHelper.readableDatabase
-            db.execSQL("DELETE FROM ${ScheduleContract.UserAddedLessonEntry.TABLE_NAME} WHERE ${ScheduleContract.UserAddedLessonEntry.DATE} < date('now')")
             val urls = mutableListOf<String>()
             val groups = Utils.getGroups(db)
             groups.mapTo(urls) { it.url }
