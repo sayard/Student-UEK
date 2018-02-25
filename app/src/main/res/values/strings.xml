@@ -47,4 +47,5 @@
     <string name="left_swipe">left_swipe</string>
     <string name="schedule_refreshed">Schedule refreshed</string>
     <string name="groups_and_teachers_refreshed">Groups and teachers refreshed</string>
+    <string name="teacher_page">Teacher page</string>
 </resources>

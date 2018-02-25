@@ -74,12 +74,17 @@ class SearchFragment : Fragment() {
                 listView.adapter = adapter
                 listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
                     val group = parent.getItemAtPosition(position) as Group
-                    //TODO open schedule
-                    Toast.makeText(context, "${group.id} ${group.type}", Toast.LENGTH_SHORT).show()
+                    val searchedScheduleFragment = SearchedScheduleFragment.newInstance(group)
+                    activity.supportFragmentManager.beginTransaction().replace(R.id.main_frame, searchedScheduleFragment).addToBackStack(null).commit()
                 }
             }
 
         }).execute()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activity.title = getString(R.string.notes)
     }
 
     private fun getAdapter(context: Context, groupList: List<Group>): GroupAndTeacherListAdapter{
