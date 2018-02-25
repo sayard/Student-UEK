@@ -69,7 +69,7 @@ class ScheduleFragment : Fragment() {
             scheduleSwipe.setOnRefreshListener{
                 ScheduleParser(context, null, null, errorMessage, adapter, scheduleSwipe).execute(urls)
                 scheduleSearch.setText("", TextView.BufferType.EDITABLE)
-                Toast.makeText(context, "Schedule refreshed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.schedule_refreshed), Toast.LENGTH_SHORT).show()
             }
         }
         cursor.close()
