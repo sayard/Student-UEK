@@ -3,7 +3,7 @@
     package="pl.c0.sayard.uekplan">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -24,12 +24,15 @@
         </activity>
         <activity
             android:name=".FirstRunStepOneActivity"
+            android:label="@string/choose_your_group_s"
             android:screenOrientation="portrait" />
         <activity
             android:name=".FirstRunStepTwoActivity"
+            android:label="@string/choose_your_language_group_s"
             android:screenOrientation="portrait" />
         <activity
             android:name=".FirstRunStepThreeActivity"
+            android:label="@string/weekly_p_e"
             android:screenOrientation="portrait" />
 
         <receiver android:name=".receivers.ScheduleRefreshReceiver" />
@@ -40,6 +43,10 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name=".AddLessonActivity"
+            android:label="@string/add_lesson"/>
     </application>
 
 </manifest>

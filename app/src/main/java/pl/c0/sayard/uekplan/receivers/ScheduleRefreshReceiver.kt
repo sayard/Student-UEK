@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import pl.c0.sayard.uekplan.Utils
 import pl.c0.sayard.uekplan.Utils.Companion.getLanguageGroups
+import pl.c0.sayard.uekplan.db.ScheduleContract
 import pl.c0.sayard.uekplan.db.ScheduleDbHelper
 import pl.c0.sayard.uekplan.parsers.ScheduleParser
 
