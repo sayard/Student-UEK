@@ -43,4 +43,6 @@
     <string name="date">Date</string>
     <string name="custom_lesson_name_error">Custom lesson name must not be empty</string>
     <string name="PREFS_REFRESH_SCHEDULE">pl.c0.sayard.uekplan.PREFS_REFRESH_SCHEDULE</string>
+    <string name="right_swipe">right_swipe</string>
+    <string name="left_swipe">left_swipe</string>
 </resources>

@@ -7,6 +7,9 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
+import com.github.pwittchen.swipe.library.rx2.Swipe
+import com.github.pwittchen.swipe.library.rx2.SwipeListener
 import kotlinx.android.synthetic.main.activity_main.*
 import pl.c0.sayard.uekplan.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
 import pl.c0.sayard.uekplan.fragments.NotesFragment
@@ -17,6 +20,7 @@ import pl.c0.sayard.uekplan.fragments.SettingsFragment
 class MainActivity : AppCompatActivity() {
 
     private var menu: Menu? = null
+    private val swipe = Swipe(20, 420)
 
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         val selectedFragment: Any
@@ -67,7 +71,48 @@ class MainActivity : AppCompatActivity() {
             val scheduleFragment = ScheduleFragment.newInstance()
             transaction.replace(R.id.main_frame, scheduleFragment)
             transaction.commit()
+            swipe.setListener(object: SwipeListener{
+                override fun onSwipedUp(event: MotionEvent?): Boolean {
+                    return false
+                }
+
+                override fun onSwipedDown(event: MotionEvent?): Boolean {
+                    return false
+                }
+
+                override fun onSwipingUp(event: MotionEvent?) {
+                    return
+                }
+
+                override fun onSwipingLeft(event: MotionEvent?) {
+                    return
+                }
+
+                override fun onSwipingRight(event: MotionEvent?) {
+                    return
+                }
+
+                override fun onSwipingDown(event: MotionEvent?) {
+                    return
+                }
+
+                override fun onSwipedRight(event: MotionEvent?): Boolean {
+                    navigation.selectedItemId = Utils.getSwipeFragmentId(navigation.selectedItemId, getString(R.string.right_swipe), this@MainActivity)
+                    return true
+                }
+
+                override fun onSwipedLeft(event: MotionEvent?): Boolean {
+                    navigation.selectedItemId = Utils.getSwipeFragmentId(navigation.selectedItemId, getString(R.string.left_swipe), this@MainActivity)
+                    return true
+                }
+
+            })
         }
+    }
+
+    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
+        swipe.dispatchTouchEvent(event)
+        return super.dispatchTouchEvent(event)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

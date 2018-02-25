@@ -182,5 +182,27 @@ class Utils {
             startTime.set(Calendar.MINUTE, startMinute)
             return startTime
         }
+
+        fun getSwipeFragmentId(id: Int, swipe:String, context: Context): Int{
+            var returnId: Int
+            if(swipe == context.getString(R.string.right_swipe)){
+                returnId = when(id){
+                    R.id.navigation_search -> R.id.navigation_search
+                    R.id.navigation_schedule -> R.id.navigation_search
+                    R.id.navigation_notes -> R.id.navigation_schedule
+                    R.id.navigation_settings -> R.id.navigation_notes
+                    else -> id
+                }
+            }else{
+                returnId = when(id){
+                    R.id.navigation_search -> R.id.navigation_schedule
+                    R.id.navigation_schedule -> R.id.navigation_notes
+                    R.id.navigation_notes -> R.id.navigation_settings
+                    R.id.navigation_settings -> R.id.navigation_settings
+                    else -> id
+                }
+            }
+            return returnId
+        }
     }
 }
