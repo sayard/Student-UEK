@@ -1,15 +1,15 @@
 package pl.c0.sayard.uekplan.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
+import pl.c0.sayard.uekplan.AddLessonActivity
 import pl.c0.sayard.uekplan.R
 import pl.c0.sayard.uekplan.data.ScheduleItem
 import pl.c0.sayard.uekplan.Utils
@@ -69,12 +69,27 @@ class ScheduleFragment : Fragment() {
             scheduleSwipe.setOnRefreshListener{
                 ScheduleParser(context, null, null, errorMessage, adapter, scheduleSwipe).execute(urls)
                 scheduleSearch.setText("", TextView.BufferType.EDITABLE)
-                Toast.makeText(context, "Schedule refreshed", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.schedule_refreshed), Toast.LENGTH_SHORT).show()
             }
         }
         cursor.close()
-
+        setHasOptionsMenu(true)
         return view
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.schedule_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId){
+            R.id.new_schedule_item -> {
+                val newLessonIntent = Intent(context, AddLessonActivity::class.java)
+                startActivity(newLessonIntent)
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun getAdapter(scheduleList: List<ScheduleItem>): ScheduleAdapter{

@@ -35,6 +35,12 @@ class Utils {
                     "&okres=1"
         }
 
+        fun getTeacherURL(group: Group?): String {
+            return "http://planzajec.uek.krakow.pl/index.php?xml&typ=N&id=" +
+                    group?.id.toString() +
+                    "&okres=1"
+        }
+
         fun getScheduleList(cursor: Cursor, db: SQLiteDatabase): MutableList<ScheduleItem> {
             val scheduleList = mutableListOf<ScheduleItem>()
             cursor.moveToFirst()
