@@ -65,4 +65,15 @@ class ScheduleContract private constructor(){
             val END_HOUR: String = "end_hour"
         }
     }
+
+    class NotesEntry: BaseColumns{
+        companion object {
+            val TABLE_NAME: String = "notes"
+            val _ID: String = BaseColumns._ID
+            val TITLE: String = "title"
+            val CONTENT: String = "content"
+            val DATE: String = "date"
+            val HOUR: String = "hour"
+        }
+    }
 }
