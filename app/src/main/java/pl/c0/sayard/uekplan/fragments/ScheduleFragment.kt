@@ -9,7 +9,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.widget.*
-import pl.c0.sayard.uekplan.AddLessonActivity
+import pl.c0.sayard.uekplan.activities.AddLessonActivity
 import pl.c0.sayard.uekplan.R
 import pl.c0.sayard.uekplan.data.ScheduleItem
 import pl.c0.sayard.uekplan.Utils

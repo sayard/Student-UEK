@@ -1,4 +1,4 @@
-package pl.c0.sayard.uekplan
+package pl.c0.sayard.uekplan.activities
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.widget.*
+import pl.c0.sayard.uekplan.R
 import pl.c0.sayard.uekplan.Utils.Companion.getTime
 import pl.c0.sayard.uekplan.db.ScheduleContract
 import pl.c0.sayard.uekplan.db.ScheduleDbHelper

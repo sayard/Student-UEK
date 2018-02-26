@@ -84,7 +84,7 @@ class SearchFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        activity.title = getString(R.string.notes)
+        activity.title = getString(R.string.search)
     }
 
     private fun getAdapter(context: Context, groupList: List<Group>): GroupAndTeacherListAdapter{

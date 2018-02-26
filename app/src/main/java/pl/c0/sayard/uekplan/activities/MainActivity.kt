@@ -1,15 +1,16 @@
-package pl.c0.sayard.uekplan
+package pl.c0.sayard.uekplan.activities
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AppCompatActivity
-import android.view.Menu
 import android.view.MotionEvent
 import com.github.pwittchen.swipe.library.rx2.Swipe
 import com.github.pwittchen.swipe.library.rx2.SwipeListener
 import kotlinx.android.synthetic.main.activity_main.*
+import pl.c0.sayard.uekplan.R
+import pl.c0.sayard.uekplan.Utils
 import pl.c0.sayard.uekplan.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
 import pl.c0.sayard.uekplan.fragments.NotesFragment
 import pl.c0.sayard.uekplan.fragments.ScheduleFragment
