@@ -3,6 +3,8 @@ package pl.c0.sayard.uekplan.fragments
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.*
 import android.widget.*
 
@@ -27,10 +29,11 @@ class NotesFragment : Fragment() {
         val view = inflater!!.inflate(R.layout.fragment_notes, container, false)
         val notesMessage = view.findViewById<TextView>(R.id.notes_message)
         val listView = view.findViewById<ListView>(R.id.notes_list_view)
+        val notesSearch = view.findViewById<EditText>(R.id.notes_search)
         val progressBar = view.findViewById<ProgressBar>(R.id.notes_progress_bar)
         progressBar.visibility = View.VISIBLE
 
-        executeNotesParser(progressBar, notesMessage, listView)
+        executeNotesParser(progressBar, notesMessage, listView, notesSearch)
 
         setHasOptionsMenu(true)
         return view
@@ -57,12 +60,14 @@ class NotesFragment : Fragment() {
             val progressBar = view!!.findViewById<ProgressBar>(R.id.notes_progress_bar)
             val listView = view!!.findViewById<ListView>(R.id.notes_list_view)
             val notesMessage = view!!.findViewById<TextView>(R.id.notes_message)
-            executeNotesParser(progressBar, notesMessage, listView)
+            val notesSearch = view!!.findViewById<EditText>(R.id.notes_search)
+            notesSearch.setText("", TextView.BufferType.EDITABLE)
+            executeNotesParser(progressBar, notesMessage, listView, notesSearch)
         }
         activity.title = getString(R.string.notes)
     }
 
-    private fun executeNotesParser(progressBar: ProgressBar, notesMessage: TextView, listView: ListView){
+    private fun executeNotesParser(progressBar: ProgressBar, notesMessage: TextView, listView: ListView, notesSearch:EditText){
         NotesParser(this, object: NotesParser.OnTaskCompleted{
 
             override fun onTaskCompleted(result: List<Note>?, fragment: NotesFragment) {
@@ -71,6 +76,16 @@ class NotesFragment : Fragment() {
                     notesMessage.visibility = View.VISIBLE
                 }else{
                     val adapter = NotesAdapter(context, result.toMutableList())
+                    notesSearch.addTextChangedListener(object: TextWatcher{
+                        override fun afterTextChanged(p0: Editable?) {}
+
+                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                            adapter.filter.filter(p0.toString())
+                        }
+
+                    })
                     listView.adapter = adapter
                     listView.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
                         Toast.makeText(context, "ASD", Toast.LENGTH_SHORT).show()
