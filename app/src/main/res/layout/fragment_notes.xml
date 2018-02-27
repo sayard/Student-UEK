@@ -9,6 +9,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <EditText
+            android:id="@+id/notes_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@android:drawable/ic_menu_search"
+            android:drawableRight="@android:drawable/ic_menu_search"
+            android:maxLines="1"
+            android:inputType="text" />
+
         <TextView
             android:id="@+id/notes_message"
             android:layout_width="match_parent"

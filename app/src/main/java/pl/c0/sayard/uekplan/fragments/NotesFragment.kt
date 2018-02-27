@@ -4,9 +4,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.*
+import android.widget.ListView
+import android.widget.ProgressBar
+import android.widget.TextView
 
 import pl.c0.sayard.uekplan.R
 import pl.c0.sayard.uekplan.activities.AddNoteActivity
+import pl.c0.sayard.uekplan.adapters.NotesAdapter
+import pl.c0.sayard.uekplan.data.Note
+import pl.c0.sayard.uekplan.parsers.NotesParser
 
 
 class NotesFragment : Fragment() {
@@ -17,14 +23,19 @@ class NotesFragment : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
+        val view = inflater!!.inflate(R.layout.fragment_notes, container, false)
+        val notesMessage = view.findViewById<TextView>(R.id.notes_message)
+        val listView = view.findViewById<ListView>(R.id.notes_list_view)
+        val progressBar = view.findViewById<ProgressBar>(R.id.notes_progress_bar)
+        progressBar.visibility = View.VISIBLE
+
+        executeNotesParser(progressBar, notesMessage, listView)
+
         setHasOptionsMenu(true)
-        return inflater!!.inflate(R.layout.fragment_notes, container, false)
+        return view
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -44,7 +55,29 @@ class NotesFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        if(view != null){
+            val progressBar = view!!.findViewById<ProgressBar>(R.id.notes_progress_bar)
+            val listView = view!!.findViewById<ListView>(R.id.notes_list_view)
+            val notesMessage = view!!.findViewById<TextView>(R.id.notes_message)
+            executeNotesParser(progressBar, notesMessage, listView)
+        }
         activity.title = getString(R.string.notes)
+    }
+
+    private fun executeNotesParser(progressBar: ProgressBar, notesMessage: TextView, listView: ListView){
+        NotesParser(this, object: NotesParser.OnTaskCompleted{
+
+            override fun onTaskCompleted(result: List<Note>?, fragment: NotesFragment) {
+                progressBar.visibility = View.GONE
+                if(result == null){
+                    notesMessage.visibility = View.VISIBLE
+                }else{
+                    val adapter = NotesAdapter(context, result.toMutableList())
+                    listView.adapter = adapter
+                }
+            }
+
+        }).execute()
     }
 
 }
