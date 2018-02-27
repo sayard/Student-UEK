@@ -10,6 +10,7 @@ import android.preference.PreferenceManager
 import android.widget.*
 import pl.c0.sayard.uekplan.R
 import pl.c0.sayard.uekplan.Utils.Companion.getTime
+import pl.c0.sayard.uekplan.data.Building
 import pl.c0.sayard.uekplan.db.ScheduleContract
 import pl.c0.sayard.uekplan.db.ScheduleDbHelper
 import java.text.SimpleDateFormat
@@ -81,29 +82,51 @@ class AddLessonActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
             timePicker.show()
         }
 
+        val buildingSpinner = findViewById<Spinner>(R.id.custom_lesson_building)
+        val buildingInstance = Building(this)
+        val spinnerAdapter = ArrayAdapter<String>(
+                this, R.layout.building_spinner_layout, R.id.building_spinner_layout_tv, buildingInstance.getBuildingList()
+        )
+        spinnerAdapter.setDropDownViewResource(R.layout.building_spinner_layout)
+        buildingSpinner.adapter = spinnerAdapter
+
         val saveButton = findViewById<Button>(R.id.save_custom_lesson_button)
         saveButton.setOnClickListener {
-            val dbHelper = ScheduleDbHelper(this@AddLessonActivity)
-            val db = dbHelper.readableDatabase
             val nameTv = findViewById<EditText>(R.id.custom_lesson_name)
             if(nameTv.text.isEmpty()){
                 Toast.makeText(this@AddLessonActivity, getString(R.string.custom_lesson_name_error), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
             val startTime = getTime(startHourTv)
             val endTime = getTime(endHourTv)
             if(startTime.timeInMillis > endTime.timeInMillis){
                 Toast.makeText(this@AddLessonActivity, getString(R.string.hour_error), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
+            var selectedBuilding = buildingSpinner.selectedItem.toString()
+            val classroomTv = findViewById<TextView>(R.id.custom_lesson_classroom)
+            val classroom = classroomTv.text.toString()
+            var buildingAbbrevation = ""
+            if(selectedBuilding == getString(R.string.building)){
+                if(classroom.contains("30 koło") || classroom.contains("kortów")){
+                    selectedBuilding = buildingInstance.MAIN_BUILDING
+                    buildingAbbrevation = buildingInstance.getBuildingAbbreviation(selectedBuilding)
+                }
+            }else{
+                buildingAbbrevation = buildingInstance.getBuildingAbbreviation(selectedBuilding)
+            }
+
+            val dbHelper = ScheduleDbHelper(this@AddLessonActivity)
+            val db = dbHelper.readableDatabase
             val contentValues = ContentValues()
             contentValues.put(ScheduleContract.UserAddedLessonEntry.SUBJECT, nameTv.text.toString())
             val typeTv = findViewById<TextView>(R.id.custom_lesson_type)
             contentValues.put(ScheduleContract.UserAddedLessonEntry.TYPE, typeTv.text.toString())
             val teacherTv = findViewById<TextView>(R.id.custom_lesson_teacher)
             contentValues.put(ScheduleContract.UserAddedLessonEntry.TEACHER, teacherTv.text.toString())
-            val classroomTv = findViewById<TextView>(R.id.custom_lesson_classroom)
-            contentValues.put(ScheduleContract.UserAddedLessonEntry.CLASSROOM, classroomTv.text.toString())
+            contentValues.put(ScheduleContract.UserAddedLessonEntry.CLASSROOM, "$buildingAbbrevation$classroom")
             contentValues.put(ScheduleContract.UserAddedLessonEntry.DATE, dateTv.text.toString())
             contentValues.put(ScheduleContract.UserAddedLessonEntry.START_HOUR, "${startHourTv.text}")
             contentValues.put(ScheduleContract.UserAddedLessonEntry.END_HOUR, "${endHourTv.text}")
