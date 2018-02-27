@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper
 /**
  * Created by Karol on 1/1/2018.
  */
-class ScheduleDbHelper(context: Context): SQLiteOpenHelper(context, "ScheduleUEK.db", null, 6) {
+class ScheduleDbHelper(context: Context): SQLiteOpenHelper(context, "ScheduleUEK.db", null, 7) {
 
     private val SQL_CREATE_GROUP = "CREATE TABLE IF NOT EXISTS " +
             ScheduleContract.GroupEntry.TABLE_NAME + "( " +
@@ -65,12 +65,23 @@ class ScheduleDbHelper(context: Context): SQLiteOpenHelper(context, "ScheduleUEK
 
     private val SQL_DELETE_USER_ADDED_LESSON = "DROP TABLE IF EXISTS " + ScheduleContract.UserAddedLessonEntry.TABLE_NAME
 
+    private val SQL_CREATE_NOTES = "CREATE TABLE IF NOT EXISTS " +
+            ScheduleContract.NotesEntry.TABLE_NAME + "( " +
+            ScheduleContract.NotesEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            ScheduleContract.NotesEntry.TITLE + " TEXT DEFAULT \"\", " +
+            ScheduleContract.NotesEntry.CONTENT + " TEXT DEFAULT \"\", " +
+            ScheduleContract.NotesEntry.DATE + " TEXT NOT NULL, " +
+            ScheduleContract.NotesEntry.HOUR + " TEXT NOT NULL)"
+
+    private val SQL_DELETE_NOTES = "DROP TABLE IF EXISTS " + ScheduleContract.NotesEntry.TABLE_NAME
+
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SQL_CREATE_GROUP)
         db.execSQL(SQL_CREATE_LANGUAGE_GROUP)
         db.execSQL(SQL_CREATE_PE)
         db.execSQL(SQL_CREATE_LESSON)
         db.execSQL(SQL_CREATE_USER_ADDED_LESSON)
+        db.execSQL(SQL_CREATE_NOTES)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -79,6 +90,7 @@ class ScheduleDbHelper(context: Context): SQLiteOpenHelper(context, "ScheduleUEK
         db.execSQL(SQL_DELETE_PE)
         db.execSQL(SQL_DELETE_LESSON)
         db.execSQL(SQL_DELETE_USER_ADDED_LESSON)
+        db.execSQL(SQL_DELETE_NOTES)
         onCreate(db)
     }
 

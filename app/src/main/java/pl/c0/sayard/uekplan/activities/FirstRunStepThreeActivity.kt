@@ -1,4 +1,4 @@
-package pl.c0.sayard.uekplan
+package pl.c0.sayard.uekplan.activities
 
 import android.annotation.SuppressLint
 import android.app.TimePickerDialog
@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import pl.c0.sayard.uekplan.R
+import pl.c0.sayard.uekplan.Utils
 import pl.c0.sayard.uekplan.Utils.Companion.AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY
 import pl.c0.sayard.uekplan.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
 import pl.c0.sayard.uekplan.Utils.Companion.getTime

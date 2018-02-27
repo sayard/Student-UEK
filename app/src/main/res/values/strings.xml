@@ -48,4 +48,17 @@
     <string name="schedule_refreshed">Schedule refreshed</string>
     <string name="groups_and_teachers_refreshed">Groups and teachers refreshed</string>
     <string name="teacher_page">Teacher page</string>
+    <string name="add_new_note">Add new note</string>
+    <string name="you_don_t_have_any_notes">You don\'t have any notes</string>
+    <string name="new_note">New note</string>
+    <string name="save_note">Save note</string>
+    <string name="title">Title</string>
+    <string name="content">Content</string>
+    <string name="note_date">Note Date</string>
+    <string name="note_hour">Note Hour</string>
+    <string name="note_delete_message">Do you want to delete this note?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="note_delete_error">There was an error deleting note</string>
+    <string name="note_id_extra">EXTRA_NOTE_ID</string>
 </resources>
