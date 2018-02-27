@@ -60,4 +60,5 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="note_delete_error">There was an error deleting note</string>
+    <string name="note_id_extra">EXTRA_NOTE_ID</string>
 </resources>

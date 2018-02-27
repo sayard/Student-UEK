@@ -4,9 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.*
-import android.widget.ListView
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 
 import pl.c0.sayard.uekplan.R
 import pl.c0.sayard.uekplan.activities.AddNoteActivity
@@ -74,6 +72,13 @@ class NotesFragment : Fragment() {
                 }else{
                     val adapter = NotesAdapter(context, result.toMutableList())
                     listView.adapter = adapter
+                    listView.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
+                        Toast.makeText(context, "ASD", Toast.LENGTH_SHORT).show()
+                        val note = parent.getItemAtPosition(position) as Note
+                        val intent = Intent(context, AddNoteActivity::class.java)
+                        intent.putExtra(getString(R.string.note_id_extra), note.id)
+                        startActivity(intent)
+                    }
                 }
             }
 

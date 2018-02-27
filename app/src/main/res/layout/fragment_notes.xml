@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pl.c0.sayard.uekplan.fragments.NotesFragment">
+    tools:context="pl.c0.sayard.uekplan.fragments.NotesFragment"
+    android:focusableInTouchMode="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,7 +36,8 @@
         <ListView
             android:id="@+id/notes_list_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:choiceMode="singleChoice"/>
 
     </LinearLayout>
 

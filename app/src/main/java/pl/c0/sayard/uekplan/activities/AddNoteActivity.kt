@@ -25,6 +25,9 @@ class AddNoteActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener{
         setContentView(R.layout.activity_add_note)
         title = getString(R.string.new_note)
 
+        val intent = getIntent()
+        val id = intent.getIntExtra(getString(R.string.note_id_extra), 0)
+
         val noteDate = findViewById<TextView>(R.id.note_date)
         noteDate.text = dateFormat.format(dateCalendar.time)
         noteDate.setOnClickListener {
@@ -59,6 +62,31 @@ class AddNoteActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener{
 
         val noteTitleET = findViewById<EditText>(R.id.note_title)
         val noteContent = findViewById<EditText>(R.id.note_content)
+        if(id != 0){
+            val dbHelper = ScheduleDbHelper(this)
+            val db = dbHelper.readableDatabase
+            val cursor = db.query(
+                    ScheduleContract.NotesEntry.TABLE_NAME,
+                    null,
+                    "${ScheduleContract.NotesEntry._ID} = $id",
+                    null,
+                    null,
+                    null,
+                    null
+            )
+            cursor.moveToFirst()
+            val title = cursor.getString(cursor.getColumnIndex(ScheduleContract.NotesEntry.TITLE))
+            val content = cursor.getString(cursor.getColumnIndex(ScheduleContract.NotesEntry.CONTENT))
+            val date = cursor.getString(cursor.getColumnIndex(ScheduleContract.NotesEntry.DATE))
+            val hour = cursor.getString(cursor.getColumnIndex(ScheduleContract.NotesEntry.HOUR))
+
+            noteTitleET.setText(title, TextView.BufferType.EDITABLE)
+            noteContent.setText(content, TextView.BufferType.EDITABLE)
+            noteDate.text = date
+            noteDate.text = date
+
+            cursor.close()
+        }
 
         val saveNoteButton = findViewById<Button>(R.id.save_note_button)
         saveNoteButton.setOnClickListener {
@@ -69,7 +97,11 @@ class AddNoteActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener{
             contentValues.put(ScheduleContract.NotesEntry.CONTENT, noteContent.text.toString())
             contentValues.put(ScheduleContract.NotesEntry.DATE, noteDate.text as String?)
             contentValues.put(ScheduleContract.NotesEntry.HOUR, noteHour.text as String?)
-            db.insert(ScheduleContract.NotesEntry.TABLE_NAME, null, contentValues)
+            if(id == 0){
+                db.insert(ScheduleContract.NotesEntry.TABLE_NAME, null, contentValues)
+            }else{
+                db.update(ScheduleContract.NotesEntry.TABLE_NAME, contentValues, "${ScheduleContract.NotesEntry._ID} = $id", null)
+            }
             finish()
         }
     }
