@@ -13,7 +13,8 @@ class Lesson(var date: String,
              var teacher: String,
              teacherId: String,
              var classroom: String,
-             var comments: String){
+             var comments: String,
+             var isCustomLesson: Boolean = false){
 
     var startDate: String? = null
     var endDate: String? = null

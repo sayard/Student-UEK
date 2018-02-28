@@ -47,6 +47,10 @@ class Utils {
             do{
                 val dateStr = cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.DATE))
                 val comments = cursor.getString(cursor.getColumnIndexOrThrow(ScheduleContract.LessonEntry.COMMENTS))
+                var isCustom = false
+                if(cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.IS_CUSTOM)) == 1){
+                    isCustom = true
+                }
                 val scheduleItem = ScheduleItem(
                         cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.SUBJECT)),
                         cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.TYPE)),
@@ -56,7 +60,8 @@ class Utils {
                         comments,
                         dateStr,
                         cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.START_DATE)),
-                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.END_DATE))
+                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.END_DATE)),
+                        isCustom = isCustom
                 )
                 scheduleList.add(scheduleItem)
             }while(cursor.moveToNext())

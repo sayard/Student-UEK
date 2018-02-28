@@ -49,6 +49,7 @@ class ScheduleContract private constructor(){
             val DATE: String = "date"
             val START_DATE: String = "start_date"
             val END_DATE: String = "end_date"
+            val IS_CUSTOM: String = "is_custom"
         }
     }
 

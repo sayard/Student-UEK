@@ -1,6 +1,7 @@
 package pl.c0.sayard.uekplan.data
 
 import android.content.Context
+import com.google.android.gms.maps.model.LatLng
 import pl.c0.sayard.uekplan.R
 
 /**
@@ -40,6 +41,15 @@ class Building(val context: Context){
     val RAKOWICKA_16_ABBREVATION = "Rakowicka 16"
     val SIENKIEWICZA_4_ABBREVATION = "Sienk. 4 "
     val SIENKIEWICZA_5_ABBREVATION = "Sienk. 5 "
+
+    val MAIN_BUILDING_30 = "30 kóło kortów"
+    val SJO = "SJO"
+    val HALL = "HALA SPORTOWA"
+    val POOL = "PŁYWALNIA"
+    val USTRONIE_BUILDING_SHORT = "paw.U"
+    val USTRONIE_BUILDING_SHORT_2 = "Ust.s."
+    val USTRONIE_BUILDING_LONG = "Paw.Ustronie"
+    val PONE_FULL = "Pdhalański Ośrodek Nauk Ekon."
 
     fun getBuildingList(): List<String>{
         return listOf<String>(
@@ -82,6 +92,40 @@ class Building(val context: Context){
             SIENKIEWICZA_4 -> SIENKIEWICZA_4_ABBREVATION
             SIENKIEWICZA_5 -> SIENKIEWICZA_5_ABBREVATION
             else -> ""
+        }
+    }
+
+    fun getBuildingLatLng(classroom: String?): LatLng?{
+        if(classroom == null){
+            return null
+        }else{
+            return when{
+                classroom.startsWith(LIBRARY_BUILDING_ABBREVATION) -> LatLng(50.068521, 19.955813)
+                classroom.startsWith(MAIN_BUILDING_ABBREVATION) -> LatLng(50.068516, 19.953870)
+                classroom == MAIN_BUILDING_30 -> LatLng(50.068304, 19.954247)
+                classroom.contains(KSIEZOWKA_BUILDING_ABBREVATION) -> LatLng(50.069154, 19.954054)
+                classroom.startsWith(PAVILON_A_ABBREVATION) -> LatLng(50.069194, 19.954689)
+                classroom.startsWith(PAVILON_B_ABBREVATION) -> LatLng(50.068950, 19.955482)
+                classroom.startsWith(PAVILON_C_ABBREVATION) -> LatLng(50.069234, 19.955258)
+                classroom.startsWith(PAVILON_D_ABBREVATION) -> LatLng(50.069434, 19.954303)
+                classroom.startsWith(PAVILON_E_ABBREVATION) -> LatLng(50.069060, 19.955864)
+                classroom.startsWith(PAVILON_F_ABBREVATION) -> LatLng(0.068508, 19.956644)
+                classroom.startsWith(SJO) -> LatLng(50.068508, 19.956644)
+                classroom.startsWith(PAVILON_G_ABBREVATION) -> LatLng(50.069514, 19.953841)
+                classroom.startsWith(SPORT_TEACHING_COMPLEX_ABBREVATION) -> LatLng(50.067933, 19.956759)
+                classroom == HALL -> LatLng(50.067933, 19.956759)
+                classroom == POOL -> LatLng(50.067757, 19.956807)
+                classroom.startsWith(USTRONIE_BUILDING_ABBREVATION) -> LatLng(50.068172, 19.955624)
+                classroom.contains(USTRONIE_BUILDING_SHORT) -> LatLng(50.068172, 19.955624)
+                classroom.startsWith(USTRONIE_BUILDING_SHORT_2) -> LatLng(50.068172, 19.955624)
+                classroom.startsWith(USTRONIE_BUILDING_LONG) -> LatLng(50.068172, 19.955624)
+                classroom.startsWith(PONE_ABBREVATION) -> LatLng(49.489873, 20.045916)
+                classroom == PONE_FULL -> LatLng(49.489873, 20.045916)
+                classroom.startsWith(RAKOWICKA_16_ABBREVATION) -> LatLng(50.067708, 19.952025)
+                classroom.startsWith(SIENKIEWICZA_4_ABBREVATION) -> LatLng(50.070477, 19.925854)
+                classroom.startsWith(SIENKIEWICZA_5_ABBREVATION) -> LatLng(0.070420, 19.926146)
+                else -> null
+            }
         }
     }
 }

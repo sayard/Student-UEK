@@ -12,6 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCtnSfmb1b5ScdqD0JXeuvI171YyEQHB5w"/>
+
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
@@ -47,7 +52,8 @@
         <activity
             android:name=".activities.AddLessonActivity"
             android:label="@string/add_lesson" />
-        <activity android:name=".activities.AddNoteActivity"></activity>
+        <activity android:name=".activities.AddNoteActivity" />
+        <activity android:name=".activities.ScheduleItemDetailsActivity"></activity>
     </application>
 
 </manifest>

@@ -104,7 +104,8 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
                         userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.TEACHER)),
                         "0",
                         userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.CLASSROOM)),
-                        ""
+                        "",
+                        true
                 )
                 lessonList.add(lesson)
             }
@@ -133,6 +134,7 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
                 contentValues.put(ScheduleContract.LessonEntry.DATE, lesson.date)
                 contentValues.put(ScheduleContract.LessonEntry.START_DATE, lesson.startDate)
                 contentValues.put(ScheduleContract.LessonEntry.END_DATE, lesson.endDate)
+                contentValues.put(ScheduleContract.LessonEntry.IS_CUSTOM, lesson.isCustomLesson)
                 db.insert(ScheduleContract.LessonEntry.TABLE_NAME, null, contentValues)
             }
             if(adapter != null){

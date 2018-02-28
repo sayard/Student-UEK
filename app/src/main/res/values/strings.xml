@@ -61,5 +61,16 @@
     <string name="no">No</string>
     <string name="note_delete_error">There was an error deleting note</string>
     <string name="note_id_extra">EXTRA_NOTE_ID</string>
+    <string name="subject_extra">EXTRA_SUBJECT</string>
+    <string name="type_extra">EXTRA_TYPE</string>
+    <string name="teacher_extra">EXTRA_TEACHER</string>
+    <string name="teacher_id_extra">EXTRA_TEACHER_ID</string>
+    <string name="classroom_extra">EXTRA_CLASSROOM</string>
+    <string name="comments_extra">EXTRA_COMMENTS</string>
+    <string name="start_date_extra">EXTRA_START_DATE</string>
+    <string name="end_date_extra">EXTRA_END_DATE</string>
+    <string name="is_custom_extra">EXTRA_IS_CUSTOM</string>
+    <string name="date_extra">EXTRA_DATE</string>
     <string name="building">Building</string>
+    <string name="e_wizyt_wka">E-Wizytówka</string>
 </resources>

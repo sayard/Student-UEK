@@ -108,14 +108,14 @@ class AddLessonActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
             var selectedBuilding = buildingSpinner.selectedItem.toString()
             val classroomTv = findViewById<TextView>(R.id.custom_lesson_classroom)
             val classroom = classroomTv.text.toString()
-            var buildingAbbrevation = ""
+            var buildingAbbreviation = ""
             if(selectedBuilding == getString(R.string.building)){
                 if(classroom.contains("30 koło") || classroom.contains("kortów")){
                     selectedBuilding = buildingInstance.MAIN_BUILDING
-                    buildingAbbrevation = buildingInstance.getBuildingAbbreviation(selectedBuilding)
+                    buildingAbbreviation = buildingInstance.getBuildingAbbreviation(selectedBuilding)
                 }
             }else{
-                buildingAbbrevation = buildingInstance.getBuildingAbbreviation(selectedBuilding)
+                buildingAbbreviation = buildingInstance.getBuildingAbbreviation(selectedBuilding)
             }
 
             val dbHelper = ScheduleDbHelper(this@AddLessonActivity)
@@ -126,7 +126,7 @@ class AddLessonActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
             contentValues.put(ScheduleContract.UserAddedLessonEntry.TYPE, typeTv.text.toString())
             val teacherTv = findViewById<TextView>(R.id.custom_lesson_teacher)
             contentValues.put(ScheduleContract.UserAddedLessonEntry.TEACHER, teacherTv.text.toString())
-            contentValues.put(ScheduleContract.UserAddedLessonEntry.CLASSROOM, "$buildingAbbrevation$classroom")
+            contentValues.put(ScheduleContract.UserAddedLessonEntry.CLASSROOM, "$buildingAbbreviation$classroom")
             contentValues.put(ScheduleContract.UserAddedLessonEntry.DATE, dateTv.text.toString())
             contentValues.put(ScheduleContract.UserAddedLessonEntry.START_HOUR, "${startHourTv.text}")
             contentValues.put(ScheduleContract.UserAddedLessonEntry.END_HOUR, "${endHourTv.text}")
