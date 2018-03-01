@@ -1,14 +1,18 @@
 package pl.c0.sayard.uekplan.activities
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -17,6 +21,8 @@ import com.google.android.gms.maps.model.MarkerOptions
 import pl.c0.sayard.uekplan.R
 import pl.c0.sayard.uekplan.data.Building
 import pl.c0.sayard.uekplan.data.ScheduleItem
+import pl.c0.sayard.uekplan.db.ScheduleContract
+import pl.c0.sayard.uekplan.db.ScheduleDbHelper
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,6 +31,35 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     private val hourFormat = SimpleDateFormat("HH:mm", Locale("pl", "PL"))
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale("pl", "PL"))
     private var scheduleItem: ScheduleItem? = null
+    private var idToDelete: Int? = null
+    private val dialogClickListener = DialogInterface.OnClickListener { dialog, which ->
+        when(which){
+            DialogInterface.BUTTON_POSITIVE ->{
+                try{
+                    val dbHelper = ScheduleDbHelper(this)
+                    val db = dbHelper.readableDatabase
+                    val deleteCount = db.delete(ScheduleContract.UserAddedLessonEntry.TABLE_NAME,
+                            "${ScheduleContract.UserAddedLessonEntry._ID} = $idToDelete",
+                            null)
+                    if(deleteCount > 0){
+                        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+                        val editor = prefs.edit()
+                        editor.putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
+                        editor.apply()
+                        val mainActivityIntent = Intent(this, MainActivity::class.java)
+                        startActivity(mainActivityIntent)
+                    }else{
+                        Toast.makeText(this, getString(R.string.custom_lesson_delete_error), Toast.LENGTH_SHORT).show()
+                    }
+                }catch (e: NullPointerException){
+                    Toast.makeText(this, getString(R.string.custom_lesson_delete_error), Toast.LENGTH_SHORT).show()
+                }
+
+                return@OnClickListener
+            }
+            DialogInterface.BUTTON_NEGATIVE -> return@OnClickListener
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,6 +138,14 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                     putExtra(getString(R.string.extra_custom_id), scheduleItem?.customId)
                 }
                 startActivity(intent)
+            }
+            R.id.custom_schedule_item_delete -> {
+                idToDelete = scheduleItem?.customId
+                val builder = AlertDialog.Builder(this)
+                builder.setMessage(getString(R.string.custom_lesson_delete_message))
+                        .setPositiveButton(getString(R.string.yes), dialogClickListener)
+                        .setNegativeButton(getString(R.string.no), dialogClickListener)
+                        .show()
             }
         }
         return super.onOptionsItemSelected(item)
