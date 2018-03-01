@@ -128,4 +128,52 @@ class Building(val context: Context){
             }
         }
     }
+
+    fun getBuildingFromAbbreviation(classroom: String?): String?{
+        if(classroom == null){
+            return null
+        }else{
+            return when{
+                classroom.startsWith(LIBRARY_BUILDING_ABBREVATION) -> LIBRARY_BUILDING
+                classroom.startsWith(MAIN_BUILDING_ABBREVATION) -> MAIN_BUILDING
+                classroom.startsWith(KSIEZOWKA_BUILDING_ABBREVATION) -> KSIEZOWKA_BUILDING
+                classroom.startsWith(PAVILON_A_ABBREVATION) -> PAVILON_A
+                classroom.startsWith(PAVILON_B_ABBREVATION) -> PAVILON_B
+                classroom.startsWith(PAVILON_C_ABBREVATION) -> PAVILON_C
+                classroom.startsWith(PAVILON_D_ABBREVATION) -> PAVILON_D
+                classroom.startsWith(PAVILON_E_ABBREVATION) -> PAVILON_E
+                classroom.startsWith(PAVILON_F_ABBREVATION) -> PAVILON_F
+                classroom.startsWith(PAVILON_G_ABBREVATION) -> PAVILON_G
+                classroom.startsWith(SPORT_TEACHING_COMPLEX_ABBREVATION) -> SPORT_TEACHING_COMPLEX
+                classroom.startsWith(USTRONIE_BUILDING_ABBREVATION) -> USTRONIE_BUILDING
+                classroom.startsWith(PONE_ABBREVATION) -> PONE
+                classroom.startsWith(RAKOWICKA_16_ABBREVATION) -> RAKOWICKA_16
+                classroom.startsWith(SIENKIEWICZA_4_ABBREVATION) -> SIENKIEWICZA_4
+                classroom.startsWith(SIENKIEWICZA_5_ABBREVATION) -> SIENKIEWICZA_5
+                else -> null
+            }
+        }
+    }
+
+    fun getClassroomWithoutBuilding(classroom: String): String{
+        return when{
+            classroom.startsWith(LIBRARY_BUILDING_ABBREVATION) -> classroom.replace(LIBRARY_BUILDING_ABBREVATION, "")
+            classroom.startsWith(MAIN_BUILDING_ABBREVATION) -> classroom.replace(MAIN_BUILDING_ABBREVATION, "")
+            classroom.startsWith(KSIEZOWKA_BUILDING_ABBREVATION) -> classroom.replace(KSIEZOWKA_BUILDING_ABBREVATION, "")
+            classroom.startsWith(PAVILON_A_ABBREVATION) -> classroom.replace(PAVILON_A_ABBREVATION, "")
+            classroom.startsWith(PAVILON_B_ABBREVATION) -> classroom.replace(PAVILON_B_ABBREVATION, "")
+            classroom.startsWith(PAVILON_C_ABBREVATION) -> classroom.replace(PAVILON_C_ABBREVATION, "")
+            classroom.startsWith(PAVILON_D_ABBREVATION) -> classroom.replace(PAVILON_D_ABBREVATION, "")
+            classroom.startsWith(PAVILON_E_ABBREVATION) -> classroom.replace(PAVILON_E_ABBREVATION, "")
+            classroom.startsWith(PAVILON_F_ABBREVATION) -> classroom.replace(PAVILON_F_ABBREVATION, "")
+            classroom.startsWith(PAVILON_G_ABBREVATION) -> classroom.replace(PAVILON_G_ABBREVATION, "")
+            classroom.startsWith(SPORT_TEACHING_COMPLEX_ABBREVATION) -> classroom.replace(SPORT_TEACHING_COMPLEX_ABBREVATION, "")
+            classroom.startsWith(USTRONIE_BUILDING_ABBREVATION) -> classroom.replace(USTRONIE_BUILDING_ABBREVATION, "")
+            classroom.startsWith(PONE_ABBREVATION) -> classroom.replace(PONE_ABBREVATION, "")
+            classroom.startsWith(RAKOWICKA_16_ABBREVATION) -> classroom.replace(RAKOWICKA_16_ABBREVATION, "")
+            classroom.startsWith(SIENKIEWICZA_4_ABBREVATION) -> classroom.replace(SIENKIEWICZA_4_ABBREVATION, "")
+            classroom.startsWith(SIENKIEWICZA_5_ABBREVATION) -> classroom.replace(SIENKIEWICZA_5_ABBREVATION, "")
+            else -> ""
+        }
+    }
 }

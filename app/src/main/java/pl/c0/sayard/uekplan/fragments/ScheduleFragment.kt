@@ -79,6 +79,7 @@ class ScheduleFragment : Fragment() {
                     putExtra(getString(R.string.start_date_extra), scheduleItem.startDateStr)
                     putExtra(getString(R.string.end_date_extra), scheduleItem.endDateStr)
                     putExtra(getString(R.string.is_custom_extra), scheduleItem.isCustom)
+                    putExtra(getString(R.string.extra_custom_id), scheduleItem.customId)
                 }
                 startActivity(intent)
             }

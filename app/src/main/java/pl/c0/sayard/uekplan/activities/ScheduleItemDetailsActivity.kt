@@ -4,6 +4,8 @@ import android.content.Intent
 import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -37,7 +39,8 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                 intent.getStringExtra(getString(R.string.date_extra)),
                 intent.getStringExtra(getString(R.string.start_date_extra)),
                 intent.getStringExtra(getString(R.string.end_date_extra)),
-                isCustom = intent.getBooleanExtra(getString(R.string.is_custom_extra), false)
+                isCustom = intent.getBooleanExtra(getString(R.string.is_custom_extra), false),
+                customId = intent.getIntExtra(getString(R.string.custom_id_extra), -1)
         )
         val subjectTv = findViewById<TextView>(R.id.schedule_item_details_subject)
         subjectTv.text = scheduleItem?.subject
@@ -75,5 +78,33 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             map?.addMarker(MarkerOptions().position(markerLatLng).title(scheduleItem?.classroom))
             map?.moveCamera(CameraUpdateFactory.newLatLngZoom(markerLatLng, 16.5f))
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        if(scheduleItem != null && scheduleItem!!.isCustom){
+            menuInflater.inflate(R.menu.schedule_item_details_menu, menu)
+        }
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId){
+            R.id.custom_schedule_item_edit -> {
+                val buildingInstance = Building(this)
+                val intent = Intent(this, AddLessonActivity::class.java).apply {
+                    putExtra(getString(R.string.extra_custom_lesson_name), scheduleItem?.subject)
+                    putExtra(getString(R.string.extra_custom_lesson_type), scheduleItem?.type)
+                    putExtra(getString(R.string.extra_custom_lesson_teacher), scheduleItem?.teacher)
+                    putExtra(getString(R.string.extra_custom_lesson_building), buildingInstance.getBuildingFromAbbreviation(scheduleItem?.classroom))
+                    putExtra(getString(R.string.extra_custom_lesson_classroom), scheduleItem?.classroom)
+                    putExtra(getString(R.string.extra_custom_lesson_date), dateFormat.format(scheduleItem?.startDate))
+                    putExtra(getString(R.string.extra_custom_lesson_start_hour), hourFormat.format(scheduleItem?.startDate))
+                    putExtra(getString(R.string.extra_custom_lesson_end_hour), hourFormat.format(scheduleItem?.endDate))
+                    putExtra(getString(R.string.extra_custom_id), scheduleItem?.customId)
+                }
+                startActivity(intent)
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

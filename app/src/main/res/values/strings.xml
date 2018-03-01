@@ -71,6 +71,17 @@
     <string name="end_date_extra">EXTRA_END_DATE</string>
     <string name="is_custom_extra">EXTRA_IS_CUSTOM</string>
     <string name="date_extra">EXTRA_DATE</string>
+    <string name="custom_id_extra">EXTRA_CUSTOM_ID</string>
     <string name="building">Building</string>
     <string name="e_wizyt_wka">E-Wizytówka</string>
+    <string name="edit">Edit</string>
+    <string name="extra_custom_lesson_name">EXTRA_CUSTOM_LESSON_NAME</string>
+    <string name="extra_custom_lesson_type">EXTRA_CUSTOM_LESSON_TYPE</string>
+    <string name="extra_custom_lesson_teacher">EXTRA_CUSTOM_LESSON_TEACHER</string>
+    <string name="extra_custom_lesson_building">EXTRA_CUSTOM_LESSON_BUILDING</string>
+    <string name="extra_custom_lesson_classroom">EXTRA_CUSTOM_LESSON_CLASSROOM</string>
+    <string name="extra_custom_lesson_date">EXTRA_CUSTOM_LESSON_DATE</string>
+    <string name="extra_custom_lesson_start_hour">EXTRA_CUSTOM_LESSON_START_HOUR</string>
+    <string name="extra_custom_lesson_end_hour">EXTRA_CUSTOM_LESSON_END_HOUR</string>
+    <string name="extra_custom_id">EXTRA_CUSTOM_ID</string>
 </resources>

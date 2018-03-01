@@ -83,7 +83,7 @@ class AddNoteActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener{
             noteTitleET.setText(title, TextView.BufferType.EDITABLE)
             noteContent.setText(content, TextView.BufferType.EDITABLE)
             noteDate.text = date
-            noteDate.text = date
+            noteHour.text = hour
 
             cursor.close()
         }

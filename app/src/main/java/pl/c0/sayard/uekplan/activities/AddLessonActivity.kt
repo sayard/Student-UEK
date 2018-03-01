@@ -34,8 +34,32 @@ class AddLessonActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_lesson)
 
+        var nameText = ""
+        var typeText = ""
+        var teacherText = ""
+        var buildingText = ""
+        var classroomText = ""
+        var dateText = dateFormat.format(dateCalendar.time)
+        var startHourText = "12:00"
+        var endHourText = "13:00"
+
+        val intent = intent
+        try{
+            nameText = intent.getStringExtra(getString(R.string.extra_custom_lesson_name))
+            typeText = intent.getStringExtra(getString(R.string.extra_custom_lesson_type))
+            teacherText = intent.getStringExtra(getString(R.string.extra_custom_lesson_teacher))
+            buildingText = intent.getStringExtra(getString(R.string.extra_custom_lesson_building))
+            val buildingInstance = Building(this)
+            classroomText = buildingInstance.getClassroomWithoutBuilding(intent.getStringExtra(getString(R.string.extra_custom_lesson_classroom)))
+            dateText = dateFormat.format(intent.getStringExtra(getString(R.string.extra_custom_lesson_date)))
+            startHourText = intent.getStringExtra(getString(R.string.extra_custom_lesson_start_hour))
+            endHourText = intent.getStringExtra(getString(R.string.extra_custom_lesson_end_hour))
+        }catch (e: Exception){
+            //fail silently
+        }
+
         val dateTv = findViewById<TextView>(R.id.custom_lesson_date_tv)
-        dateTv.text = dateFormat.format(dateCalendar.time)
+        dateTv.text = dateText
         dateTv.setOnClickListener {
             val dpDialog = DatePickerDialog(
                     this@AddLessonActivity,
@@ -49,6 +73,7 @@ class AddLessonActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         }
 
         val startHourTv = findViewById<TextView>(R.id.custom_lesson_start_hour_tv)
+        startHourTv.text = startHourText
         startHourTv.setOnClickListener {
             val currentTime = Calendar.getInstance()
             val hour = currentTime.get(Calendar.HOUR_OF_DAY)
@@ -66,6 +91,7 @@ class AddLessonActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         }
 
         val endHourTv = findViewById<TextView>(R.id.custom_lesson_end_hour_tv)
+        endHourTv.text = endHourText
         endHourTv.setOnClickListener {
             val currentTime = Calendar.getInstance()
             val hour = currentTime.get(Calendar.HOUR_OF_DAY)
@@ -89,11 +115,23 @@ class AddLessonActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
         )
         spinnerAdapter.setDropDownViewResource(R.layout.building_spinner_layout)
         buildingSpinner.adapter = spinnerAdapter
+        if(buildingText != ""){
+            val spinnerPosition = spinnerAdapter.getPosition(buildingText)
+            buildingSpinner.setSelection(spinnerPosition)
+        }
+
+        val name = findViewById<EditText>(R.id.custom_lesson_name)
+        name.setText(nameText, TextView.BufferType.EDITABLE)
+        val classroom = findViewById<TextView>(R.id.custom_lesson_classroom)
+        classroom.setText(classroomText, TextView.BufferType.EDITABLE)
+        val teacher = findViewById<TextView>(R.id.custom_lesson_teacher)
+        teacher.setText(teacherText, TextView.BufferType.EDITABLE)
+        val type = findViewById<TextView>(R.id.custom_lesson_type)
+        type.setText(typeText, TextView.BufferType.EDITABLE)
 
         val saveButton = findViewById<Button>(R.id.save_custom_lesson_button)
         saveButton.setOnClickListener {
-            val nameTv = findViewById<EditText>(R.id.custom_lesson_name)
-            if(nameTv.text.isEmpty()){
+            if(name.text.isEmpty()){
                 Toast.makeText(this@AddLessonActivity, getString(R.string.custom_lesson_name_error), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
@@ -106,11 +144,10 @@ class AddLessonActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
             }
 
             var selectedBuilding = buildingSpinner.selectedItem.toString()
-            val classroomTv = findViewById<TextView>(R.id.custom_lesson_classroom)
-            val classroom = classroomTv.text.toString()
+            val classroomVal = classroom.text.toString()
             var buildingAbbreviation = ""
             if(selectedBuilding == getString(R.string.building)){
-                if(classroom.contains("30 koło") || classroom.contains("kortów")){
+                if(classroomVal.contains("30 koło") || classroomVal.contains("kortów")){
                     selectedBuilding = buildingInstance.MAIN_BUILDING
                     buildingAbbreviation = buildingInstance.getBuildingAbbreviation(selectedBuilding)
                 }
@@ -121,22 +158,28 @@ class AddLessonActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
             val dbHelper = ScheduleDbHelper(this@AddLessonActivity)
             val db = dbHelper.readableDatabase
             val contentValues = ContentValues()
-            contentValues.put(ScheduleContract.UserAddedLessonEntry.SUBJECT, nameTv.text.toString())
-            val typeTv = findViewById<TextView>(R.id.custom_lesson_type)
-            contentValues.put(ScheduleContract.UserAddedLessonEntry.TYPE, typeTv.text.toString())
-            val teacherTv = findViewById<TextView>(R.id.custom_lesson_teacher)
-            contentValues.put(ScheduleContract.UserAddedLessonEntry.TEACHER, teacherTv.text.toString())
-            contentValues.put(ScheduleContract.UserAddedLessonEntry.CLASSROOM, "$buildingAbbreviation$classroom")
+            contentValues.put(ScheduleContract.UserAddedLessonEntry.SUBJECT, name.text.toString())
+            contentValues.put(ScheduleContract.UserAddedLessonEntry.TYPE, type.text.toString())
+            contentValues.put(ScheduleContract.UserAddedLessonEntry.TEACHER, teacher.text.toString())
+            contentValues.put(ScheduleContract.UserAddedLessonEntry.CLASSROOM, "$buildingAbbreviation$classroomVal")
             contentValues.put(ScheduleContract.UserAddedLessonEntry.DATE, dateTv.text.toString())
             contentValues.put(ScheduleContract.UserAddedLessonEntry.START_HOUR, "${startHourTv.text}")
             contentValues.put(ScheduleContract.UserAddedLessonEntry.END_HOUR, "${endHourTv.text}")
-            db.insert(ScheduleContract.UserAddedLessonEntry.TABLE_NAME, null, contentValues)
+            val id = intent.getIntExtra(getString(R.string.extra_custom_id), -1)
+            if(id == -1){
+                db.insert(ScheduleContract.UserAddedLessonEntry.TABLE_NAME, null, contentValues)
+            }else{
+                db.update(ScheduleContract.UserAddedLessonEntry.TABLE_NAME,
+                        contentValues,
+                        "${ScheduleContract.UserAddedLessonEntry._ID} = $id",
+                        null)
+            }
             val prefs = PreferenceManager.getDefaultSharedPreferences(this@AddLessonActivity)
             val editor = prefs.edit()
             editor.putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
             editor.apply()
-            val intent = Intent(this@AddLessonActivity, MainActivity::class.java)
-            startActivity(intent)
+            val mainActivityIntent = Intent(this@AddLessonActivity, MainActivity::class.java)
+            startActivity(mainActivityIntent)
         }
     }
 }

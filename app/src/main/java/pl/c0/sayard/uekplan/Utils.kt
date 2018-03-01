@@ -61,7 +61,8 @@ class Utils {
                         dateStr,
                         cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.START_DATE)),
                         cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.END_DATE)),
-                        isCustom = isCustom
+                        isCustom = isCustom,
+                        customId = cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.CUSTOM_ID))
                 )
                 scheduleList.add(scheduleItem)
             }while(cursor.moveToNext())
