@@ -96,7 +96,7 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         if(scheduleItem?.classroom == ""){
             supportFragmentManager.findFragmentById(R.id.schedule_item_details_map).view?.visibility = View.GONE
         }
-        if(scheduleItem != null && !scheduleItem!!.isCustom ){
+        if(scheduleItem != null && !scheduleItem!!.isCustom && scheduleItem?.teacherId != 0){
             val teacherPageButton = findViewById<Button>(R.id.schedule_item_details_teacher_page_button)
             teacherPageButton.visibility = View.VISIBLE
             teacherPageButton.setOnClickListener {
