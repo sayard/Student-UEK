@@ -80,6 +80,8 @@ class ScheduleFragment : Fragment() {
                     putExtra(getString(R.string.end_date_extra), scheduleItem.endDateStr)
                     putExtra(getString(R.string.is_custom_extra), scheduleItem.isCustom)
                     putExtra(getString(R.string.extra_custom_id), scheduleItem.customId)
+                    putExtra(getString(R.string.extra_note_id), scheduleItem.noteId)
+                    putExtra(getString(R.string.extra_note_content), scheduleItem.noteContent)
                 }
                 startActivity(intent)
             }
@@ -112,6 +114,15 @@ class ScheduleFragment : Fragment() {
 
     private fun getAdapter(scheduleList: List<ScheduleItem>): ScheduleAdapter{
         return ScheduleAdapter(context, scheduleList)
+    }
+
+    override fun onResume() {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        if(prefs.getBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false)){
+            val ft = activity.supportFragmentManager.beginTransaction()
+            ft.detach(this).attach(this).commit()
+        }
+        super.onResume()
     }
 
 }

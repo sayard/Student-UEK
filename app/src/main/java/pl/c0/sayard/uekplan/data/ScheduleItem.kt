@@ -19,7 +19,9 @@ class ScheduleItem(
         val endDateStr: String,
         var isFirstOnTheDay: Boolean = false,
         var isCustom: Boolean = false,
-        val customId: Int = -1){
+        val customId: Int = -1,
+        var noteId: Int = -1,
+        var noteContent: String = ""){
 
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale("pl", "PL"))
     private val dateFormatShort = SimpleDateFormat("yyyy-MM-dd", Locale("pl", "PL"))

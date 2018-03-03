@@ -105,6 +105,35 @@ class Utils {
                         scheduleItem.isFirstOnTheDay = true
                     }
                 }
+                val lessonNoteCursor = db.query(
+                        ScheduleContract.LessonNoteEntry.TABLE_NAME,
+                        arrayOf(ScheduleContract.LessonNoteEntry._ID, ScheduleContract.LessonNoteEntry.CONTENT),
+                        "${ScheduleContract.LessonNoteEntry.LESSON_SUBJECT} = ? AND " +
+                                "${ScheduleContract.LessonNoteEntry.LESSON_TYPE} = ? AND " +
+                                "${ScheduleContract.LessonNoteEntry.LESSON_TEACHER} = ? AND " +
+                                "${ScheduleContract.LessonNoteEntry.LESSON_TEACHER_ID} = ? AND " +
+                                "${ScheduleContract.LessonNoteEntry.LESSON_CLASSROOM} = ? AND " +
+                                "${ScheduleContract.LessonNoteEntry.LESSON_DATE} = ? AND " +
+                                "${ScheduleContract.LessonNoteEntry.LESSON_START_DATE} = ? AND " +
+                                "${ScheduleContract.LessonNoteEntry.LESSON_END_DATE} = ? ",
+                        arrayOf(scheduleItem.subject,
+                                scheduleItem.type,
+                                scheduleItem.teacher,
+                                "${scheduleItem.teacherId}",
+                                scheduleItem.classroom,
+                                scheduleItem.dateStr,
+                                scheduleItem.startDateStr,
+                                scheduleItem.endDateStr
+                        ),
+                        null,
+                        null,
+                        ScheduleContract.LessonNoteEntry._ID
+                )
+                if(lessonNoteCursor != null && lessonNoteCursor.count > 0){
+                    lessonNoteCursor.moveToFirst()
+                    scheduleItem.noteId = lessonNoteCursor.getInt(lessonNoteCursor.getColumnIndex(ScheduleContract.LessonNoteEntry._ID))
+                    scheduleItem.noteContent = lessonNoteCursor.getString(lessonNoteCursor.getColumnIndex(ScheduleContract.LessonNoteEntry.CONTENT))
+                }
             }
             return scheduleList
         }

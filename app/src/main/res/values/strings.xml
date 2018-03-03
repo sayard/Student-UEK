@@ -87,4 +87,10 @@
     <string name="delete">Delete</string>
     <string name="custom_lesson_delete_message">Do you want to delete this lesson?</string>
     <string name="custom_lesson_delete_error">There was an error deleting lesson</string>
+    <string name="extra_note_id">EXTRA_NOTE_ID</string>
+    <string name="extra_note_content">EXTRA_NOTE_CONTENT</string>
+    <string name="add_note">Add note</string>
+    <string name="edit_note">Edit note</string>
+    <string name="note_update_error">There was an error updating note</string>
+    <string name="note_adding_error">There was an error adding a note</string>
 </resources>

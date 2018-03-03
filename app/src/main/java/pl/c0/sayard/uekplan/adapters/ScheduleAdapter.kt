@@ -36,6 +36,9 @@ class ScheduleAdapter(var context: Context, var scheduleListOriginal:List<Schedu
             if(scheduleItemObj.comments == ""){
                 vh.scheduleLineFour?.visibility = View.GONE
             }
+            if(scheduleItemObj.noteId == -1 && scheduleItemObj.noteContent == ""){
+                vh.noteIconTextView?.visibility = View.GONE
+            }
         }
         val calendar = scheduleItemObj.calendar
         val dayString =
@@ -67,6 +70,9 @@ class ScheduleAdapter(var context: Context, var scheduleListOriginal:List<Schedu
             vh.scheduleLineFour?.visibility = View.VISIBLE
             vh.scheduleCommentsTv?.text = scheduleItemObj.comments
         }
+        if(scheduleItemObj.noteId != -1 && scheduleItemObj.noteContent != ""){
+            vh.noteIconTextView?.visibility = View.VISIBLE
+        }
         return view
     }
 
@@ -79,6 +85,7 @@ class ScheduleAdapter(var context: Context, var scheduleListOriginal:List<Schedu
         val scheduleClassroomTv = row?.findViewById<TextView>(R.id.schedule_classroom_tv)
         val scheduleLineFour = row?.findViewById<LinearLayout>(R.id.schedule_line_four)
         val scheduleCommentsTv = row?.findViewById<TextView>(R.id.schedule_comments_tv)
+        val noteIconTextView = row?.findViewById<TextView>(R.id.schedule_note_icon)
     }
 
     override fun getItem(position: Int): Any {

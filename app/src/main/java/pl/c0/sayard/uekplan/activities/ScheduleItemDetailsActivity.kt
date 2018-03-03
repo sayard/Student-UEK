@@ -1,6 +1,7 @@
 package pl.c0.sayard.uekplan.activities
 
 import android.app.AlertDialog
+import android.content.ContentValues
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
@@ -11,6 +12,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -75,7 +77,9 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                 intent.getStringExtra(getString(R.string.start_date_extra)),
                 intent.getStringExtra(getString(R.string.end_date_extra)),
                 isCustom = intent.getBooleanExtra(getString(R.string.is_custom_extra), false),
-                customId = intent.getIntExtra(getString(R.string.custom_id_extra), -1)
+                customId = intent.getIntExtra(getString(R.string.custom_id_extra), -1),
+                noteId = intent.getIntExtra(getString(R.string.extra_note_id), -1),
+                noteContent = intent.getStringExtra(getString(R.string.extra_note_content))
         )
         val subjectTv = findViewById<TextView>(R.id.schedule_item_details_subject)
         subjectTv.text = scheduleItem?.subject
@@ -91,6 +95,22 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         dateAndHourTv.text = dateAndHourStr
         val classroomTv = findViewById<TextView>(R.id.schedule_item_details_classroom)
         classroomTv.text = scheduleItem?.classroom
+
+        val noteContentTextView = findViewById<TextView>(R.id.schedule_item_details_note_content)
+        noteContentTextView.text = scheduleItem?.noteContent
+
+        val addOrEditLessonNoteButton = findViewById<Button>(R.id.add_or_edit_lesson_note)
+        if(scheduleItem?.noteId == -1 && scheduleItem?.noteContent == ""){
+            addOrEditLessonNoteButton.text = getString(R.string.add_note)
+        }else{
+            addOrEditLessonNoteButton.text = getString(R.string.edit_note)
+            noteContentTextView.visibility = View.VISIBLE
+        }
+        addOrEditLessonNoteButton.visibility = View.VISIBLE
+        addOrEditLessonNoteButton.setOnClickListener {
+            val noteId = scheduleItem?.noteId
+            showNoteEditDialog(noteId, scheduleItem?.noteContent)
+        }
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.schedule_item_details_map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -151,5 +171,74 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun showNoteEditDialog(noteId:Int?, dbNoteContent: String?){
+        val dialogBuilder = AlertDialog.Builder(this)
+        val dialogView = layoutInflater.inflate(R.layout.schedule_item_note_edit_dialog, null)
+        dialogBuilder.setView(dialogView)
+
+        val noteContentField = dialogView.findViewById<EditText>(R.id.lesson_note_edit_field)
+
+        val dbHelper = ScheduleDbHelper(this)
+        val db = dbHelper.readableDatabase
+
+        val noteContentTextView = findViewById<TextView>(R.id.schedule_item_details_note_content)
+        val addOrEditLessonNoteButton = findViewById<Button>(R.id.add_or_edit_lesson_note)
+
+        val contentValues = ContentValues()
+        contentValues.put(ScheduleContract.LessonNoteEntry.LESSON_SUBJECT, scheduleItem?.subject)
+        contentValues.put(ScheduleContract.LessonNoteEntry.LESSON_TYPE, scheduleItem?.type)
+        contentValues.put(ScheduleContract.LessonNoteEntry.LESSON_TEACHER, scheduleItem?.teacher)
+        contentValues.put(ScheduleContract.LessonNoteEntry.LESSON_TEACHER_ID, scheduleItem?.teacherId)
+        contentValues.put(ScheduleContract.LessonNoteEntry.LESSON_CLASSROOM, scheduleItem?.classroom)
+        contentValues.put(ScheduleContract.LessonNoteEntry.LESSON_DATE, scheduleItem?.dateStr)
+        contentValues.put(ScheduleContract.LessonNoteEntry.LESSON_START_DATE, scheduleItem?.startDateStr)
+        contentValues.put(ScheduleContract.LessonNoteEntry.LESSON_END_DATE, scheduleItem?.endDateStr)
+        if(noteId == -1){
+            dialogBuilder.setTitle(getString(R.string.add_note))
+            dialogBuilder.setPositiveButton(getString(R.string.save)) { _, _ ->
+                val noteContent = noteContentField.text.toString()
+                contentValues.put(ScheduleContract.LessonNoteEntry.CONTENT, noteContent)
+                val insertCount = db.insert(
+                        ScheduleContract.LessonNoteEntry.TABLE_NAME,
+                        null,
+                        contentValues
+                )
+                if(insertCount > 0){
+                    noteContentTextView.text = noteContent
+                    noteContentTextView.visibility = View.VISIBLE
+                    addOrEditLessonNoteButton.text = getString(R.string.edit_note)
+                }else{
+                    Toast.makeText(this, getString(R.string.note_adding_error), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }else{
+            dialogBuilder.setTitle(getString(R.string.edit_note))
+            noteContentField.setText(dbNoteContent, TextView.BufferType.EDITABLE)
+            dialogBuilder.setPositiveButton(getString(R.string.save)){_, _ ->
+                val noteContent = noteContentField.text.toString()
+                contentValues.put(ScheduleContract.LessonNoteEntry.CONTENT, noteContent)
+                val updateCount = db.update(
+                        ScheduleContract.LessonNoteEntry.TABLE_NAME,
+                        contentValues,
+                        "${ScheduleContract.LessonNoteEntry._ID} = $noteId",
+                        null
+                )
+                if(updateCount > 0){
+                    noteContentTextView.text = noteContent
+                }else{
+                    Toast.makeText(this, getString(R.string.note_update_error), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        dialogBuilder.setNegativeButton(getString(R.string.cancel)) {_, _ ->
+            //pass
+        }
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        val editor = prefs.edit()
+        editor.putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
+        editor.apply()
+        dialogBuilder.create().show()
     }
 }
