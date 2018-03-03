@@ -93,4 +93,5 @@
     <string name="edit_note">Edit note</string>
     <string name="note_update_error">There was an error updating note</string>
     <string name="note_adding_error">There was an error adding a note</string>
+    <string name="schedule_details_marker_snippet">Click here to open Google Maps</string>
 </resources>
