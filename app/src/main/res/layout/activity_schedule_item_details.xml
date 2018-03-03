@@ -56,36 +56,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/schedule_item_details_classroom"/>
 
-    <Button
-        android:id="@+id/schedule_item_details_teacher_page_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:layout_marginTop="5dp"
-        android:textColor="@android:color/white"
-        android:text="@string/e_wizyt_wka"
-        android:visibility="gone"
+    <ScrollView
+        android:id="@+id/schedule_item_details_scroll_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/schedule_item_details_map" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/schedule_item_details_map"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <TextView
-        android:id="@+id/schedule_item_details_note_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/schedule_item_details_teacher_page_button"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <Button
-        android:id="@+id/add_or_edit_lesson_note"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:layout_marginTop="5dp"
-        android:textColor="@android:color/white"
-        android:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/schedule_item_details_note_content"/>
+            <TextView
+                android:id="@+id/schedule_item_details_note_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/add_or_edit_lesson_note"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:layout_marginTop="5dp"
+                android:textColor="@android:color/white"
+                android:visibility="visible"/>
+
+            <Button
+                android:id="@+id/schedule_item_details_teacher_page_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:layout_marginTop="5dp"
+                android:textColor="@android:color/white"
+                android:text="@string/e_wizyt_wka"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
 
 </android.support.constraint.ConstraintLayout>

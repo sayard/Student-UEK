@@ -7,12 +7,12 @@
 
     <EditText
         android:id="@+id/lesson_note_edit_field"
-        android:lines="5"
-        android:minLines="1"
-        android:maxLines="5"
-        android:gravity="top|start"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text" />
+        android:inputType="textCapSentences|textMultiLine"
+        android:hint="@string/content"
+        android:lines="4"
+        android:maxLines="4"
+        android:gravity="top|start"/>
 
 </LinearLayout>

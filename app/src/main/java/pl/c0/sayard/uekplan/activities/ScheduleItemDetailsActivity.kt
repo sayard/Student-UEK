@@ -34,7 +34,7 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale("pl", "PL"))
     private var scheduleItem: ScheduleItem? = null
     private var idToDelete: Int? = null
-    private val dialogClickListener = DialogInterface.OnClickListener { dialog, which ->
+    private val dialogClickListener = DialogInterface.OnClickListener { _, which ->
         when(which){
             DialogInterface.BUTTON_POSITIVE ->{
                 try{
