@@ -19,6 +19,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import pl.c0.sayard.uekplan.R
 import pl.c0.sayard.uekplan.data.Building
@@ -132,7 +133,21 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         val buildingInstance = Building(this)
         val markerLatLng = buildingInstance.getBuildingLatLng(scheduleItem?.classroom)
         if(markerLatLng != null){
-            map?.addMarker(MarkerOptions().position(markerLatLng).title(scheduleItem?.classroom))
+            val marker = map
+                            ?.addMarker(MarkerOptions()
+                            .position(markerLatLng)
+                            .title(scheduleItem?.classroom))
+            marker?.snippet = getString(R.string.schedule_details_marker_snippet)
+            marker?.showInfoWindow()
+            map?.setOnMarkerClickListener { clickedMarker ->
+                if(clickedMarker == marker){
+                    val gmmIntentUri = Uri.parse("geo:0,0?q=${markerLatLng.latitude},${markerLatLng.longitude}(${scheduleItem?.classroom})")
+                    val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                    mapIntent.`package` = "com.google.android.apps.maps"
+                    startActivity(mapIntent)
+                }
+                true
+            }
             map?.moveCamera(CameraUpdateFactory.newLatLngZoom(markerLatLng, 16.5f))
         }
     }
