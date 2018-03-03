@@ -88,7 +88,6 @@ class NotesFragment : Fragment() {
                     })
                     listView.adapter = adapter
                     listView.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
-                        Toast.makeText(context, "ASD", Toast.LENGTH_SHORT).show()
                         val note = parent.getItemAtPosition(position) as Note
                         val intent = Intent(context, AddNoteActivity::class.java)
                         intent.putExtra(getString(R.string.note_id_extra), note.id)

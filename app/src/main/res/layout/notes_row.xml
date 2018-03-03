@@ -30,7 +30,7 @@
                 android:id="@+id/notes_row_delete_button"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:background="@drawable/ic_cancel_black_24dp"
+                android:background="@drawable/ic_delete_grey_24dp"
                 android:layout_gravity="end"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"

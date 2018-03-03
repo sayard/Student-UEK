@@ -58,7 +58,11 @@ class SearchedScheduleParser(val progressBar: ProgressBar, val errorMessage: Tex
                 if(it?.type == "N"){
                     val scheduleElem = nodeList.item(0) as Element
                     val idCelStr = scheduleElem.getAttribute(IDCEL_TAG)
-                    idCel = idCelStr.substring(1).toInt()
+                    if(idCelStr != ""){
+                        idCel = idCelStr.substring(1).toInt()
+                    }else{
+                        idCel = null
+                    }
                 }
                 nodeList = document.getElementsByTagName(CLASSES_TAG)
                 for(i in 0 until nodeList.length){

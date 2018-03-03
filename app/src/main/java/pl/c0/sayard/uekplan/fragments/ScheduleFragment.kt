@@ -15,6 +15,7 @@ import pl.c0.sayard.uekplan.data.ScheduleItem
 import pl.c0.sayard.uekplan.Utils
 import pl.c0.sayard.uekplan.Utils.Companion.getLanguageGroups
 import pl.c0.sayard.uekplan.Utils.Companion.getScheduleCursor
+import pl.c0.sayard.uekplan.activities.ScheduleItemDetailsActivity
 import pl.c0.sayard.uekplan.adapters.ScheduleAdapter
 import pl.c0.sayard.uekplan.db.ScheduleDbHelper
 import pl.c0.sayard.uekplan.parsers.ScheduleParser
@@ -65,6 +66,25 @@ class ScheduleFragment : Fragment() {
             scheduleSearch.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus -> scheduleSearch.isCursorVisible = hasFocus }
             val listView = view.findViewById<ListView>(R.id.schedule_list_view)
             listView.adapter = adapter
+            listView.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
+                val scheduleItem = parent.getItemAtPosition(position) as ScheduleItem
+                val intent = Intent(context, ScheduleItemDetailsActivity::class.java).apply {
+                    putExtra(getString(R.string.subject_extra), scheduleItem.subject)
+                    putExtra(getString(R.string.type_extra), scheduleItem.type)
+                    putExtra(getString(R.string.teacher_extra), scheduleItem.teacher)
+                    putExtra(getString(R.string.teacher_id_extra), scheduleItem.teacherId)
+                    putExtra(getString(R.string.classroom_extra), scheduleItem.classroom)
+                    putExtra(getString(R.string.comments_extra), scheduleItem.comments)
+                    putExtra(getString(R.string.date_extra), scheduleItem.dateStr)
+                    putExtra(getString(R.string.start_date_extra), scheduleItem.startDateStr)
+                    putExtra(getString(R.string.end_date_extra), scheduleItem.endDateStr)
+                    putExtra(getString(R.string.is_custom_extra), scheduleItem.isCustom)
+                    putExtra(getString(R.string.extra_custom_id), scheduleItem.customId)
+                    putExtra(getString(R.string.extra_note_id), scheduleItem.noteId)
+                    putExtra(getString(R.string.extra_note_content), scheduleItem.noteContent)
+                }
+                startActivity(intent)
+            }
             val scheduleSwipe = view.findViewById<SwipeRefreshLayout>(R.id.schedule_swipe)
             scheduleSwipe.setOnRefreshListener{
                 ScheduleParser(context, null, null, errorMessage, adapter, scheduleSwipe).execute(urls)
@@ -94,6 +114,15 @@ class ScheduleFragment : Fragment() {
 
     private fun getAdapter(scheduleList: List<ScheduleItem>): ScheduleAdapter{
         return ScheduleAdapter(context, scheduleList)
+    }
+
+    override fun onResume() {
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        if(prefs.getBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false)){
+            val ft = activity.supportFragmentManager.beginTransaction()
+            ft.detach(this).attach(this).commit()
+        }
+        super.onResume()
     }
 
 }

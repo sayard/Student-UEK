@@ -6,7 +6,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.os.AsyncTask
 import android.support.v4.widget.SwipeRefreshLayout
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -49,6 +48,7 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
         val db = dbHelper.writableDatabase
         db.execSQL("DELETE FROM " + ScheduleContract.LessonEntry.TABLE_NAME)
         db.execSQL("DELETE FROM ${ScheduleContract.UserAddedLessonEntry.TABLE_NAME} WHERE ${ScheduleContract.UserAddedLessonEntry.DATE} < date('now')")
+        db.execSQL("DELETE FROM ${ScheduleContract.LessonNoteEntry.TABLE_NAME} WHERE ${ScheduleContract.LessonNoteEntry.LESSON_DATE} < date('now')")
         dbHelper.close()
     }
 
@@ -102,9 +102,11 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
                         userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.SUBJECT)),
                         userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.TYPE)),
                         userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.TEACHER)),
-                        "0",
+                        "-1",
                         userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.CLASSROOM)),
-                        ""
+                        "",
+                        true,
+                        userLessonsCursor.getInt(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry._ID))
                 )
                 lessonList.add(lesson)
             }
@@ -112,7 +114,6 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
             dbHelper.close()
             return lessonList
         }catch (e: Exception){
-            Log.v("SCHEDULE_PARS_EXCEPTION", e.toString())
             return emptyList()
         }
     }
@@ -133,6 +134,8 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
                 contentValues.put(ScheduleContract.LessonEntry.DATE, lesson.date)
                 contentValues.put(ScheduleContract.LessonEntry.START_DATE, lesson.startDate)
                 contentValues.put(ScheduleContract.LessonEntry.END_DATE, lesson.endDate)
+                contentValues.put(ScheduleContract.LessonEntry.IS_CUSTOM, lesson.isCustomLesson)
+                contentValues.put(ScheduleContract.LessonEntry.CUSTOM_ID, lesson.customId)
                 db.insert(ScheduleContract.LessonEntry.TABLE_NAME, null, contentValues)
             }
             if(adapter != null){

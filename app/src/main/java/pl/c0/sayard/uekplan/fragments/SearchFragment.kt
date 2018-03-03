@@ -47,35 +47,37 @@ class SearchFragment : Fragment() {
         val listView = view.findViewById<ListView>(R.id.group_and_teacher_list_view)
         GroupAndTeacherParser(this, progressBar, listView,object:GroupAndTeacherParser.OnTaskCompleted{
             override fun onTaskCompleted(result: List<Group>?, fragment: SearchFragment) {
-                val adapter = getAdapter(context, result!!)
-                if(adapter.count <= 0){
-                    Toast.makeText(this@SearchFragment.context, getText(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
-                    errorMessage.visibility = View.VISIBLE
-                    searchBox.visibility = View.GONE
-                }else{
-                    errorMessage.visibility = View.GONE
-                    searchBox.visibility = View.VISIBLE
-                }
-
-                searchBox.addTextChangedListener(object: TextWatcher{
-                    override fun afterTextChanged(p0: Editable?) {
+                if(context != null){
+                    val adapter = getAdapter(context, result!!)
+                    if(adapter.count <= 0){
+                        Toast.makeText(this@SearchFragment.context, getText(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
+                        errorMessage.visibility = View.VISIBLE
+                        searchBox.visibility = View.GONE
+                    }else{
+                        errorMessage.visibility = View.GONE
+                        searchBox.visibility = View.VISIBLE
                     }
 
-                    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    searchBox.addTextChangedListener(object: TextWatcher{
+                        override fun afterTextChanged(p0: Editable?) {
+                        }
+
+                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        }
+
+                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                            adapter.filter.filter(p0.toString())
+                        }
+
+                    })
+
+                    val listView = view.findViewById<ListView>(R.id.group_and_teacher_list_view)
+                    listView.adapter = adapter
+                    listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+                        val group = parent.getItemAtPosition(position) as Group
+                        val searchedScheduleFragment = SearchedScheduleFragment.newInstance(group)
+                        activity.supportFragmentManager.beginTransaction().replace(R.id.main_frame, searchedScheduleFragment).addToBackStack(null).commit()
                     }
-
-                    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        adapter.filter.filter(p0.toString())
-                    }
-
-                })
-
-                val listView = view.findViewById<ListView>(R.id.group_and_teacher_list_view)
-                listView.adapter = adapter
-                listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
-                    val group = parent.getItemAtPosition(position) as Group
-                    val searchedScheduleFragment = SearchedScheduleFragment.newInstance(group)
-                    activity.supportFragmentManager.beginTransaction().replace(R.id.main_frame, searchedScheduleFragment).addToBackStack(null).commit()
                 }
             }
 
@@ -84,6 +86,8 @@ class SearchFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        val searchBox = view?.findViewById<EditText>(R.id.group_and_teacher_search)
+        searchBox?.setText("", TextView.BufferType.EDITABLE)
         activity.title = getString(R.string.search)
     }
 

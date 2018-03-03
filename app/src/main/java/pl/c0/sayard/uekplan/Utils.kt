@@ -47,6 +47,10 @@ class Utils {
             do{
                 val dateStr = cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.DATE))
                 val comments = cursor.getString(cursor.getColumnIndexOrThrow(ScheduleContract.LessonEntry.COMMENTS))
+                var isCustom = false
+                if(cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.IS_CUSTOM)) == 1){
+                    isCustom = true
+                }
                 val scheduleItem = ScheduleItem(
                         cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.SUBJECT)),
                         cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.TYPE)),
@@ -56,7 +60,9 @@ class Utils {
                         comments,
                         dateStr,
                         cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.START_DATE)),
-                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.END_DATE))
+                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.END_DATE)),
+                        isCustom = isCustom,
+                        customId = cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.CUSTOM_ID))
                 )
                 scheduleList.add(scheduleItem)
             }while(cursor.moveToNext())
@@ -86,8 +92,9 @@ class Utils {
                             "$it ${pe.endHour}"
                     )
                 }
-                Collections.sort(scheduleList) { p0, p1 -> p0?.startDate!!.compareTo(p1?.startDate) }
+                scheduleList.sortWith(Comparator { p0, p1 -> p0?.startDate!!.compareTo(p1?.startDate) })
             }
+
             for(i in 0 until scheduleList.size){
                 val scheduleItem = scheduleList[i]
                 if(i==0){
@@ -97,6 +104,35 @@ class Utils {
                     if(scheduleItem.dateStr != previousScheduleItem.dateStr){
                         scheduleItem.isFirstOnTheDay = true
                     }
+                }
+                val lessonNoteCursor = db.query(
+                        ScheduleContract.LessonNoteEntry.TABLE_NAME,
+                        arrayOf(ScheduleContract.LessonNoteEntry._ID, ScheduleContract.LessonNoteEntry.CONTENT),
+                        "${ScheduleContract.LessonNoteEntry.LESSON_SUBJECT} = ? AND " +
+                                "${ScheduleContract.LessonNoteEntry.LESSON_TYPE} = ? AND " +
+                                "${ScheduleContract.LessonNoteEntry.LESSON_TEACHER} = ? AND " +
+                                "${ScheduleContract.LessonNoteEntry.LESSON_TEACHER_ID} = ? AND " +
+                                "${ScheduleContract.LessonNoteEntry.LESSON_CLASSROOM} = ? AND " +
+                                "${ScheduleContract.LessonNoteEntry.LESSON_DATE} = ? AND " +
+                                "${ScheduleContract.LessonNoteEntry.LESSON_START_DATE} = ? AND " +
+                                "${ScheduleContract.LessonNoteEntry.LESSON_END_DATE} = ? ",
+                        arrayOf(scheduleItem.subject,
+                                scheduleItem.type,
+                                scheduleItem.teacher,
+                                "${scheduleItem.teacherId}",
+                                scheduleItem.classroom,
+                                scheduleItem.dateStr,
+                                scheduleItem.startDateStr,
+                                scheduleItem.endDateStr
+                        ),
+                        null,
+                        null,
+                        ScheduleContract.LessonNoteEntry._ID
+                )
+                if(lessonNoteCursor != null && lessonNoteCursor.count > 0){
+                    lessonNoteCursor.moveToFirst()
+                    scheduleItem.noteId = lessonNoteCursor.getInt(lessonNoteCursor.getColumnIndex(ScheduleContract.LessonNoteEntry._ID))
+                    scheduleItem.noteContent = lessonNoteCursor.getString(lessonNoteCursor.getColumnIndex(ScheduleContract.LessonNoteEntry.CONTENT))
                 }
             }
             return scheduleList
