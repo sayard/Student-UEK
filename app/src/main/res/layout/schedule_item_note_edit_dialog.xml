@@ -12,6 +12,7 @@
         android:inputType="textCapSentences|textMultiLine"
         android:hint="@string/content"
         android:lines="4"
+        android:minLines="1"
         android:maxLines="4"
         android:gravity="top|start"/>
 

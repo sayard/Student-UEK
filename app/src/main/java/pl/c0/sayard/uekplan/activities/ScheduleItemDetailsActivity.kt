@@ -231,6 +231,28 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                     Toast.makeText(this, getString(R.string.note_update_error), Toast.LENGTH_SHORT).show()
                 }
             }
+            dialogBuilder.setNeutralButton(getString(R.string.delete)){_,_ ->
+                val deleteDialogBuilder = AlertDialog.Builder(this)
+                deleteDialogBuilder.setTitle(getString(R.string.note_delete_message))
+                deleteDialogBuilder.setPositiveButton(getString(R.string.yes)){_,_ ->
+                    val deleteCount = db.delete(
+                            ScheduleContract.LessonNoteEntry.TABLE_NAME,
+                            "${ScheduleContract.LessonNoteEntry._ID} = $noteId",
+                            null
+                    )
+                    if(deleteCount > 0){
+                        noteContentTextView.text = ""
+                        noteContentTextView.visibility = View.GONE
+                        addOrEditLessonNoteButton.text = getString(R.string.add_note)
+                    }else{
+                        Toast.makeText(this, getString(R.string.note_delete_error), Toast.LENGTH_SHORT).show()
+                    }
+                }
+                deleteDialogBuilder.setNegativeButton(getString(R.string.no)){_,_ ->
+                    //pass
+                }
+                deleteDialogBuilder.create().show()
+            }
         }
         dialogBuilder.setNegativeButton(getString(R.string.cancel)) {_, _ ->
             //pass
