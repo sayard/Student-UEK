@@ -92,8 +92,9 @@ class Utils {
                             "$it ${pe.endHour}"
                     )
                 }
-                Collections.sort(scheduleList) { p0, p1 -> p0?.startDate!!.compareTo(p1?.startDate) }
+                scheduleList.sortWith(Comparator { p0, p1 -> p0?.startDate!!.compareTo(p1?.startDate) })
             }
+
             for(i in 0 until scheduleList.size){
                 val scheduleItem = scheduleList[i]
                 if(i==0){

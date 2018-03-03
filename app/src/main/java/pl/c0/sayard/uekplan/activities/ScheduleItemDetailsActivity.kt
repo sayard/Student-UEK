@@ -89,6 +89,8 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         val endHour = hourFormat.format(scheduleItem?.endDate)
         val dateAndHourStr = "${scheduleItem?.dayOfTheWeekStr} $date $startHour-$endHour"
         dateAndHourTv.text = dateAndHourStr
+        val classroomTv = findViewById<TextView>(R.id.schedule_item_details_classroom)
+        classroomTv.text = scheduleItem?.classroom
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.schedule_item_details_map) as SupportMapFragment
         mapFragment.getMapAsync(this)

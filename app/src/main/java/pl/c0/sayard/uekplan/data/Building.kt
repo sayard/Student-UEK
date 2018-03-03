@@ -26,7 +26,7 @@ class Building(val context: Context){
     val SIENKIEWICZA_5 = "Sienkiewicza 5"
 
     val LIBRARY_BUILDING_ABBREVATION = "Bibl. "
-    val MAIN_BUILDING_ABBREVATION = "Bud. gł. "
+    val MAIN_BUILDING_ABBREVATION = "Bud.gł. "
     val KSIEZOWKA_BUILDING_ABBREVATION = "Księżówka"
     val PAVILON_A_ABBREVATION = "Paw.A "
     val PAVILON_B_ABBREVATION = "Paw.B "
@@ -109,7 +109,7 @@ class Building(val context: Context){
                 classroom.startsWith(PAVILON_C_ABBREVATION) -> LatLng(50.069234, 19.955258)
                 classroom.startsWith(PAVILON_D_ABBREVATION) -> LatLng(50.069434, 19.954303)
                 classroom.startsWith(PAVILON_E_ABBREVATION) -> LatLng(50.069060, 19.955864)
-                classroom.startsWith(PAVILON_F_ABBREVATION) -> LatLng(0.068508, 19.956644)
+                classroom.startsWith(PAVILON_F_ABBREVATION) -> LatLng(50.068508, 19.956644)
                 classroom.startsWith(SJO) -> LatLng(50.068508, 19.956644)
                 classroom.startsWith(PAVILON_G_ABBREVATION) -> LatLng(50.069514, 19.953841)
                 classroom.startsWith(SPORT_TEACHING_COMPLEX_ABBREVATION) -> LatLng(50.067933, 19.956759)
@@ -123,7 +123,7 @@ class Building(val context: Context){
                 classroom == PONE_FULL -> LatLng(49.489873, 20.045916)
                 classroom.startsWith(RAKOWICKA_16_ABBREVATION) -> LatLng(50.067708, 19.952025)
                 classroom.startsWith(SIENKIEWICZA_4_ABBREVATION) -> LatLng(50.070477, 19.925854)
-                classroom.startsWith(SIENKIEWICZA_5_ABBREVATION) -> LatLng(0.070420, 19.926146)
+                classroom.startsWith(SIENKIEWICZA_5_ABBREVATION) -> LatLng(50.070420, 19.926146)
                 else -> null
             }
         }
