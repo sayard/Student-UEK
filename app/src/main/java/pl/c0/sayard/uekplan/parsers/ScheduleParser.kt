@@ -48,6 +48,7 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
         val db = dbHelper.writableDatabase
         db.execSQL("DELETE FROM " + ScheduleContract.LessonEntry.TABLE_NAME)
         db.execSQL("DELETE FROM ${ScheduleContract.UserAddedLessonEntry.TABLE_NAME} WHERE ${ScheduleContract.UserAddedLessonEntry.DATE} < date('now')")
+        db.execSQL("DELETE FROM ${ScheduleContract.LessonNoteEntry.TABLE_NAME} WHERE ${ScheduleContract.LessonNoteEntry.LESSON_DATE} < date('now')")
         dbHelper.close()
     }
 
