@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
         android:allowBackup="true"
@@ -12,10 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCtnSfmb1b5ScdqD0JXeuvI171YyEQHB5w"/>
+            android:value="AIzaSyCtnSfmb1b5ScdqD0JXeuvI171YyEQHB5w" />
 
         <activity
             android:name=".activities.MainActivity"
@@ -53,7 +54,8 @@
             android:name=".activities.AddLessonActivity"
             android:label="@string/add_lesson" />
         <activity android:name=".activities.AddNoteActivity" />
-        <activity android:name=".activities.ScheduleItemDetailsActivity"></activity>
+        <activity android:name=".activities.ScheduleItemDetailsActivity" />
+        <activity android:name=".activities.ActivateGoogleCalendarIntegrationActivity"></activity>
     </application>
 
 </manifest>

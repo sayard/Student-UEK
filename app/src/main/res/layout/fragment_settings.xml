@@ -2,11 +2,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pl.c0.sayard.uekplan.fragments.SettingsFragment">
+    tools:context="pl.c0.sayard.uekplan.fragments.SettingsFragment"
+    android:padding="5dp">
 
-    <TextView
-        android:layout_width="match_parent"
+    <ScrollView
         android:layout_height="match_parent"
-        android:text="Settings fragment" />
+        android:layout_width="match_parent"
+        tools:ignore="UselessParent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Switch
+                android:id="@+id/settings_calendar_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:text="@string/google_calendar_integration"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/your_schedule_will_automatically_get_added_to_your_google_calendar"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"/>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </FrameLayout>
