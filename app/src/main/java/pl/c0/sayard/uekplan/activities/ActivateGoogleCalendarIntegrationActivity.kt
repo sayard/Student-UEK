@@ -6,33 +6,24 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import android.os.AsyncTask
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.text.TextUtils
-import android.util.Log
-import android.view.View
+import android.preference.PreferenceManager
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
-import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
-import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException
-import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
-import com.google.api.client.json.jackson2.JacksonFactory
-import com.google.api.client.util.DateTime
 import com.google.api.client.util.ExponentialBackOff
-import com.google.api.services.calendar.Calendar
 import com.google.api.services.calendar.CalendarScopes
 import pl.c0.sayard.uekplan.R
+import pl.c0.sayard.uekplan.tasks.CalendarEventsTask
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
-import java.io.IOException
 
 class ActivateGoogleCalendarIntegrationActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
-    private class Constants{
+    class Constants{
         companion object {
             const val REQUEST_ACCOUNT_PICKER = 1000
             const val REQUEST_AUTHORIZATION = 1001
@@ -43,13 +34,14 @@ class ActivateGoogleCalendarIntegrationActivity : AppCompatActivity(), EasyPermi
 
     private var credential: GoogleAccountCredential? = null
 
-    private val PREF_ACCOUNT_NAME = "accountName"
+    private var PREFS_ACCOUNT_NAME = ""
 
     var progressBar:ProgressBar? = null
     var messageBox:TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        PREFS_ACCOUNT_NAME = getString(R.string.PREFS_ACCOUNT_NAME)
         setContentView(R.layout.activity_activate_google_calendar_integration)
         progressBar = findViewById<ProgressBar>(R.id.activate_google_calendar_integration_progress_bar)
         messageBox = findViewById<TextView>(R.id.activate_google_calendar_integration_message_box)
@@ -61,19 +53,18 @@ class ActivateGoogleCalendarIntegrationActivity : AppCompatActivity(), EasyPermi
 
     private fun configureApi(){
         if(!isGooglePlayServicesAvailable()){
-            Log.v("TAG", "1")
             acquireGooglePlayServices()
         }else if(credential?.selectedAccountName == null){
-            Log.v("TAG", "2")
             chooseAccount()
         }else if(!isDeviceOnline()){
-            Log.v("TAG", "3")
             messageBox?.text = getString(R.string.no_network_connection_message)
         }else{
-            Log.v("TAG", "4")
             if(credential != null){
-                Log.v("TAG", "5")
-                MakeRequestTask(credential!!, this).execute()
+                CalendarEventsTask(credential!!, this, this).execute()
+                val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+                val editor = prefs.edit()
+                editor.putBoolean(getString(R.string.PREFS_ENABLE_GC), true)
+                editor.apply()
             }
         }
     }
@@ -82,7 +73,7 @@ class ActivateGoogleCalendarIntegrationActivity : AppCompatActivity(), EasyPermi
     private fun chooseAccount(){
         if(EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)){
             val accountName = getPreferences(Context.MODE_PRIVATE)
-                    .getString(PREF_ACCOUNT_NAME, null)
+                    .getString(PREFS_ACCOUNT_NAME, null)
             if(accountName != null){
                 credential?.selectedAccountName = accountName
                 configureApi()
@@ -114,9 +105,9 @@ class ActivateGoogleCalendarIntegrationActivity : AppCompatActivity(), EasyPermi
                 if(resultCode == Activity.RESULT_OK && data != null && data.extras != null){
                     val accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME)
                     if(accountName != null){
-                        val settings = getPreferences(Context.MODE_PRIVATE)
+                        val settings = PreferenceManager.getDefaultSharedPreferences(this)
                         val editor = settings.edit()
-                        editor.putString(PREF_ACCOUNT_NAME, accountName)
+                        editor.putString(PREFS_ACCOUNT_NAME, accountName)
                         editor.apply()
                         credential?.selectedAccountName = accountName
                         configureApi()
@@ -174,84 +165,5 @@ class ActivateGoogleCalendarIntegrationActivity : AppCompatActivity(), EasyPermi
                 connectionStatusCode,
                 Constants.REQUEST_GOOGLE_PLAY_SERVICES)
         dialog.show()
-    }
-
-    private class MakeRequestTask(credential: GoogleAccountCredential, val instance: Activity) : AsyncTask<Void, Void, List<String>?>() {
-
-        private var service: Calendar? = null
-        private var lastError: Exception? = null
-
-        init {
-            val transport = AndroidHttp.newCompatibleTransport()
-            val jsonFactory = JacksonFactory.getDefaultInstance()
-            service = Calendar.Builder(transport, jsonFactory, credential)
-                    .setApplicationName("Student UEK")
-                    .build()
-        }
-
-        override fun doInBackground(vararg params: Void?): List<String>? {
-            return try{
-                getDataFromApi()
-            }catch (e: Exception){
-                lastError = e
-                cancel(true)
-                null
-            }
-        }
-
-        @Throws(IOException::class)
-        private fun getDataFromApi(): List<String>{
-            val now = DateTime(System.currentTimeMillis())
-            val eventStrings = mutableListOf<String>()
-            val events = service?.events()?.list("primary")
-                    ?.setMaxResults(10)
-                    ?.setTimeMin(now)
-                    ?.setOrderBy("startTime")
-                    ?.setSingleEvents(true)
-                    ?.execute()
-            val items = events?.items
-            if (items != null) {
-                for(event in items){
-                    var start = event.start.dateTime
-                    if(start == null){
-                        start = event.start.date
-                    }
-                    eventStrings.add("${event.summary} $start")
-                }
-            }
-            return eventStrings
-        }
-
-        override fun onPostExecute(result: List<String>?) {
-            if(result == null || result.isEmpty()){
-                Log.v("TAG", "no results")
-            }else{
-                Log.v("TAG", TextUtils.join("\n", result))
-            }
-        }
-
-        override fun onCancelled() {
-            super.onCancelled()
-            if(lastError != null){
-                when (lastError) {
-                    is GooglePlayServicesAvailabilityIOException -> {
-                        val apiAvailability = GoogleApiAvailability.getInstance()
-                        val dialog = apiAvailability.getErrorDialog(
-                                instance,
-                                (lastError as GooglePlayServicesAvailabilityIOException).connectionStatusCode,
-                                Constants.REQUEST_GOOGLE_PLAY_SERVICES)
-                        dialog.show()
-                    }
-                    is UserRecoverableAuthIOException -> instance.startActivityForResult(
-                            (lastError as UserRecoverableAuthIOException).intent,
-                            ActivateGoogleCalendarIntegrationActivity.Constants.REQUEST_AUTHORIZATION
-                    )
-                    else -> Log.v("TAG", lastError!!.message)
-                }
-            }else{
-                Log.v("TAG", "cancelled")
-            }
-        }
-
     }
 }

@@ -15,6 +15,7 @@ import pl.c0.sayard.uekplan.data.ScheduleItem
 import pl.c0.sayard.uekplan.data.SchedulePE
 import pl.c0.sayard.uekplan.db.ScheduleContract
 import pl.c0.sayard.uekplan.receivers.BootReceiver
+import pl.c0.sayard.uekplan.receivers.GoogleCalendarTaskReceiver
 import pl.c0.sayard.uekplan.receivers.ScheduleRefreshReceiver
 import java.text.SimpleDateFormat
 import java.util.*
@@ -25,6 +26,7 @@ import java.util.*
 class Utils {
     companion object {
         val SCHEDULE_REFRESH_TASK_REQUEST_CODE = 101
+        val GOOGLE_CALENDAR_INTEGRATION_REQUEST_CODE = 102
 
         val FIRST_RUN_SHARED_PREFS_KEY = "firstRun"
         val AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY = "automaticScheduleRefresh"
@@ -196,6 +198,29 @@ class Utils {
                     alarmIntent
             )
             enableBootReceiver(context)
+        }
+
+        fun startGoogleCalendarIntegrationTask(context: Context){
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val intent = Intent(context, GoogleCalendarTaskReceiver::class.java)
+            val alarmIntent = PendingIntent.getBroadcast(context.applicationContext, GOOGLE_CALENDAR_INTEGRATION_REQUEST_CODE, intent, 0)
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.HOUR_OF_DAY, 2)
+            calendar.set(Calendar.MINUTE, 0)
+            alarmManager.setInexactRepeating(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    AlarmManager.INTERVAL_DAY,
+                    alarmIntent
+            )
+            enableBootReceiver(context)
+        }
+
+        fun stopGoogleCalendarIntegrationTask(context: Context){
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val intent = Intent(context, GoogleCalendarTaskReceiver::class.java)
+            val alarmIntent = PendingIntent.getBroadcast(context.applicationContext, GOOGLE_CALENDAR_INTEGRATION_REQUEST_CODE, intent, 0)
+            alarmManager.cancel(alarmIntent)
         }
 
         fun getScheduleCursor(db: SQLiteDatabase): Cursor{

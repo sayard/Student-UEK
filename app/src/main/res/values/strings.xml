@@ -94,9 +94,14 @@
     <string name="note_update_error">There was an error updating note</string>
     <string name="note_adding_error">There was an error adding a note</string>
     <string name="schedule_details_marker_snippet">Click here to open Google Maps</string>
-    <string name="google_calendar_integration">Google Calendar integration</string>
+    <string name="google_calendar_integration">Google Calendar Integration</string>
     <string name="your_schedule_will_automatically_get_added_to_your_google_calendar">Your schedule will automatically get added to your Google Calendar</string>
     <string name="no_network_connection_message">No network connection is available. Try again later.</string>
     <string name="contacts_permission_rationale">This app requires contacts permissions to access your Google Account.</string>
     <string name="gp_services_required_msg">This app requires Google Play Services</string>
+    <string name="PREFS_ACCOUNT_NAME">accountName</string>
+    <string name="PREFS_ENABLE_GC">pl.c0.sayard.uekplan.PREFS_ENABLE_GC</string>
+    <string name="GC_ERROR_CHANNEL">pl.c0.sayard.uekplan.GC_ERROR_CHANNEL</string>
+    <string name="gc_items_adding_fail">Failed to add items to your Google Calendar</string>
+    <string name="click_here_to_try_again">Click here to try again</string>
 </resources>
