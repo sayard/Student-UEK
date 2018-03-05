@@ -124,7 +124,7 @@ class Building(val context: Context){
                 classroom.startsWith(RAKOWICKA_16_ABBREVATION) -> LatLng(50.067708, 19.952025)
                 classroom.startsWith(SIENKIEWICZA_4_ABBREVATION) -> LatLng(50.070477, 19.925854)
                 classroom.startsWith(SIENKIEWICZA_5_ABBREVATION) -> LatLng(50.070420, 19.926146)
-                else -> null
+                else -> LatLng(50.068516, 19.953870)
             }
         }
     }

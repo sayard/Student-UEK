@@ -50,46 +50,58 @@ class ScheduleFragment : Fragment() {
             prefs.edit().putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false).apply()
         }else{
             val scheduleList = Utils.getScheduleList(cursor, db)
-            val adapter = getAdapter(scheduleList)
-            val scheduleSearch = view.findViewById<EditText>(R.id.schedule_search)
-            scheduleSearch.addTextChangedListener(object: TextWatcher{
-                override fun afterTextChanged(p0: Editable?) {
-                }
+            if (scheduleList.isNotEmpty()){
+                errorMessage.visibility = View.GONE
+                val adapter = getAdapter(scheduleList)
+                val scheduleSearch = view.findViewById<EditText>(R.id.schedule_search)
+                scheduleSearch.addTextChangedListener(object: TextWatcher{
+                    override fun afterTextChanged(p0: Editable?) {
+                    }
 
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
+                    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    }
 
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    adapter.filter.filter(p0.toString())
+                    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        adapter.filter.filter(p0.toString())
+                    }
+                })
+                scheduleSearch.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus -> scheduleSearch.isCursorVisible = hasFocus }
+                val listView = view.findViewById<ListView>(R.id.schedule_list_view)
+                listView.adapter = adapter
+                listView.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
+                    val scheduleItem = parent.getItemAtPosition(position) as ScheduleItem
+                    val intent = Intent(context, ScheduleItemDetailsActivity::class.java).apply {
+                        putExtra(getString(R.string.subject_extra), scheduleItem.subject)
+                        putExtra(getString(R.string.type_extra), scheduleItem.type)
+                        putExtra(getString(R.string.teacher_extra), scheduleItem.teacher)
+                        putExtra(getString(R.string.teacher_id_extra), scheduleItem.teacherId)
+                        putExtra(getString(R.string.classroom_extra), scheduleItem.classroom)
+                        putExtra(getString(R.string.comments_extra), scheduleItem.comments)
+                        putExtra(getString(R.string.date_extra), scheduleItem.dateStr)
+                        putExtra(getString(R.string.start_date_extra), scheduleItem.startDateStr)
+                        putExtra(getString(R.string.end_date_extra), scheduleItem.endDateStr)
+                        putExtra(getString(R.string.is_custom_extra), scheduleItem.isCustom)
+                        putExtra(getString(R.string.extra_custom_id), scheduleItem.customId)
+                        putExtra(getString(R.string.extra_note_id), scheduleItem.noteId)
+                        putExtra(getString(R.string.extra_note_content), scheduleItem.noteContent)
+                    }
+                    startActivity(intent)
                 }
-            })
-            scheduleSearch.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus -> scheduleSearch.isCursorVisible = hasFocus }
-            val listView = view.findViewById<ListView>(R.id.schedule_list_view)
-            listView.adapter = adapter
-            listView.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
-                val scheduleItem = parent.getItemAtPosition(position) as ScheduleItem
-                val intent = Intent(context, ScheduleItemDetailsActivity::class.java).apply {
-                    putExtra(getString(R.string.subject_extra), scheduleItem.subject)
-                    putExtra(getString(R.string.type_extra), scheduleItem.type)
-                    putExtra(getString(R.string.teacher_extra), scheduleItem.teacher)
-                    putExtra(getString(R.string.teacher_id_extra), scheduleItem.teacherId)
-                    putExtra(getString(R.string.classroom_extra), scheduleItem.classroom)
-                    putExtra(getString(R.string.comments_extra), scheduleItem.comments)
-                    putExtra(getString(R.string.date_extra), scheduleItem.dateStr)
-                    putExtra(getString(R.string.start_date_extra), scheduleItem.startDateStr)
-                    putExtra(getString(R.string.end_date_extra), scheduleItem.endDateStr)
-                    putExtra(getString(R.string.is_custom_extra), scheduleItem.isCustom)
-                    putExtra(getString(R.string.extra_custom_id), scheduleItem.customId)
-                    putExtra(getString(R.string.extra_note_id), scheduleItem.noteId)
-                    putExtra(getString(R.string.extra_note_content), scheduleItem.noteContent)
+                val scheduleSwipe = view.findViewById<SwipeRefreshLayout>(R.id.schedule_swipe)
+                scheduleSwipe.setOnRefreshListener{
+                    ScheduleParser(context, null, null, errorMessage, adapter, scheduleSwipe).execute(urls)
+                    scheduleSearch.setText("", TextView.BufferType.EDITABLE)
+                    Toast.makeText(context, getString(R.string.schedule_refreshed), Toast.LENGTH_SHORT).show()
                 }
-                startActivity(intent)
-            }
-            val scheduleSwipe = view.findViewById<SwipeRefreshLayout>(R.id.schedule_swipe)
-            scheduleSwipe.setOnRefreshListener{
-                ScheduleParser(context, null, null, errorMessage, adapter, scheduleSwipe).execute(urls)
-                scheduleSearch.setText("", TextView.BufferType.EDITABLE)
-                Toast.makeText(context, getString(R.string.schedule_refreshed), Toast.LENGTH_SHORT).show()
+            }else{
+                errorMessage.visibility = View.VISIBLE
+                val scheduleSwipe = view.findViewById<SwipeRefreshLayout>(R.id.schedule_swipe)
+                scheduleSwipe.setOnRefreshListener{
+                    val ft = activity.supportFragmentManager.beginTransaction()
+                    ft.detach(this)
+                    ft.attach(this)
+                    ft.commit()
+                }
             }
         }
         cursor.close()

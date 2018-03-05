@@ -44,28 +44,32 @@ class Utils {
         fun getScheduleList(cursor: Cursor, db: SQLiteDatabase): MutableList<ScheduleItem> {
             val scheduleList = mutableListOf<ScheduleItem>()
             cursor.moveToFirst()
-            do{
-                val dateStr = cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.DATE))
-                val comments = cursor.getString(cursor.getColumnIndexOrThrow(ScheduleContract.LessonEntry.COMMENTS))
-                var isCustom = false
-                if(cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.IS_CUSTOM)) == 1){
-                    isCustom = true
-                }
-                val scheduleItem = ScheduleItem(
-                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.SUBJECT)),
-                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.TYPE)),
-                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.TEACHER)),
-                        cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.TEACHER_ID)),
-                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.CLASSROOM)),
-                        comments,
-                        dateStr,
-                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.START_DATE)),
-                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.END_DATE)),
-                        isCustom = isCustom,
-                        customId = cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.CUSTOM_ID))
-                )
-                scheduleList.add(scheduleItem)
-            }while(cursor.moveToNext())
+            if(cursor != null && cursor.count >0){
+                do{
+                    val dateStr = cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.DATE))
+                    val comments = cursor.getString(cursor.getColumnIndexOrThrow(ScheduleContract.LessonEntry.COMMENTS))
+                    var isCustom = false
+                    if(cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.IS_CUSTOM)) == 1){
+                        isCustom = true
+                    }
+                    val scheduleItem = ScheduleItem(
+                            cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.SUBJECT)),
+                            cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.TYPE)),
+                            cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.TEACHER)),
+                            cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.TEACHER_ID)),
+                            cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.CLASSROOM)),
+                            comments,
+                            dateStr,
+                            cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.START_DATE)),
+                            cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.END_DATE)),
+                            isCustom = isCustom,
+                            customId = cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.CUSTOM_ID))
+                    )
+                    scheduleList.add(scheduleItem)
+                }while(cursor.moveToNext())
+            }else{
+                return mutableListOf<ScheduleItem>()
+            }
             val pe = getPe(db)
             if(pe != null){
                 val days = HashSet<String>(scheduleList.map { it.dateStr })
@@ -134,6 +138,7 @@ class Utils {
                     scheduleItem.noteId = lessonNoteCursor.getInt(lessonNoteCursor.getColumnIndex(ScheduleContract.LessonNoteEntry._ID))
                     scheduleItem.noteContent = lessonNoteCursor.getString(lessonNoteCursor.getColumnIndex(ScheduleContract.LessonNoteEntry.CONTENT))
                 }
+                lessonNoteCursor.close()
             }
             return scheduleList
         }
