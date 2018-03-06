@@ -61,10 +61,6 @@ class ActivateGoogleCalendarIntegrationActivity : AppCompatActivity(), EasyPermi
         }else{
             if(credential != null){
                 CalendarEventsTask(credential!!, this, this).execute()
-                val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-                val editor = prefs.edit()
-                editor.putBoolean(getString(R.string.PREFS_ENABLE_GC), true)
-                editor.apply()
             }
         }
     }
@@ -72,8 +68,8 @@ class ActivateGoogleCalendarIntegrationActivity : AppCompatActivity(), EasyPermi
     @AfterPermissionGranted(Constants.REQUEST_PERMISSION_GET_ACCOUNTS)
     private fun chooseAccount(){
         if(EasyPermissions.hasPermissions(this, Manifest.permission.GET_ACCOUNTS)){
-            val accountName = getPreferences(Context.MODE_PRIVATE)
-                    .getString(PREFS_ACCOUNT_NAME, null)
+            val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+            val accountName = prefs.getString(PREFS_ACCOUNT_NAME, null)
             if(accountName != null){
                 credential?.selectedAccountName = accountName
                 configureApi()

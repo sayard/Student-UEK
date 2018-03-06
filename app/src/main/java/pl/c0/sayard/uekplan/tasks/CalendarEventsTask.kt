@@ -38,7 +38,6 @@ class CalendarEventsTask(credential: GoogleAccountCredential, val instance: Acti
     override fun doInBackground(vararg params: Void?) {
         try{
             insertCalendarEvents()
-            Utils.startGoogleCalendarIntegrationTask(context)
         }catch (e: Exception){
             lastError = e
             cancel(true)

@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
+import android.preference.PreferenceManager
 import android.support.v4.app.NotificationCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
@@ -28,6 +29,9 @@ class GoogleCalendarTaskReceiver: BroadcastReceiver() {
             val credential = GoogleAccountCredential.usingOAuth2(
                     context.applicationContext, mutableListOf(CalendarScopes.CALENDAR))
                     .setBackOff(ExponentialBackOff())
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            val accountName = prefs.getString(context.getString(R.string.PREFS_ACCOUNT_NAME), null)
+            credential.selectedAccountName = accountName
             if(isDeviceOnline(context)){
                 if(isGooglePlayServicesAvailable(context) && credential.selectedAccountName != null){
                     CalendarEventsTask(credential, null, context).execute()

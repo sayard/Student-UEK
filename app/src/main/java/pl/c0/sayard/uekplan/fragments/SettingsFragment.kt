@@ -8,9 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Switch
-import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
-import com.google.api.client.util.ExponentialBackOff
-import com.google.api.services.calendar.CalendarScopes
 
 import pl.c0.sayard.uekplan.R
 import pl.c0.sayard.uekplan.Utils
@@ -42,15 +39,14 @@ class SettingsFragment : Fragment() {
             if(isChecked){
                 val intent = Intent(context, ActivateGoogleCalendarIntegrationActivity::class.java)
                 startActivity(intent)
+                editor.putBoolean(getString(R.string.PREFS_ENABLE_GC), true)
+                editor.apply()
+                Utils.startGoogleCalendarIntegrationTask(context)
             }else{
                 editor.putString(getString(R.string.PREFS_ACCOUNT_NAME), null)
                 editor.putBoolean(getString(R.string.PREFS_ENABLE_GC), false)
+                editor.putString(context.getString(R.string.PREFS_ACCOUNT_NAME), null)
                 editor.apply()
-                val credential = GoogleAccountCredential.usingOAuth2(
-                        activity.applicationContext, mutableListOf(CalendarScopes.CALENDAR)
-                ).setBackOff(ExponentialBackOff())
-                credential.selectedAccountName = null
-                credential.selectedAccount = null
                 Utils.stopGoogleCalendarIntegrationTask(context)
             }
         }
