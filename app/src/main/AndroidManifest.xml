@@ -35,16 +35,6 @@
             android:label="@string/weekly_p_e"
             android:screenOrientation="portrait" />
 
-        <receiver android:name=".receivers.ScheduleRefreshReceiver" />
-        <receiver
-            android:name=".receivers.BootReceiver"
-            android:enabled="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-        <receiver android:name=".receivers.GoogleCalendarTaskReceiver" />
-
         <activity
             android:name=".activities.AddLessonActivity"
             android:label="@string/add_lesson" />

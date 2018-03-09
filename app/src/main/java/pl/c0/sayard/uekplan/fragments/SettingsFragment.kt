@@ -35,19 +35,16 @@ class SettingsFragment : Fragment() {
 
         val googleCalendarIntegrationSwitch = view.findViewById<Switch>(R.id.settings_calendar_switch)
         googleCalendarIntegrationSwitch.isChecked = prefs.getBoolean(getString(R.string.PREFS_ENABLE_GC), false)
-        googleCalendarIntegrationSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+        googleCalendarIntegrationSwitch.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked){
                 val intent = Intent(context, ActivateGoogleCalendarIntegrationActivity::class.java)
                 startActivity(intent)
                 editor.putBoolean(getString(R.string.PREFS_ENABLE_GC), true)
                 editor.apply()
-                Utils.startGoogleCalendarIntegrationTask(context)
             }else{
                 editor.putString(getString(R.string.PREFS_ACCOUNT_NAME), null)
                 editor.putBoolean(getString(R.string.PREFS_ENABLE_GC), false)
-                editor.putString(context.getString(R.string.PREFS_ACCOUNT_NAME), null)
                 editor.apply()
-                Utils.stopGoogleCalendarIntegrationTask(context)
             }
         }
 
