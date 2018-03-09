@@ -14,6 +14,7 @@ import android.widget.*
 import pl.c0.sayard.uekplan.R
 import pl.c0.sayard.uekplan.Utils
 import pl.c0.sayard.uekplan.activities.ActivateGoogleCalendarIntegrationActivity
+import pl.c0.sayard.uekplan.activities.CreditsActivity
 import pl.c0.sayard.uekplan.activities.FirstRunStepOneActivity
 import pl.c0.sayard.uekplan.jobs.RefreshScheduleJob
 
@@ -150,6 +151,12 @@ class SettingsFragment : Fragment() {
             builder.setMessage(getString(R.string.groups_rechoosing_dialog_msg))
                     .setPositiveButton(getString(R.string.yes), dialogClickListener)
                     .setNegativeButton(getString(R.string.no), dialogClickListener).show()
+        }
+
+        val credits = view.findViewById<LinearLayout>(R.id.credits)
+        credits.setOnClickListener {
+            val intent = Intent(context, CreditsActivity::class.java)
+            startActivity(intent)
         }
 
         return view
