@@ -18,6 +18,7 @@ import pl.c0.sayard.uekplan.Utils.Companion.getScheduleCursor
 import pl.c0.sayard.uekplan.activities.ScheduleItemDetailsActivity
 import pl.c0.sayard.uekplan.adapters.ScheduleAdapter
 import pl.c0.sayard.uekplan.db.ScheduleDbHelper
+import pl.c0.sayard.uekplan.jobs.RefreshScheduleJob
 import pl.c0.sayard.uekplan.parsers.ScheduleParser
 
 
@@ -92,6 +93,11 @@ class ScheduleFragment : Fragment() {
                     ScheduleParser(context, null, null, errorMessage, adapter, scheduleSwipe).execute(urls)
                     scheduleSearch.setText("", TextView.BufferType.EDITABLE)
                     Toast.makeText(context, getString(R.string.schedule_refreshed), Toast.LENGTH_SHORT).show()
+                    Thread{
+                        kotlin.run {
+                            RefreshScheduleJob.refreshSchedule(context)
+                        }
+                    }.start()
                 }
             }else{
                 errorMessage.visibility = View.VISIBLE

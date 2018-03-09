@@ -113,4 +113,7 @@
     <string name="EXTRA_NOTIFICATION_CLASSROOM">pl.c0.sayard.uekplan.EXTRA_NOTIFICATION_CLASSROOM</string>
     <string name="EXTRA_NOTIFICATION_HOUR">pl.c0.sayard.uekplan.EXTRA_NOTIFICATION_HOUR</string>
     <string name="SCHEDULE_ITEM_NOTIFICATION_CHANNEL">pl.c0.sayard.uekplan.SCHEDULE_ITEM_NOTIFICATION_CHANNEL</string>
+    <string name="reconfiguring">Reconfiguring</string>
+    <string name="choose_your_groups_one_more_time">Choose your groups one more time</string>
+    <string name="groups_rechoosing_dialog_msg">Are you sure yo want to choose your groups one more time?</string>
 </resources>

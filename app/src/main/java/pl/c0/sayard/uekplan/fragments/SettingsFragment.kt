@@ -1,5 +1,7 @@
 package pl.c0.sayard.uekplan.fragments
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -8,14 +10,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.evernote.android.job.JobRequest
 
 import pl.c0.sayard.uekplan.R
 import pl.c0.sayard.uekplan.Utils
 import pl.c0.sayard.uekplan.activities.ActivateGoogleCalendarIntegrationActivity
+import pl.c0.sayard.uekplan.activities.FirstRunStepOneActivity
 import pl.c0.sayard.uekplan.jobs.RefreshScheduleJob
 
 class SettingsFragment : Fragment() {
+
+
+    val dialogClickListener = DialogInterface.OnClickListener { _, buttonClicked ->
+        when(buttonClicked){
+            DialogInterface.BUTTON_POSITIVE -> {
+                val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+                val editor = prefs.edit()
+                editor.putBoolean(Utils.FIRST_RUN_SHARED_PREFS_KEY, true)
+                editor.putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
+                editor.apply()
+                val intent = Intent(context, FirstRunStepOneActivity::class.java)
+                activity.finish()
+                startActivity(intent)
+            }
+            DialogInterface.BUTTON_NEGATIVE -> {}
+        }
+    }
 
     companion object {
         fun newInstance(): SettingsFragment{
@@ -123,6 +142,15 @@ class SettingsFragment : Fragment() {
             }
 
         })
+
+        val reconfigure = view.findViewById<LinearLayout>(R.id.reconfigure)
+        reconfigure.setOnClickListener {
+
+            val builder = AlertDialog.Builder(context)
+            builder.setMessage(getString(R.string.groups_rechoosing_dialog_msg))
+                    .setPositiveButton(getString(R.string.yes), dialogClickListener)
+                    .setNegativeButton(getString(R.string.no), dialogClickListener).show()
+        }
 
         return view
     }
