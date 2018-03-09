@@ -63,10 +63,12 @@ class SettingsFragment : Fragment() {
         notificationSwitch.isChecked = prefs.getBoolean(getString(R.string.PREFS_ENABLE_NOTIFICATIONS), false)
         val notificationsSeekBar = view.findViewById<SeekBar>(R.id.notification_minutes_seek_bar)
         val notificationsDetailsView = view.findViewById<LinearLayout>(R.id.notification_settings_detail_view)
+        val notificationMinutes = view.findViewById<TextView>(R.id.notification_settings_minutes)
         if(notificationSwitch.isChecked){
             notificationsSeekBar.visibility = View.VISIBLE
             notificationsDetailsView.visibility = View.VISIBLE
             notificationsSeekBar.progress = prefs.getInt(getString(R.string.PREFS_NOTIFICATION_TIME_THRESHOLD), 15)
+            notificationMinutes.text = prefs.getInt(getString(R.string.PREFS_NOTIFICATION_TIME_THRESHOLD), 15).toString()
         }
         notificationSwitch.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked){
@@ -95,8 +97,6 @@ class SettingsFragment : Fragment() {
                 }.start()
             }
         }
-
-        val notificationMinutes = view.findViewById<TextView>(R.id.notification_settings_minutes)
 
         notificationsSeekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
 

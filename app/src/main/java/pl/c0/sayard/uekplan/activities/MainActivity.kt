@@ -1,6 +1,5 @@
 package pl.c0.sayard.uekplan.activities
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -101,6 +100,17 @@ class MainActivity : AppCompatActivity() {
                 }
 
             })
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val selectedFragment = supportFragmentManager.findFragmentById((R.id.navigation))
+        when(selectedFragment){
+            is SearchFragment -> navigation.selectedItemId = R.id.navigation_search
+            is ScheduleFragment -> navigation.selectedItemId = R.id.navigation_schedule
+            is NotesFragment -> navigation.selectedItemId = R.id.navigation_notes
+            is SettingsFragment -> navigation.selectedItemId = R.id.navigation_settings
         }
     }
 
