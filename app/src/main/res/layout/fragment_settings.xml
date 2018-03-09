@@ -31,7 +31,54 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/darker_gray"/>
+                android:background="@android:color/darker_gray"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"/>
+
+            <Switch
+                android:id="@+id/settings_notification_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:text="@string/notifications"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/notifications_will_display_before_every_item_in_your_schedule"/>
+
+
+            <SeekBar
+                android:id="@+id/notification_minutes_seek_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:progress="15"
+                android:max="60"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:id="@+id/notification_settings_detail_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/minutes"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginEnd="2dp" />
+
+                <TextView
+                    android:id="@+id/notification_settings_minutes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="15"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

@@ -1,11 +1,6 @@
 package pl.c0.sayard.uekplan
 
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.widget.TextView
@@ -14,9 +9,6 @@ import pl.c0.sayard.uekplan.data.ScheduleGroup
 import pl.c0.sayard.uekplan.data.ScheduleItem
 import pl.c0.sayard.uekplan.data.SchedulePE
 import pl.c0.sayard.uekplan.db.ScheduleContract
-import pl.c0.sayard.uekplan.receivers.BootReceiver
-import pl.c0.sayard.uekplan.receivers.GoogleCalendarTaskReceiver
-import pl.c0.sayard.uekplan.receivers.ScheduleRefreshReceiver
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -184,45 +176,6 @@ class Utils {
             return languageGroups
         }
 
-        fun startScheduleRefreshTask(context: Context){
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val intent = Intent(context, ScheduleRefreshReceiver::class.java)
-            val alarmIntent = PendingIntent.getBroadcast(context, SCHEDULE_REFRESH_TASK_REQUEST_CODE, intent, 0)
-            val calendar = Calendar.getInstance()
-            calendar.set(Calendar.HOUR_OF_DAY, 1)
-            calendar.set(Calendar.MINUTE, 0)
-            alarmManager.setInexactRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    AlarmManager.INTERVAL_DAY,
-                    alarmIntent
-            )
-            enableBootReceiver(context)
-        }
-
-        fun startGoogleCalendarIntegrationTask(context: Context){
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val intent = Intent(context, GoogleCalendarTaskReceiver::class.java)
-            val alarmIntent = PendingIntent.getBroadcast(context.applicationContext, GOOGLE_CALENDAR_INTEGRATION_REQUEST_CODE, intent, 0)
-            val calendar = Calendar.getInstance()
-            calendar.set(Calendar.HOUR_OF_DAY, 2)
-            calendar.set(Calendar.MINUTE, 0)
-            alarmManager.setInexactRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    AlarmManager.INTERVAL_DAY,
-                    alarmIntent
-            )
-            enableBootReceiver(context)
-        }
-
-        fun stopGoogleCalendarIntegrationTask(context: Context){
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val intent = Intent(context, GoogleCalendarTaskReceiver::class.java)
-            val alarmIntent = PendingIntent.getBroadcast(context.applicationContext, GOOGLE_CALENDAR_INTEGRATION_REQUEST_CODE, intent, 0)
-            alarmManager.cancel(alarmIntent)
-        }
-
         fun getScheduleCursor(db: SQLiteDatabase): Cursor{
             return db.query(
                     ScheduleContract.LessonEntry.TABLE_NAME,
@@ -232,17 +185,6 @@ class Utils {
                     null,
                     null,
                     ScheduleContract.LessonEntry.START_DATE
-            )
-        }
-
-        private fun enableBootReceiver(context: Context){
-            val receiver = ComponentName(context, BootReceiver::class.java)
-            val packageManager = context.packageManager
-
-            packageManager.setComponentEnabledSetting(
-                    receiver,
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                    PackageManager.DONT_KILL_APP
             )
         }
 

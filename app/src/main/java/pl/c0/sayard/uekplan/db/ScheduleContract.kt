@@ -94,4 +94,12 @@ class ScheduleContract private constructor(){
             val LESSON_END_DATE: String = "lesson_end_date"
         }
     }
+
+    class NotificationEntry: BaseColumns{
+        companion object {
+            val TABLE_NAME: String = "notification"
+            val _ID: String = BaseColumns._ID
+            val JOB_TAG: String = "job_tag"
+        }
+    }
 }

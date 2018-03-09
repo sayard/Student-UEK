@@ -104,4 +104,13 @@
     <string name="GC_ERROR_CHANNEL">pl.c0.sayard.uekplan.GC_ERROR_CHANNEL</string>
     <string name="gc_items_adding_fail">Failed to add items to your Google Calendar</string>
     <string name="click_here_to_try_again">Click here to try again</string>
+    <string name="notifications">Notifications</string>
+    <string name="notifications_will_display_before_every_item_in_your_schedule">Notifications will display before every item in your schedule</string>
+    <string name="minutes">Minutes:</string>
+    <string name="PREFS_ENABLE_NOTIFICATIONS">pl.c0.sayard.uekplan.PREFS_ENABLE_NOTIFICATIONS</string>
+    <string name="PREFS_NOTIFICATION_TIME_THRESHOLD">pl.c0.sayard.uekplan.PREFS_NOTIFICATION_TIME_THRESHOLD</string>
+    <string name="EXTRA_NOTIFICATION_SUBJECT">pl.c0.sayard.uekplan.EXTRA_NOTIFICATION_SUBJECT</string>
+    <string name="EXTRA_NOTIFICATION_CLASSROOM">pl.c0.sayard.uekplan.EXTRA_NOTIFICATION_CLASSROOM</string>
+    <string name="EXTRA_NOTIFICATION_HOUR">pl.c0.sayard.uekplan.EXTRA_NOTIFICATION_HOUR</string>
+    <string name="SCHEDULE_ITEM_NOTIFICATION_CHANNEL">pl.c0.sayard.uekplan.SCHEDULE_ITEM_NOTIFICATION_CHANNEL</string>
 </resources>

@@ -3,7 +3,6 @@ package pl.c0.sayard.uekplan.activities
 import android.annotation.SuppressLint
 import android.app.TimePickerDialog
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -11,7 +10,7 @@ import android.preference.PreferenceManager
 import android.view.View
 import android.widget.*
 import pl.c0.sayard.uekplan.R
-import pl.c0.sayard.uekplan.Utils
+import pl.c0.sayard.uekplan.jobs.RefreshScheduleJob
 import pl.c0.sayard.uekplan.Utils.Companion.AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY
 import pl.c0.sayard.uekplan.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
 import pl.c0.sayard.uekplan.Utils.Companion.getTime
@@ -100,7 +99,7 @@ class FirstRunStepThreeActivity : AppCompatActivity() {
             }
             val prefs = PreferenceManager.getDefaultSharedPreferences(this)
             if(prefs.getBoolean(FIRST_RUN_SHARED_PREFS_KEY, true)){
-                Utils.startScheduleRefreshTask(this@FirstRunStepThreeActivity)
+                RefreshScheduleJob.schedule()
                 prefs.edit()?.putBoolean(AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY, true)?.apply()
             }
             prefs.edit()?.putBoolean(FIRST_RUN_SHARED_PREFS_KEY, false)?.apply()

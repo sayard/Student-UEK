@@ -17,6 +17,7 @@ import pl.c0.sayard.uekplan.Utils
 import pl.c0.sayard.uekplan.activities.ActivateGoogleCalendarIntegrationActivity
 import pl.c0.sayard.uekplan.data.Building
 import pl.c0.sayard.uekplan.db.ScheduleDbHelper
+import pl.c0.sayard.uekplan.jobs.RefreshScheduleJob
 import java.io.IOException
 
 /**
