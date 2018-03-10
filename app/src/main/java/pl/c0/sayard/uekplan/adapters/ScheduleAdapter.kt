@@ -141,7 +141,9 @@ class ScheduleAdapter(var context: Context, var scheduleListOriginal:List<Schedu
                                     dateFormatShort.format(it.endDate),
                                     it.isFirstOnTheDay,
                                     isCustom = it.isCustom,
-                                    customId = it.customId
+                                    customId = it.customId,
+                                    noteId = it.noteId,
+                                    noteContent = it.noteContent
                             ))
                         }
                     }

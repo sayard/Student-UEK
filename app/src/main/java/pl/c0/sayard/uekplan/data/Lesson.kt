@@ -6,7 +6,7 @@ package pl.c0.sayard.uekplan.data
  * Created by karol on 09.01.18.
  */
 class Lesson(var date: String,
-             startHour: String,
+             val startHour: String,
              endHour: String,
              var subject: String,
              var type: String,

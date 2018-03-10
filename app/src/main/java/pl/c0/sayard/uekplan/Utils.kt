@@ -1,11 +1,6 @@
 package pl.c0.sayard.uekplan
 
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.widget.TextView
@@ -14,8 +9,6 @@ import pl.c0.sayard.uekplan.data.ScheduleGroup
 import pl.c0.sayard.uekplan.data.ScheduleItem
 import pl.c0.sayard.uekplan.data.SchedulePE
 import pl.c0.sayard.uekplan.db.ScheduleContract
-import pl.c0.sayard.uekplan.receivers.BootReceiver
-import pl.c0.sayard.uekplan.receivers.ScheduleRefreshReceiver
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,6 +18,7 @@ import java.util.*
 class Utils {
     companion object {
         val SCHEDULE_REFRESH_TASK_REQUEST_CODE = 101
+        val GOOGLE_CALENDAR_INTEGRATION_REQUEST_CODE = 102
 
         val FIRST_RUN_SHARED_PREFS_KEY = "firstRun"
         val AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY = "automaticScheduleRefresh"
@@ -44,28 +38,32 @@ class Utils {
         fun getScheduleList(cursor: Cursor, db: SQLiteDatabase): MutableList<ScheduleItem> {
             val scheduleList = mutableListOf<ScheduleItem>()
             cursor.moveToFirst()
-            do{
-                val dateStr = cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.DATE))
-                val comments = cursor.getString(cursor.getColumnIndexOrThrow(ScheduleContract.LessonEntry.COMMENTS))
-                var isCustom = false
-                if(cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.IS_CUSTOM)) == 1){
-                    isCustom = true
-                }
-                val scheduleItem = ScheduleItem(
-                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.SUBJECT)),
-                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.TYPE)),
-                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.TEACHER)),
-                        cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.TEACHER_ID)),
-                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.CLASSROOM)),
-                        comments,
-                        dateStr,
-                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.START_DATE)),
-                        cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.END_DATE)),
-                        isCustom = isCustom,
-                        customId = cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.CUSTOM_ID))
-                )
-                scheduleList.add(scheduleItem)
-            }while(cursor.moveToNext())
+            if(cursor != null && cursor.count >0){
+                do{
+                    val dateStr = cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.DATE))
+                    val comments = cursor.getString(cursor.getColumnIndexOrThrow(ScheduleContract.LessonEntry.COMMENTS))
+                    var isCustom = false
+                    if(cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.IS_CUSTOM)) == 1){
+                        isCustom = true
+                    }
+                    val scheduleItem = ScheduleItem(
+                            cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.SUBJECT)),
+                            cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.TYPE)),
+                            cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.TEACHER)),
+                            cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.TEACHER_ID)),
+                            cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.CLASSROOM)),
+                            comments,
+                            dateStr,
+                            cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.START_DATE)),
+                            cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.END_DATE)),
+                            isCustom = isCustom,
+                            customId = cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.CUSTOM_ID))
+                    )
+                    scheduleList.add(scheduleItem)
+                }while(cursor.moveToNext())
+            }else{
+                return mutableListOf<ScheduleItem>()
+            }
             val pe = getPe(db)
             if(pe != null){
                 val days = HashSet<String>(scheduleList.map { it.dateStr })
@@ -134,6 +132,7 @@ class Utils {
                     scheduleItem.noteId = lessonNoteCursor.getInt(lessonNoteCursor.getColumnIndex(ScheduleContract.LessonNoteEntry._ID))
                     scheduleItem.noteContent = lessonNoteCursor.getString(lessonNoteCursor.getColumnIndex(ScheduleContract.LessonNoteEntry.CONTENT))
                 }
+                lessonNoteCursor.close()
             }
             return scheduleList
         }
@@ -177,22 +176,6 @@ class Utils {
             return languageGroups
         }
 
-        fun startScheduleRefreshTask(context: Context){
-            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val intent = Intent(context, ScheduleRefreshReceiver::class.java)
-            val alarmIntent = PendingIntent.getBroadcast(context, SCHEDULE_REFRESH_TASK_REQUEST_CODE, intent, 0)
-            val calendar = Calendar.getInstance()
-            calendar.set(Calendar.HOUR_OF_DAY, 1)
-            calendar.set(Calendar.MINUTE, 0)
-            alarmManager.setInexactRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    AlarmManager.INTERVAL_DAY,
-                    alarmIntent
-            )
-            enableBootReceiver(context)
-        }
-
         fun getScheduleCursor(db: SQLiteDatabase): Cursor{
             return db.query(
                     ScheduleContract.LessonEntry.TABLE_NAME,
@@ -202,17 +185,6 @@ class Utils {
                     null,
                     null,
                     ScheduleContract.LessonEntry.START_DATE
-            )
-        }
-
-        private fun enableBootReceiver(context: Context){
-            val receiver = ComponentName(context, BootReceiver::class.java)
-            val packageManager = context.packageManager
-
-            packageManager.setComponentEnabledSetting(
-                    receiver,
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                    PackageManager.DONT_KILL_APP
             )
         }
 

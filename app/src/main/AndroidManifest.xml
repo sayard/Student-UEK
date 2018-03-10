@@ -4,29 +4,26 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCtnSfmb1b5ScdqD0JXeuvI171YyEQHB5w"/>
+            android:value="AIzaSyCtnSfmb1b5ScdqD0JXeuvI171YyEQHB5w" />
 
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.FirstRunStepOneActivity"
             android:label="@string/choose_your_group_s"
@@ -39,21 +36,24 @@
             android:name=".activities.FirstRunStepThreeActivity"
             android:label="@string/weekly_p_e"
             android:screenOrientation="portrait" />
-
-        <receiver android:name=".receivers.ScheduleRefreshReceiver" />
-        <receiver
-            android:name=".receivers.BootReceiver"
-            android:enabled="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
-
         <activity
             android:name=".activities.AddLessonActivity"
             android:label="@string/add_lesson" />
         <activity android:name=".activities.AddNoteActivity" />
-        <activity android:name=".activities.ScheduleItemDetailsActivity"></activity>
+        <activity android:name=".activities.ScheduleItemDetailsActivity" />
+        <activity android:name=".activities.ActivateGoogleCalendarIntegrationActivity" />
+        <activity
+            android:name=".activities.SplashActivity"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.CreditsActivity"
+            android:label="@string/credits"/>
     </application>
 
 </manifest>

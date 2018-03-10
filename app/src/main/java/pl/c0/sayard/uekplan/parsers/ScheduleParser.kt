@@ -46,9 +46,9 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
         progressBar?.visibility = View.VISIBLE
         val dbHelper = ScheduleDbHelper(context)
         val db = dbHelper.writableDatabase
-        db.execSQL("DELETE FROM " + ScheduleContract.LessonEntry.TABLE_NAME)
-        db.execSQL("DELETE FROM ${ScheduleContract.UserAddedLessonEntry.TABLE_NAME} WHERE ${ScheduleContract.UserAddedLessonEntry.DATE} < date('now')")
-        db.execSQL("DELETE FROM ${ScheduleContract.LessonNoteEntry.TABLE_NAME} WHERE ${ScheduleContract.LessonNoteEntry.LESSON_DATE} < date('now')")
+        db.delete(ScheduleContract.LessonEntry.TABLE_NAME, null, null)
+        db.delete(ScheduleContract.UserAddedLessonEntry.TABLE_NAME, "? < date('now')", arrayOf(ScheduleContract.UserAddedLessonEntry.DATE))
+        db.delete(ScheduleContract.LessonNoteEntry.TABLE_NAME, "? < date('now')", arrayOf(ScheduleContract.LessonNoteEntry.LESSON_DATE))
         dbHelper.close()
     }
 

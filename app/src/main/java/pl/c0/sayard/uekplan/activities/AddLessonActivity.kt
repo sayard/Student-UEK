@@ -13,6 +13,7 @@ import pl.c0.sayard.uekplan.Utils.Companion.getTime
 import pl.c0.sayard.uekplan.data.Building
 import pl.c0.sayard.uekplan.db.ScheduleContract
 import pl.c0.sayard.uekplan.db.ScheduleDbHelper
+import pl.c0.sayard.uekplan.jobs.RefreshScheduleJob
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -178,6 +179,11 @@ class AddLessonActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
             val editor = prefs.edit()
             editor.putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
             editor.apply()
+            Thread{
+                kotlin.run {
+                    RefreshScheduleJob.refreshSchedule(this)
+                }
+            }.start()
             val mainActivityIntent = Intent(this@AddLessonActivity, MainActivity::class.java)
             startActivity(mainActivityIntent)
         }
