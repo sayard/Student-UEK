@@ -5,32 +5,24 @@ import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import pl.c0.sayard.uekplan.R
 import pl.c0.sayard.uekplan.data.ScheduleItem
+import java.text.SimpleDateFormat
 import java.util.*
 
 /**
  * Created by karol on 11.01.18.
  */
-class ScheduleAdapter(var context: Context, scheduleList:List<ScheduleItem>) : BaseAdapter() {
+class ScheduleAdapter(var context: Context, var scheduleListOriginal:List<ScheduleItem>) : BaseAdapter(), Filterable {
 
-
-    private var scheduleOriginal: List<ScheduleItem>? = null
-    private var scheduleDisplay: List<ScheduleItem>? = null
+    private var scheduleListDisplay = scheduleListOriginal
     private val mInflater: LayoutInflater = LayoutInflater.from(context)
-
-    init {
-        scheduleOriginal = scheduleList
-        scheduleDisplay = scheduleOriginal
-    }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view: View
         val vh: ScheduleViewHolder
-        val scheduleItemObj: ScheduleItem = scheduleDisplay!![position]
+        val scheduleItemObj: ScheduleItem = scheduleListDisplay[position]
         if(convertView == null){
             view = this.mInflater.inflate(R.layout.schedule_row, parent, false)
             vh = ScheduleViewHolder(view)
@@ -40,6 +32,12 @@ class ScheduleAdapter(var context: Context, scheduleList:List<ScheduleItem>) : B
             vh = view.tag as ScheduleViewHolder
             if(!scheduleItemObj.isFirstOnTheDay){
                 view.findViewById<TextView>(R.id.schedule_day_tv).visibility = View.GONE
+            }
+            if(scheduleItemObj.comments == ""){
+                vh.scheduleLineFour?.visibility = View.GONE
+            }
+            if(scheduleItemObj.noteId == -1 && scheduleItemObj.noteContent == ""){
+                vh.noteIconTextView?.visibility = View.GONE
             }
         }
         val calendar = scheduleItemObj.calendar
@@ -72,6 +70,9 @@ class ScheduleAdapter(var context: Context, scheduleList:List<ScheduleItem>) : B
             vh.scheduleLineFour?.visibility = View.VISIBLE
             vh.scheduleCommentsTv?.text = scheduleItemObj.comments
         }
+        if(scheduleItemObj.noteId != -1 && scheduleItemObj.noteContent != ""){
+            vh.noteIconTextView?.visibility = View.VISIBLE
+        }
         return view
     }
 
@@ -84,10 +85,11 @@ class ScheduleAdapter(var context: Context, scheduleList:List<ScheduleItem>) : B
         val scheduleClassroomTv = row?.findViewById<TextView>(R.id.schedule_classroom_tv)
         val scheduleLineFour = row?.findViewById<LinearLayout>(R.id.schedule_line_four)
         val scheduleCommentsTv = row?.findViewById<TextView>(R.id.schedule_comments_tv)
+        val noteIconTextView = row?.findViewById<TextView>(R.id.schedule_note_icon)
     }
 
     override fun getItem(position: Int): Any {
-        return scheduleOriginal!![position]
+        return scheduleListDisplay[position]
     }
 
     override fun getItemId(position: Int): Long {
@@ -95,11 +97,78 @@ class ScheduleAdapter(var context: Context, scheduleList:List<ScheduleItem>) : B
     }
 
     override fun getCount(): Int {
-        return scheduleOriginal!!.size
+        return scheduleListDisplay.size
     }
 
     fun changeAdapterData(scheduleList:List<ScheduleItem>){
-        scheduleOriginal = scheduleList
-        scheduleDisplay = scheduleOriginal
+        scheduleListOriginal = scheduleList
+        scheduleListDisplay = scheduleListOriginal
+    }
+
+    override fun getFilter(): Filter {
+        return object: Filter(){
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val results = FilterResults()
+                val filteredList = mutableListOf<ScheduleItem>()
+                if(scheduleListOriginal == null){
+                    scheduleListOriginal = mutableListOf()
+                }
+
+                if(constraint == null || constraint.isEmpty()){
+                    results.count = scheduleListOriginal.size
+                    results.values = scheduleListOriginal
+                }else{
+                    val constraintLowerCase = constraint.toString().toLowerCase()
+                    scheduleListOriginal.map {
+                        val dataSubject = it.subject
+                        val dataType = it.type
+                        val dataTeacher = it.teacher
+                        val dataClassroom = it.classroom
+                        val dateFormatShort = SimpleDateFormat("yyyy-MM-dd HH:mm")
+                        if(dataSubject.toLowerCase().contains(constraintLowerCase) ||
+                           dataType.toLowerCase().contains(constraintLowerCase) ||
+                           dataTeacher.toLowerCase().contains(constraintLowerCase) ||
+                           dataClassroom.toLowerCase().contains(constraintLowerCase)){
+                            filteredList.add(ScheduleItem(
+                                    it.subject,
+                                    it.type,
+                                    it.teacher,
+                                    it.teacherId,
+                                    it.classroom,
+                                    it.comments,
+                                    it.dateStr,
+                                    dateFormatShort.format(it.startDate),
+                                    dateFormatShort.format(it.endDate),
+                                    it.isFirstOnTheDay,
+                                    isCustom = it.isCustom,
+                                    customId = it.customId,
+                                    noteId = it.noteId,
+                                    noteContent = it.noteContent
+                            ))
+                        }
+                    }
+                    results.count = filteredList.size
+                    results.values = filteredList
+                }
+                return results
+            }
+
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                scheduleListDisplay = results?.values as List<ScheduleItem>
+                for(i in 0 until scheduleListDisplay.size){
+                    val scheduleItem = scheduleListDisplay[i]
+                    if(i==0){
+                        scheduleItem.isFirstOnTheDay = true
+                    }else{
+                        val previousScheduleItem = scheduleListDisplay[i-1]
+                        if(scheduleItem.dateStr != previousScheduleItem.dateStr){
+                            scheduleItem.isFirstOnTheDay = true
+                        }
+                    }
+                }
+                notifyDataSetChanged()
+            }
+
+        }
     }
 }

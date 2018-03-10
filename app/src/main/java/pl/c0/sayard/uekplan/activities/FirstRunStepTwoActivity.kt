@@ -1,5 +1,6 @@
-package pl.c0.sayard.uekplan
+package pl.c0.sayard.uekplan.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
@@ -11,38 +12,40 @@ import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.View
 import android.widget.*
+import pl.c0.sayard.uekplan.R
+import pl.c0.sayard.uekplan.Utils
 import pl.c0.sayard.uekplan.adapters.GroupListAdapter
 import pl.c0.sayard.uekplan.data.Group
 import pl.c0.sayard.uekplan.db.ScheduleContract
 import pl.c0.sayard.uekplan.db.ScheduleDbHelper
 import pl.c0.sayard.uekplan.parsers.GroupParser
 
-class FirstRunStepOneActivity : AppCompatActivity() {
-
-    private var nextStepButton: Button? = null
+class FirstRunStepTwoActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_first_run_step_one)
-        val retryButton = findViewById<Button>(R.id.group_retry_button)
-        nextStepButton = findViewById(R.id.next_step_button)
-        GroupParser(this, false, object: GroupParser.OnTaskCompleted{
+        setContentView(R.layout.activity_first_run_step_two)
+        val retryButton = findViewById<Button>(R.id.language_group_retry_button)
+        val nextStepButton = findViewById<Button>(R.id.next_step_button_two)
+        GroupParser(this, true, object: GroupParser.OnTaskCompleted{
+            @SuppressLint("ClickableViewAccessibility")
             override fun onTaskCompleted(result: List<Group>?, activity: Activity) {
-                val adapter = getAdapter(activity, result!!)
+                val groupListOriginal = result!!
+                val adapter = getAdapter(activity, groupListOriginal)
                 if(adapter.count <= 0){
                     Toast.makeText(activity, getText(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
                     retryButton.visibility = View.VISIBLE
-                    nextStepButton?.visibility = View.GONE
+                    nextStepButton.visibility = View.GONE
                 }else{
                     retryButton.visibility = View.GONE
-                    nextStepButton?.visibility = View.VISIBLE
+                    nextStepButton.visibility = View.VISIBLE
                 }
 
-                retryButton.setOnClickListener {
+                retryButton.setOnClickListener{
                     activity.recreate()
                 }
 
-                val searchBox = findViewById<EditText>(R.id.step_one_search_box)
+                val searchBox = findViewById<EditText>(R.id.step_two_search_box)
                 searchBox.addTextChangedListener(object: TextWatcher{
                     override fun afterTextChanged(p0: Editable?) {
                     }
@@ -56,23 +59,42 @@ class FirstRunStepOneActivity : AppCompatActivity() {
 
                 })
 
-                val listView = findViewById<ListView>(R.id.group_list_view)
+                val listView = findViewById<ListView>(R.id.language_group_list_view)
                 listView.adapter = adapter
                 val selectedGroups = mutableListOf<Group>()
-                listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+                listView.onItemClickListener = AdapterView.OnItemClickListener{ parent, view, position, id ->
                     val group = parent.getItemAtPosition(position) as Group
                     if(!selectedGroups.remove(group) && selectedGroups.count()<2){
                         selectedGroups.add(group)
                     }
-                    updateSelectedGroupsAndActivateNextButton(selectedGroups)
+                    updateSelectedGroups(selectedGroups)
                 }
-                val selectedGroupsET = findViewById<EditText>(R.id.selected_group_s_edit_text)
-                selectedGroupsET.setOnTouchListener(View.OnTouchListener { view, event->
+                nextStepButton.setOnClickListener{
+                    val dbHelper = ScheduleDbHelper(activity)
+                    val db = dbHelper.readableDatabase
+                    val contentValues = ContentValues()
+                    db.execSQL("DELETE FROM " + ScheduleContract.LanguageGroupsEntry.TABLE_NAME)
+                    selectedGroups.forEach({
+                        contentValues.put(
+                                ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_NAME,
+                                it.name
+                        )
+                        contentValues.put(
+                                ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_URL,
+                                Utils.getGroupURL(it)
+                        )
+                        db.insert(ScheduleContract.LanguageGroupsEntry.TABLE_NAME, null, contentValues)
+                    })
+                    val intent = Intent(activity, FirstRunStepThreeActivity::class.java)
+                    startActivity(intent)
+                }
+                val selectedGroupsET = findViewById<EditText>(R.id.selected_language_group_s_edit_text)
+                selectedGroupsET.setOnTouchListener(View.OnTouchListener { view, event ->
                     val DRAWABLE_RIGHT = 2
                     if(event?.action == MotionEvent.ACTION_UP){
                         if(event.rawX >= (selectedGroupsET.right - selectedGroupsET.compoundDrawables[DRAWABLE_RIGHT].bounds.width())){
                             selectedGroups.clear()
-                            updateSelectedGroupsAndActivateNextButton(selectedGroups)
+                            updateSelectedGroups(selectedGroups)
                             return@OnTouchListener true
                         }
                     }
@@ -86,8 +108,8 @@ class FirstRunStepOneActivity : AppCompatActivity() {
         return GroupListAdapter(context, groupListOriginal)
     }
 
-    private fun updateSelectedGroupsAndActivateNextButton(groups: List<Group>){
-        val selectedGroupsET = findViewById<EditText>(R.id.selected_group_s_edit_text)
+    private fun updateSelectedGroups(groups: List<Group>){
+        val selectedGroupsET = findViewById<EditText>(R.id.selected_language_group_s_edit_text)
         if(selectedGroupsET.visibility == View.GONE){
             selectedGroupsET.visibility = View.VISIBLE
         }else if(groups.isEmpty()){
@@ -98,26 +120,5 @@ class FirstRunStepOneActivity : AppCompatActivity() {
             groupNames.add(it.name)
         })
         selectedGroupsET.setText(groupNames.joinToString(", "))
-        nextStepButton?.isClickable = true
-        nextStepButton?.setBackgroundColor(resources.getColor(R.color.colorPrimary))
-        nextStepButton?.setOnClickListener {
-            val dbHelper = ScheduleDbHelper(this)
-            val db = dbHelper.readableDatabase
-            val contentValues = ContentValues()
-            db.execSQL("DELETE FROM " + ScheduleContract.GroupEntry.TABLE_NAME)
-            groups.forEach({
-                contentValues.put(
-                        ScheduleContract.GroupEntry.GROUP_NAME,
-                        it.name
-                )
-                contentValues.put(
-                        ScheduleContract.GroupEntry.GROUP_URL,
-                        Utils.getGroupURL(it)
-                )
-                db.insert(ScheduleContract.GroupEntry.TABLE_NAME, null, contentValues)
-            })
-            val intent = Intent(this, FirstRunStepTwoActivity::class.java)
-            startActivity(intent)
-        }
     }
 }

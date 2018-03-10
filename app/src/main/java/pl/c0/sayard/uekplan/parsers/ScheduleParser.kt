@@ -6,7 +6,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.os.AsyncTask
 import android.support.v4.widget.SwipeRefreshLayout
-import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -47,7 +46,9 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
         progressBar?.visibility = View.VISIBLE
         val dbHelper = ScheduleDbHelper(context)
         val db = dbHelper.writableDatabase
-        db.execSQL("DELETE FROM " + ScheduleContract.LessonEntry.TABLE_NAME)
+        db.delete(ScheduleContract.LessonEntry.TABLE_NAME, null, null)
+        db.delete(ScheduleContract.UserAddedLessonEntry.TABLE_NAME, "? < date('now')", arrayOf(ScheduleContract.UserAddedLessonEntry.DATE))
+        db.delete(ScheduleContract.LessonNoteEntry.TABLE_NAME, "? < date('now')", arrayOf(ScheduleContract.LessonNoteEntry.LESSON_DATE))
         dbHelper.close()
     }
 
@@ -82,9 +83,37 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
                     }
                 }
             }
+            val dbHelper = ScheduleDbHelper(context)
+            val db = dbHelper.writableDatabase
+            val userLessonsCursor = db.query(
+                    ScheduleContract.UserAddedLessonEntry.TABLE_NAME,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            )
+            while (userLessonsCursor.moveToNext()){
+                val lesson = Lesson(
+                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.DATE)),
+                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.START_HOUR)),
+                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.END_HOUR)),
+                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.SUBJECT)),
+                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.TYPE)),
+                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.TEACHER)),
+                        "-1",
+                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.CLASSROOM)),
+                        "",
+                        true,
+                        userLessonsCursor.getInt(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry._ID))
+                )
+                lessonList.add(lesson)
+            }
+            userLessonsCursor.close()
+            dbHelper.close()
             return lessonList
         }catch (e: Exception){
-            Log.v("SCHEDULE_PARS_EXCEPTION", e.toString())
             return emptyList()
         }
     }
@@ -105,6 +134,8 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
                 contentValues.put(ScheduleContract.LessonEntry.DATE, lesson.date)
                 contentValues.put(ScheduleContract.LessonEntry.START_DATE, lesson.startDate)
                 contentValues.put(ScheduleContract.LessonEntry.END_DATE, lesson.endDate)
+                contentValues.put(ScheduleContract.LessonEntry.IS_CUSTOM, lesson.isCustomLesson)
+                contentValues.put(ScheduleContract.LessonEntry.CUSTOM_ID, lesson.customId)
                 db.insert(ScheduleContract.LessonEntry.TABLE_NAME, null, contentValues)
             }
             if(adapter != null){

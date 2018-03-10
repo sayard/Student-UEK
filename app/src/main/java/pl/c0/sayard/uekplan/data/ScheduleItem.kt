@@ -15,10 +15,14 @@ class ScheduleItem(
         val classroom: String,
         val comments: String,
         val dateStr: String,
-        startDateStr: String,
-        endDateStr: String,
-        var isFirstOnTheDay: Boolean = false
-){
+        val startDateStr: String,
+        val endDateStr: String,
+        var isFirstOnTheDay: Boolean = false,
+        var isCustom: Boolean = false,
+        val customId: Int = -1,
+        var noteId: Int = -1,
+        var noteContent: String = ""){
+
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale("pl", "PL"))
     private val dateFormatShort = SimpleDateFormat("yyyy-MM-dd", Locale("pl", "PL"))
     var startDate: Date? = null
@@ -43,6 +47,6 @@ class ScheduleItem(
     }
 
     override fun toString(): String {
-        return "$subject\n $type\n $teacher\n $teacherId\n $classroom\n comments:$comments\n $dateStr\n $isFirstOnTheDay"
+        return "$subject\n $type\n $teacher\n $teacherId\n $classroom\n comments:$comments\n $dateStr\n $isFirstOnTheDay\n $isCustom"
     }
 }
