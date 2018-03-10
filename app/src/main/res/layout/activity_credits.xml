@@ -8,7 +8,7 @@
     android:layout_margin="5dp">
 
     <TextView
-        android:id="@+id/credits_android_name"
+        android:id="@+id/credits_android_version"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
@@ -18,14 +18,14 @@
         app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
-        android:id="@+id/credits_android_version"
+        android:id="@+id/credits_android_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
         android:textSize="20sp"
         android:text="Karol Gracz"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/credits_android_name"/>
+        app:layout_constraintTop_toBottomOf="@id/credits_android_version"/>
 
     <TextView
         android:id="@+id/credits_android_email"
@@ -35,7 +35,7 @@
         android:text="graczu42@gmail.com"
         android:autoLink="email"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/credits_android_version"/>
+        app:layout_constraintTop_toBottomOf="@id/credits_android_name"/>
 
     <TextView
         android:id="@+id/credits_android_github"
@@ -58,7 +58,7 @@
         app:layout_constraintTop_toBottomOf="@id/credits_android_github"/>
 
     <TextView
-        android:id="@+id/credits_ios_name"
+        android:id="@+id/credits_ios_version"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
@@ -68,14 +68,14 @@
         app:layout_constraintTop_toBottomOf="@id/credits_divider"/>
 
     <TextView
-        android:id="@+id/credits_ios_version"
+        android:id="@+id/credits_ios_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
         android:textSize="20sp"
         android:text="Michał Wójtowicz"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/credits_ios_name"/>
+        app:layout_constraintTop_toBottomOf="@id/credits_ios_version"/>
 
     <TextView
         android:id="@+id/credits_ios_email"
@@ -85,7 +85,7 @@
         android:text="wojtowiczmichal97@gmail.com"
         android:autoLink="email"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/credits_ios_version"/>
+        app:layout_constraintTop_toBottomOf="@id/credits_ios_name"/>
 
     <TextView
         android:id="@+id/credits_ios_github"
@@ -96,5 +96,79 @@
         android:autoLink="web"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/credits_ios_email"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/ee_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/credits_ios_github"
+        android:layout_marginTop="40dp"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/ee_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="60dp"
+            android:minWidth="60dp"
+            android:text="▲"
+            app:layout_constraintStart_toEndOf="@id/ee_left"/>
+
+        <Button
+            android:id="@+id/ee_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="60dp"
+            android:minWidth="60dp"
+            android:text="▼"
+            app:layout_constraintTop_toBottomOf="@+id/ee_up"
+            app:layout_constraintStart_toEndOf="@id/ee_left"/>
+
+        <Button
+            android:id="@+id/ee_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="60dp"
+            android:minWidth="60dp"
+            android:layout_marginTop="30dp"
+            android:text="◀"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <Button
+            android:id="@+id/ee_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="60dp"
+            android:minWidth="60dp"
+            android:layout_marginTop="30dp"
+            android:text="▶"
+            app:layout_constraintStart_toEndOf="@id/ee_down"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <Button
+            android:id="@+id/ee_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="60dp"
+            android:minWidth="60dp"
+            android:layout_marginTop="30dp"
+            android:text="A"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/ee_b"/>
+
+        <Button
+            android:id="@+id/ee_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="60dp"
+            android:minWidth="60dp"
+            android:layout_marginTop="30dp"
+            android:text="B"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>
