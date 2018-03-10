@@ -153,6 +153,11 @@ class SettingsFragment : Fragment() {
                     .setNegativeButton(getString(R.string.no), dialogClickListener).show()
         }
 
+        val buyPremium = view.findViewById<LinearLayout>(R.id.buy_premium)
+        buyPremium.setOnClickListener {
+            Toast.makeText(context, "SOON", Toast.LENGTH_SHORT).show()
+        }
+
         val credits = view.findViewById<LinearLayout>(R.id.credits)
         credits.setOnClickListener {
             val intent = Intent(context, CreditsActivity::class.java)

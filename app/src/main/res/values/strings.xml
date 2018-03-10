@@ -117,4 +117,6 @@
     <string name="choose_your_groups_one_more_time">Choose your groups one more time</string>
     <string name="groups_rechoosing_dialog_msg">Are you sure yo want to choose your groups one more time?</string>
     <string name="credits">Credits</string>
+    <string name="buy_premium">Buy Premium</string>
+    <string name="get_rid_of_the_ads_and_gain_extra_features_by_buying_premium">Get rid of the ads and gain extra features by buying premium</string>
 </resources>
