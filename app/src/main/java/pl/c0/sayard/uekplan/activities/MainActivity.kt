@@ -4,48 +4,22 @@ import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.design.widget.BottomNavigationView
+import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.view.MotionEvent
-import com.github.pwittchen.swipe.library.rx2.Swipe
-import com.github.pwittchen.swipe.library.rx2.SwipeListener
+import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_main.*
 import pl.c0.sayard.uekplan.R
 import pl.c0.sayard.uekplan.Utils
 import pl.c0.sayard.uekplan.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
+import pl.c0.sayard.uekplan.adapters.ViewPagerAdapter
 import pl.c0.sayard.uekplan.fragments.NotesFragment
 import pl.c0.sayard.uekplan.fragments.ScheduleFragment
 import pl.c0.sayard.uekplan.fragments.SearchFragment
 import pl.c0.sayard.uekplan.fragments.SettingsFragment
 
 class MainActivity : AppCompatActivity() {
-    private val swipe = Swipe(20, 420)
 
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        val selectedFragment: Any
-        val transaction = supportFragmentManager.beginTransaction()
-        when(item.itemId){
-            R.id.navigation_search ->{
-                selectedFragment = SearchFragment.newInstance()
-                setTitle(R.string.search)
-            }
-            R.id.navigation_schedule -> {
-                selectedFragment = ScheduleFragment.newInstance()
-                setTitle(R.string.schedule)
-            }
-            R.id.navigation_notes -> {
-                selectedFragment = NotesFragment.newInstance()
-                setTitle(R.string.notes)
-            }
-            R.id.navigation_settings -> {
-                selectedFragment = SettingsFragment.newInstance()
-                setTitle(R.string.settings)
-            }
-            else -> return@OnNavigationItemSelectedListener false
-        }
-        transaction.replace(R.id.main_frame, selectedFragment as android.support.v4.app.Fragment?)
-        transaction.commit()
-        true
-    }
+    private var prevMenuItem: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,66 +31,69 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }else{
             setContentView(R.layout.activity_main)
+
+            val viewPager = findViewById<ViewPager>(R.id.main_frame)
+
             navigation.selectedItemId = R.id.navigation_schedule
-            navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-            val transaction = supportFragmentManager.beginTransaction()
-            setTitle(R.string.schedule)
-            val scheduleFragment = ScheduleFragment.newInstance()
-            transaction.replace(R.id.main_frame, scheduleFragment)
-            transaction.commit()
-            swipe.setListener(object: SwipeListener{
-                override fun onSwipedUp(event: MotionEvent?): Boolean {
-                    return false
+            navigation.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
+                when(item.itemId){
+                    R.id.navigation_search ->{
+                        viewPager.currentItem = 0
+                        setTitle(R.string.search)
+                    }
+                    R.id.navigation_schedule -> {
+                        viewPager.currentItem = 1
+                        setTitle(R.string.schedule)
+                    }
+                    R.id.navigation_notes -> {
+                        viewPager.currentItem = 2
+                        setTitle(R.string.notes)
+                    }
+                    R.id.navigation_settings -> {
+                        viewPager.currentItem = 3
+                        setTitle(R.string.settings)
+                    }
+                    else -> return@OnNavigationItemSelectedListener false
+                }
+                true
+            })
+
+            viewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener{
+                override fun onPageScrollStateChanged(state: Int) {
                 }
 
-                override fun onSwipedDown(event: MotionEvent?): Boolean {
-                    return false
+                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
                 }
 
-                override fun onSwipingUp(event: MotionEvent?) {
-                    return
-                }
-
-                override fun onSwipingLeft(event: MotionEvent?) {
-                    return
-                }
-
-                override fun onSwipingRight(event: MotionEvent?) {
-                    return
-                }
-
-                override fun onSwipingDown(event: MotionEvent?) {
-                    return
-                }
-
-                override fun onSwipedRight(event: MotionEvent?): Boolean {
-                    navigation.selectedItemId = Utils.getSwipeFragmentId(navigation.selectedItemId, getString(R.string.right_swipe), this@MainActivity)
-                    return true
-                }
-
-                override fun onSwipedLeft(event: MotionEvent?): Boolean {
-                    navigation.selectedItemId = Utils.getSwipeFragmentId(navigation.selectedItemId, getString(R.string.left_swipe), this@MainActivity)
-                    return true
+                override fun onPageSelected(position: Int) {
+                    if(prevMenuItem != null){
+                        prevMenuItem!!.isChecked = false
+                    }else{
+                        navigation.menu.getItem(1).isChecked = false
+                    }
+                    val menuItem = navigation.menu.getItem(position)
+                    menuItem.isChecked = true
+                    prevMenuItem = menuItem
+                    title = getString(Utils.getTitleBasedOnPosition(position))
                 }
 
             })
+            setUpViewPager(viewPager)
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        val selectedFragment = supportFragmentManager.findFragmentById((R.id.navigation))
-        when(selectedFragment){
-            is SearchFragment -> navigation.selectedItemId = R.id.navigation_search
-            is ScheduleFragment -> navigation.selectedItemId = R.id.navigation_schedule
-            is NotesFragment -> navigation.selectedItemId = R.id.navigation_notes
-            is SettingsFragment -> navigation.selectedItemId = R.id.navigation_settings
-        }
-    }
-
-    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
-        swipe.dispatchTouchEvent(event)
-        return super.dispatchTouchEvent(event)
+    private fun setUpViewPager(viewPager: ViewPager){
+        val adapter = ViewPagerAdapter(supportFragmentManager)
+        val searchFragment = SearchFragment.newInstance()
+        val scheduleFragment = ScheduleFragment.newInstance()
+        val notesFragment = NotesFragment.newInstance()
+        val settingsFragment = SettingsFragment.newInstance()
+        adapter.addFragment(searchFragment)
+        adapter.addFragment(scheduleFragment)
+        adapter.addFragment(notesFragment)
+        adapter.addFragment(settingsFragment)
+        viewPager.adapter = adapter
+        viewPager.currentItem = 1
     }
 
 }

@@ -53,7 +53,8 @@
         </activity>
         <activity
             android:name=".activities.CreditsActivity"
-            android:label="@string/credits"/>
+            android:label="@string/credits" />
+        <activity android:name=".activities.SearchedScheduleActivity"/>
     </application>
 
 </manifest>

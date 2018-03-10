@@ -1,6 +1,7 @@
 package pl.c0.sayard.uekplan.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
@@ -12,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.*
 
 import pl.c0.sayard.uekplan.R
+import pl.c0.sayard.uekplan.activities.SearchedScheduleActivity
 import pl.c0.sayard.uekplan.adapters.GroupAndTeacherListAdapter
 import pl.c0.sayard.uekplan.data.Group
 import pl.c0.sayard.uekplan.parsers.GroupAndTeacherParser
@@ -75,8 +77,12 @@ class SearchFragment : Fragment() {
                     listView.adapter = adapter
                     listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
                         val group = parent.getItemAtPosition(position) as Group
-                        val searchedScheduleFragment = SearchedScheduleFragment.newInstance(group)
-                        activity.supportFragmentManager.beginTransaction().replace(R.id.main_frame, searchedScheduleFragment).addToBackStack(null).commit()
+                        val intent = Intent(context, SearchedScheduleActivity::class.java).apply {
+                            putExtra(getString(R.string.EXTRA_SEARCHED_SCHEDULE_GROUP_ID), group.id)
+                            putExtra(getString(R.string.EXTRA_SEARCHED_SCHEDULE_GROUP_NAME), group.name)
+                            putExtra(getString(R.string.EXTRA_SEARCHED_SCHEDULE_GROUP_TYPE), group.type)
+                        }
+                        startActivity(intent)
                     }
                 }
             }
@@ -88,7 +94,6 @@ class SearchFragment : Fragment() {
         super.onResume()
         val searchBox = view?.findViewById<EditText>(R.id.group_and_teacher_search)
         searchBox?.setText("", TextView.BufferType.EDITABLE)
-        activity.title = getString(R.string.search)
     }
 
     private fun getAdapter(context: Context, groupList: List<Group>): GroupAndTeacherListAdapter{

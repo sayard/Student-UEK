@@ -10,11 +10,10 @@ import org.xml.sax.InputSource
 import pl.c0.sayard.uekplan.Utils
 import pl.c0.sayard.uekplan.data.Group
 import pl.c0.sayard.uekplan.data.ScheduleItem
-import pl.c0.sayard.uekplan.fragments.SearchedScheduleFragment
 import java.net.URL
 import javax.xml.parsers.DocumentBuilderFactory
 
-class SearchedScheduleParser(val progressBar: ProgressBar, val errorMessage: TextView, val fragment: SearchedScheduleFragment, val onTaskCompleted: OnTaskCompleted): AsyncTask<Group, Void, List<ScheduleItem>>(){
+class SearchedScheduleParser(val progressBar: ProgressBar, val errorMessage: TextView, val onTaskCompleted: OnTaskCompleted): AsyncTask<Group, Void, List<ScheduleItem>>(){
     private val CLASSES_TAG = "zajecia"
     private val DATE_TAG = "termin"
     private val START_HOUR_TAG = "od-godz"
@@ -30,7 +29,7 @@ class SearchedScheduleParser(val progressBar: ProgressBar, val errorMessage: Tex
     private val IDCEL_TAG = "idcel"
 
     interface OnTaskCompleted{
-        fun onTaskCompleted(result: List<ScheduleItem>, fragment: SearchedScheduleFragment)
+        fun onTaskCompleted(result: List<ScheduleItem>)
     }
 
     override fun onPreExecute() {
@@ -105,7 +104,7 @@ class SearchedScheduleParser(val progressBar: ProgressBar, val errorMessage: Tex
         super.onPostExecute(result)
         progressBar.visibility = View.GONE
         if(result != null){
-            onTaskCompleted.onTaskCompleted(result, fragment)
+            onTaskCompleted.onTaskCompleted(result)
         }else{
             errorMessage.visibility = View.VISIBLE
         }

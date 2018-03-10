@@ -64,7 +64,6 @@ class NotesFragment : Fragment() {
             notesSearch.setText("", TextView.BufferType.EDITABLE)
             executeNotesParser(progressBar, notesMessage, listView, notesSearch)
         }
-        activity.title = getString(R.string.notes)
     }
 
     private fun executeNotesParser(progressBar: ProgressBar, notesMessage: TextView, listView: ListView, notesSearch:EditText){

@@ -119,4 +119,7 @@
     <string name="credits">Credits</string>
     <string name="buy_premium">Buy Premium</string>
     <string name="get_rid_of_the_ads_and_gain_extra_features_by_buying_premium">Get rid of the ads and gain extra features by buying premium</string>
+    <string name="EXTRA_SEARCHED_SCHEDULE_GROUP_ID">pl.c0.sayard.EXTRA_SEARCHED_SCHEDULE_GROUP_ID</string>
+    <string name="EXTRA_SEARCHED_SCHEDULE_GROUP_NAME">pl.c0.sayard.EXTRA_SEARCHED_SCHEDULE_GROUP_NAME</string>
+    <string name="EXTRA_SEARCHED_SCHEDULE_GROUP_TYPE">pl.c0.sayard.EXTRA_SEARCHED_SCHEDULE_GROUP_TYPE</string>
 </resources>

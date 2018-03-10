@@ -1,6 +1,5 @@
 package pl.c0.sayard.uekplan
 
-import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.widget.TextView
@@ -17,9 +16,6 @@ import java.util.*
  */
 class Utils {
     companion object {
-        val SCHEDULE_REFRESH_TASK_REQUEST_CODE = 101
-        val GOOGLE_CALENDAR_INTEGRATION_REQUEST_CODE = 102
-
         val FIRST_RUN_SHARED_PREFS_KEY = "firstRun"
         val AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY = "automaticScheduleRefresh"
 
@@ -197,26 +193,14 @@ class Utils {
             return startTime
         }
 
-        fun getSwipeFragmentId(id: Int, swipe:String, context: Context): Int{
-            var returnId: Int
-            if(swipe == context.getString(R.string.right_swipe)){
-                returnId = when(id){
-                    R.id.navigation_search -> R.id.navigation_search
-                    R.id.navigation_schedule -> R.id.navigation_search
-                    R.id.navigation_notes -> R.id.navigation_schedule
-                    R.id.navigation_settings -> R.id.navigation_notes
-                    else -> id
-                }
-            }else{
-                returnId = when(id){
-                    R.id.navigation_search -> R.id.navigation_schedule
-                    R.id.navigation_schedule -> R.id.navigation_notes
-                    R.id.navigation_notes -> R.id.navigation_settings
-                    R.id.navigation_settings -> R.id.navigation_settings
-                    else -> id
-                }
+        fun getTitleBasedOnPosition(position: Int): Int{
+            return when(position){
+                0 -> R.string.search
+                1 -> R.string.schedule
+                2 -> R.string.notes
+                3 -> R.string.settings
+                else -> R.string.app_name
             }
-            return returnId
         }
     }
 }
