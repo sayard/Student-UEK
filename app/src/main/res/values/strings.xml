@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">UEK Plan</string>
+    <string name="app_name">Student UEK</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
@@ -42,9 +42,7 @@
     <string name="classroom">Classroom</string>
     <string name="date">Date</string>
     <string name="custom_lesson_name_error">Custom lesson name must not be empty</string>
-    <string name="PREFS_REFRESH_SCHEDULE">pl.c0.sayard.uekplan.PREFS_REFRESH_SCHEDULE</string>
-    <string name="right_swipe">right_swipe</string>
-    <string name="left_swipe">left_swipe</string>
+    <string name="PREFS_REFRESH_SCHEDULE">pl.c0.sayard.studentUEK.PREFS_REFRESH_SCHEDULE</string>
     <string name="schedule_refreshed">Schedule refreshed</string>
     <string name="groups_and_teachers_refreshed">Groups and teachers refreshed</string>
     <string name="teacher_page">Teacher page</string>
@@ -100,26 +98,26 @@
     <string name="contacts_permission_rationale">This app requires contacts permissions to access your Google Account.</string>
     <string name="gp_services_required_msg">This app requires Google Play Services</string>
     <string name="PREFS_ACCOUNT_NAME">accountName</string>
-    <string name="PREFS_ENABLE_GC">pl.c0.sayard.uekplan.PREFS_ENABLE_GC</string>
-    <string name="GC_ERROR_CHANNEL">pl.c0.sayard.uekplan.GC_ERROR_CHANNEL</string>
+    <string name="PREFS_ENABLE_GC">pl.c0.sayard.studentUEK.PREFS_ENABLE_GC</string>
+    <string name="GC_ERROR_CHANNEL">pl.c0.sayard.studentUEK.GC_ERROR_CHANNEL</string>
     <string name="gc_items_adding_fail">Failed to add items to your Google Calendar</string>
     <string name="click_here_to_try_again">Click here to try again</string>
     <string name="notifications">Notifications</string>
     <string name="notifications_will_display_before_every_item_in_your_schedule">Notifications will display before every item in your schedule</string>
     <string name="minutes">Minutes:</string>
-    <string name="PREFS_ENABLE_NOTIFICATIONS">pl.c0.sayard.uekplan.PREFS_ENABLE_NOTIFICATIONS</string>
-    <string name="PREFS_NOTIFICATION_TIME_THRESHOLD">pl.c0.sayard.uekplan.PREFS_NOTIFICATION_TIME_THRESHOLD</string>
-    <string name="EXTRA_NOTIFICATION_SUBJECT">pl.c0.sayard.uekplan.EXTRA_NOTIFICATION_SUBJECT</string>
-    <string name="EXTRA_NOTIFICATION_CLASSROOM">pl.c0.sayard.uekplan.EXTRA_NOTIFICATION_CLASSROOM</string>
-    <string name="EXTRA_NOTIFICATION_HOUR">pl.c0.sayard.uekplan.EXTRA_NOTIFICATION_HOUR</string>
-    <string name="SCHEDULE_ITEM_NOTIFICATION_CHANNEL">pl.c0.sayard.uekplan.SCHEDULE_ITEM_NOTIFICATION_CHANNEL</string>
+    <string name="PREFS_ENABLE_NOTIFICATIONS">pl.c0.sayard.studentUEK.PREFS_ENABLE_NOTIFICATIONS</string>
+    <string name="PREFS_NOTIFICATION_TIME_THRESHOLD">pl.c0.sayard.studentUEK.PREFS_NOTIFICATION_TIME_THRESHOLD</string>
+    <string name="EXTRA_NOTIFICATION_SUBJECT">pl.c0.sayard.studentUEK.EXTRA_NOTIFICATION_SUBJECT</string>
+    <string name="EXTRA_NOTIFICATION_CLASSROOM">pl.c0.sayard.studentUEK.EXTRA_NOTIFICATION_CLASSROOM</string>
+    <string name="EXTRA_NOTIFICATION_HOUR">pl.c0.sayard.studentUEK.EXTRA_NOTIFICATION_HOUR</string>
+    <string name="SCHEDULE_ITEM_NOTIFICATION_CHANNEL">pl.c0.sayard.studentUEK.SCHEDULE_ITEM_NOTIFICATION_CHANNEL</string>
     <string name="reconfiguring">Reconfiguring</string>
     <string name="choose_your_groups_one_more_time">Choose your groups one more time</string>
     <string name="groups_rechoosing_dialog_msg">Are you sure yo want to choose your groups one more time?</string>
     <string name="credits">Credits</string>
     <string name="buy_premium">Buy Premium</string>
     <string name="get_rid_of_the_ads_and_gain_extra_features_by_buying_premium">Get rid of the ads and gain extra features by buying premium</string>
-    <string name="EXTRA_SEARCHED_SCHEDULE_GROUP_ID">pl.c0.sayard.EXTRA_SEARCHED_SCHEDULE_GROUP_ID</string>
-    <string name="EXTRA_SEARCHED_SCHEDULE_GROUP_NAME">pl.c0.sayard.EXTRA_SEARCHED_SCHEDULE_GROUP_NAME</string>
-    <string name="EXTRA_SEARCHED_SCHEDULE_GROUP_TYPE">pl.c0.sayard.EXTRA_SEARCHED_SCHEDULE_GROUP_TYPE</string>
+    <string name="EXTRA_SEARCHED_SCHEDULE_GROUP_ID">pl.c0.sayard.studentUEK.EXTRA_SEARCHED_SCHEDULE_GROUP_ID</string>
+    <string name="EXTRA_SEARCHED_SCHEDULE_GROUP_NAME">pl.c0.sayard.studentUEK.EXTRA_SEARCHED_SCHEDULE_GROUP_NAME</string>
+    <string name="EXTRA_SEARCHED_SCHEDULE_GROUP_TYPE">pl.c0.sayard.studentUEK.EXTRA_SEARCHED_SCHEDULE_GROUP_TYPE</string>
 </resources>

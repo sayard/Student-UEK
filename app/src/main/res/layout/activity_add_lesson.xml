@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pl.c0.sayard.uekplan.activities.AddLessonActivity">
+    tools:context="pl.c0.sayard.studentUEK.activities.AddLessonActivity">
 
     <EditText
         android:id="@+id/custom_lesson_name"

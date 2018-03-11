@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pl.c0.sayard.uekplan.fragments.NotesFragment"
+    tools:context="pl.c0.sayard.studentUEK.fragments.NotesFragment"
     android:focusableInTouchMode="true">
 
     <LinearLayout
