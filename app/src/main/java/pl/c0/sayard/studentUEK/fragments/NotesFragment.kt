@@ -70,27 +70,29 @@ class NotesFragment : Fragment() {
         NotesParser(this, object: NotesParser.OnTaskCompleted{
 
             override fun onTaskCompleted(result: List<Note>?) {
-                progressBar.visibility = View.GONE
-                if(result == null){
-                    notesMessage.visibility = View.VISIBLE
-                }else{
-                    val adapter = NotesAdapter(context, result.toMutableList())
-                    notesSearch.addTextChangedListener(object: TextWatcher{
-                        override fun afterTextChanged(p0: Editable?) {}
+                if(context != null){
+                    progressBar.visibility = View.GONE
+                    if(result == null){
+                        notesMessage.visibility = View.VISIBLE
+                    }else{
+                        val adapter = NotesAdapter(context, result.toMutableList())
+                        notesSearch.addTextChangedListener(object: TextWatcher{
+                            override fun afterTextChanged(p0: Editable?) {}
 
-                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+                            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
-                        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                            adapter.filter.filter(p0.toString())
+                            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                                adapter.filter.filter(p0.toString())
+                            }
+
+                        })
+                        listView.adapter = adapter
+                        listView.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
+                            val note = parent.getItemAtPosition(position) as Note
+                            val intent = Intent(context, AddNoteActivity::class.java)
+                            intent.putExtra(getString(R.string.note_id_extra), note.id)
+                            startActivity(intent)
                         }
-
-                    })
-                    listView.adapter = adapter
-                    listView.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
-                        val note = parent.getItemAtPosition(position) as Note
-                        val intent = Intent(context, AddNoteActivity::class.java)
-                        intent.putExtra(getString(R.string.note_id_extra), note.id)
-                        startActivity(intent)
                     }
                 }
             }
