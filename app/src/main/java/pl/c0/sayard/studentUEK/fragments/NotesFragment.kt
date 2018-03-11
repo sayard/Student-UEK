@@ -69,7 +69,7 @@ class NotesFragment : Fragment() {
     private fun executeNotesParser(progressBar: ProgressBar, notesMessage: TextView, listView: ListView, notesSearch:EditText){
         NotesParser(this, object: NotesParser.OnTaskCompleted{
 
-            override fun onTaskCompleted(result: List<Note>?, fragment: NotesFragment) {
+            override fun onTaskCompleted(result: List<Note>?) {
                 progressBar.visibility = View.GONE
                 if(result == null){
                     notesMessage.visibility = View.VISIBLE

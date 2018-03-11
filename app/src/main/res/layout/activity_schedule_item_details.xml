@@ -93,7 +93,7 @@
                 android:background="@color/colorPrimary"
                 android:layout_marginTop="5dp"
                 android:textColor="@android:color/white"
-                android:text="@string/e_wizyt_wka"
+                android:text="@string/teacher_page"
                 android:visibility="gone" />
 
         </LinearLayout>

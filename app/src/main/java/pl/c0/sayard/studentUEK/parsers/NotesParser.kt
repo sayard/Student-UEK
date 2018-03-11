@@ -12,7 +12,7 @@ import pl.c0.sayard.studentUEK.fragments.NotesFragment
 class NotesParser(private val fragment: NotesFragment, private val onTaskCompleted: OnTaskCompleted): AsyncTask<Void, Void, List<Note>>() {
 
     interface OnTaskCompleted{
-        fun onTaskCompleted(result: List<Note>?, fragment: NotesFragment)
+        fun onTaskCompleted(result: List<Note>?)
     }
 
     override fun doInBackground(vararg p0: Void?): List<Note> {
@@ -45,6 +45,6 @@ class NotesParser(private val fragment: NotesFragment, private val onTaskComplet
 
     override fun onPostExecute(result: List<Note>?) {
         super.onPostExecute(result)
-        onTaskCompleted.onTaskCompleted(result, fragment)
+        onTaskCompleted.onTaskCompleted(result)
     }
 }
