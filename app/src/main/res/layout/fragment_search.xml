@@ -17,15 +17,6 @@
             android:layout_height="match_parent"
             android:visibility="gone"/>
 
-        <TextView
-            android:id="@+id/group_and_teacher_error_message"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/error_try_again_later"
-            android:padding="50dp"
-            android:textAlignment="center"
-            android:visibility="gone"/>
-
         <EditText
             android:id="@+id/group_and_teacher_search"
             android:layout_width="match_parent"
@@ -43,6 +34,15 @@
                 android:layout_height="match_parent"
                 android:choiceMode="singleChoice"
                 android:visibility="visible"/>
+
+            <TextView
+                android:id="@+id/group_and_teacher_error_message"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="@string/error_try_again_later"
+                android:padding="50dp"
+                android:textAlignment="center"
+                android:visibility="gone"/>
 
         </android.support.v4.widget.SwipeRefreshLayout>
 

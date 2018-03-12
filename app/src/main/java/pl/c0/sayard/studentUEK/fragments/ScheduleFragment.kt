@@ -1,6 +1,8 @@
 package pl.c0.sayard.studentUEK.fragments
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
@@ -90,14 +92,21 @@ class ScheduleFragment : Fragment() {
                 }
                 val scheduleSwipe = view.findViewById<SwipeRefreshLayout>(R.id.schedule_swipe)
                 scheduleSwipe.setOnRefreshListener{
-                    ScheduleParser(context, null, null, errorMessage, adapter, scheduleSwipe).execute(urls)
-                    scheduleSearch.setText("", TextView.BufferType.EDITABLE)
-                    Toast.makeText(context, getString(R.string.schedule_refreshed), Toast.LENGTH_SHORT).show()
-                    Thread{
-                        kotlin.run {
-                            RefreshScheduleJob.refreshSchedule(context)
-                        }
-                    }.start()
+                    val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                    val networkInfo = connMgr.activeNetworkInfo
+                    if(networkInfo != null && networkInfo.isConnected){
+                        ScheduleParser(context, null, null, errorMessage, adapter, scheduleSwipe).execute(urls)
+                        scheduleSearch.setText("", TextView.BufferType.EDITABLE)
+                        Toast.makeText(context, getString(R.string.schedule_refreshed), Toast.LENGTH_SHORT).show()
+                        Thread{
+                            kotlin.run {
+                                RefreshScheduleJob.refreshSchedule(context)
+                            }
+                        }.start()
+                    }else{
+                        Toast.makeText(context, getString(R.string.no_internet_conn), Toast.LENGTH_SHORT).show()
+                        scheduleSwipe.isRefreshing = false
+                    }
                 }
             }else{
                 errorMessage.visibility = View.VISIBLE
