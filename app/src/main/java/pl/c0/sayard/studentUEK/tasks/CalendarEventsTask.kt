@@ -17,6 +17,7 @@ import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.activities.ActivateGoogleCalendarIntegrationActivity
 import pl.c0.sayard.studentUEK.data.Building
 import pl.c0.sayard.studentUEK.db.ScheduleDbHelper
+import pl.c0.sayard.studentUEK.jobs.RefreshScheduleJob
 import java.io.IOException
 
 /**
@@ -93,13 +94,9 @@ class CalendarEventsTask(credential: GoogleAccountCredential, val instance: Acti
         item.id = "primary"
         val itemList = mutableListOf(item)
         request.items = itemList
-        return try{
-            val query = service?.freebusy()?.query(request)
-            val response = query?.execute()
-            (response?.calendars?.get("primary")?.get("busy") as List<*>).isEmpty()
-        }catch (e: Exception){
-            false
-        }
+        val query = service?.freebusy()?.query(request)
+        val response = query?.execute()
+        return (response?.calendars?.get("primary")?.get("busy") as List<*>).isEmpty()
     }
 
     override fun onCancelled() {
@@ -114,10 +111,17 @@ class CalendarEventsTask(credential: GoogleAccountCredential, val instance: Acti
                             ActivateGoogleCalendarIntegrationActivity.Constants.REQUEST_GOOGLE_PLAY_SERVICES)
                     dialog.show()
                 }
-                is UserRecoverableAuthIOException -> instance?.startActivityForResult(
-                        (lastError as UserRecoverableAuthIOException).intent,
-                        ActivateGoogleCalendarIntegrationActivity.Constants.REQUEST_AUTHORIZATION
-                )
+                is UserRecoverableAuthIOException -> {
+                    instance?.startActivityForResult(
+                            (lastError as UserRecoverableAuthIOException).intent,
+                            ActivateGoogleCalendarIntegrationActivity.Constants.REQUEST_AUTHORIZATION
+                    )
+                    Thread{
+                        kotlin.run {
+                            RefreshScheduleJob.refreshSchedule(context)
+                        }
+                    }.start()
+                }
                 else ->{} //fail silently
             }
         }else{
