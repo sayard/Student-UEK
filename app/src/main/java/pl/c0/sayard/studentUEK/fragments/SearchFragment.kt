@@ -2,6 +2,7 @@ package pl.c0.sayard.studentUEK.fragments
 
 import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
@@ -34,9 +35,15 @@ class SearchFragment : Fragment() {
         val searchBox = view.findViewById<EditText>(R.id.group_and_teacher_search)
         executeGroupAndTeacherParser(view)
         searchSwipe.setOnRefreshListener {
-            executeGroupAndTeacherParser(view)
-            searchBox.setText("", TextView.BufferType.EDITABLE)
-            Toast.makeText(context, getString(R.string.groups_and_teachers_refreshed), Toast.LENGTH_SHORT).show()
+            val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val networkInfo = connMgr.activeNetworkInfo
+            if(networkInfo != null && networkInfo.isConnected){
+                executeGroupAndTeacherParser(view)
+                searchBox.setText("", TextView.BufferType.EDITABLE)
+                Toast.makeText(context, getString(R.string.groups_and_teachers_refreshed), Toast.LENGTH_SHORT).show()
+            }else{
+                Toast.makeText(context, getString(R.string.no_internet_conn), Toast.LENGTH_SHORT).show()
+            }
             searchSwipe.isRefreshing = false
         }
         return view
@@ -52,7 +59,6 @@ class SearchFragment : Fragment() {
                 if(context != null){
                     val adapter = getAdapter(context, result!!)
                     if(adapter.count <= 0){
-                        Toast.makeText(this@SearchFragment.context, getText(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
                         errorMessage.visibility = View.VISIBLE
                         searchBox.visibility = View.GONE
                     }else{

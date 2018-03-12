@@ -69,4 +69,5 @@
     <string name="credits">Autorzy</string>
     <string name="buy_premium">Kup Premium</string>
     <string name="get_rid_of_the_ads_and_gain_extra_features_by_buying_premium">Pozbądź się reklam i zyskaj dodatkowe funkcje</string>
+    <string name="no_internet_conn">Brak połączenia z internetem</string>
 </resources>
