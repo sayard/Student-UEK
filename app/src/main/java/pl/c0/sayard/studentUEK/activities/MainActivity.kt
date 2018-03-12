@@ -7,6 +7,11 @@ import android.support.design.widget.BottomNavigationView
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.view.View
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.activity_main.*
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
@@ -79,6 +84,21 @@ class MainActivity : AppCompatActivity() {
 
             })
             setUpViewPager(viewPager)
+        }
+        MobileAds.initialize(this, "") //TODO: supply admob app id
+        val adView = findViewById<AdView>(R.id.banner_ad)
+        val adRequest = AdRequest.Builder().build()
+        adView.loadAd(adRequest)
+        adView.adListener = object : AdListener(){
+            override fun onAdLoaded() {
+                super.onAdLoaded()
+                adView.visibility = View.VISIBLE
+            }
+
+            override fun onAdFailedToLoad(p0: Int) {
+                super.onAdFailedToLoad(p0)
+                adView.visibility = View.GONE
+            }
         }
     }
 
