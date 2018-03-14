@@ -121,4 +121,10 @@ class FirstRunStepTwoActivity : AppCompatActivity() {
         })
         selectedGroupsET.setText(groupNames.joinToString(", "))
     }
+
+    override fun onRestart() {
+        super.onRestart()
+        val intent = Intent(this, FirstRunStepOneActivity::class.java)
+        startActivity(intent)
+    }
 }

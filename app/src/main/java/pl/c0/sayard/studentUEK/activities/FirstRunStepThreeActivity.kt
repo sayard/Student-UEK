@@ -107,4 +107,10 @@ class FirstRunStepThreeActivity : AppCompatActivity() {
             startActivity(intent)
         })
     }
+
+    override fun onRestart() {
+        super.onRestart()
+        val intent = Intent(this, FirstRunStepOneActivity::class.java)
+        startActivity(intent)
+    }
 }
