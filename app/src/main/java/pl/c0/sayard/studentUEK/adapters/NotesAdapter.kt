@@ -102,9 +102,9 @@ class NotesAdapter(private val context: Context, private var notesListOriginal: 
                     notesListOriginal = mutableListOf()
                 }
 
-                if(constraint == null || constraint.isEmpty()){
+                if(constraint == null || constraint == ""){
                     results.count = notesListOriginal.size
-                    results.values = notesListDisplay
+                    results.values = notesListOriginal
                 }else{
                     val constraintLowerCase = constraint.toString().toLowerCase()
                     for(i in 0 until notesListOriginal.size){

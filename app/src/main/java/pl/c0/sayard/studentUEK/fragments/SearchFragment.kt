@@ -8,10 +8,10 @@ import android.support.v4.app.Fragment
 import android.support.v4.widget.SwipeRefreshLayout
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import pl.c0.sayard.studentUEK.BackButtonEditText
 
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.activities.SearchedScheduleActivity
@@ -21,6 +21,8 @@ import pl.c0.sayard.studentUEK.parsers.GroupAndTeacherParser
 
 
 class SearchFragment : Fragment() {
+
+    private var groupsAndTeacherSearch:BackButtonEditText? = null
 
     companion object {
         fun newInstance(): SearchFragment{
@@ -32,26 +34,49 @@ class SearchFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.fragment_search, container, false)
         val searchSwipe = view.findViewById<SwipeRefreshLayout>(R.id.search_swipe)
-        val searchBox = view.findViewById<EditText>(R.id.group_and_teacher_search)
+        groupsAndTeacherSearch = view.findViewById<BackButtonEditText>(R.id.group_and_teacher_search)
         executeGroupAndTeacherParser(view)
         searchSwipe.setOnRefreshListener {
             val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkInfo = connMgr.activeNetworkInfo
             if(networkInfo != null && networkInfo.isConnected){
                 executeGroupAndTeacherParser(view)
-                searchBox.setText("", TextView.BufferType.EDITABLE)
+                groupsAndTeacherSearch?.setText("", TextView.BufferType.EDITABLE)
                 Toast.makeText(context, getString(R.string.groups_and_teachers_refreshed), Toast.LENGTH_SHORT).show()
             }else{
                 Toast.makeText(context, getString(R.string.no_internet_conn), Toast.LENGTH_SHORT).show()
             }
             searchSwipe.isRefreshing = false
         }
+        setHasOptionsMenu(true)
         return view
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        inflater?.inflate(R.menu.search_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item?.itemId){
+            R.id.search_groups_and_teachers_item -> {
+                val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                if(groupsAndTeacherSearch?.visibility == View.GONE){
+                    groupsAndTeacherSearch?.visibility = View.VISIBLE
+                    groupsAndTeacherSearch?.isFocusableInTouchMode = true
+                    groupsAndTeacherSearch?.requestFocus()
+                    imm.showSoftInput(groupsAndTeacherSearch, InputMethodManager.SHOW_IMPLICIT)
+                }else{
+                    groupsAndTeacherSearch?.visibility = View.GONE
+                    imm.hideSoftInputFromWindow(groupsAndTeacherSearch?.windowToken, 0)
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun executeGroupAndTeacherParser(view: View){
         val errorMessage = view.findViewById<TextView>(R.id.group_and_teacher_error_message)
-        val searchBox = view.findViewById<EditText>(R.id.group_and_teacher_search)
         val progressBar = view.findViewById<ProgressBar>(R.id.group_and_teacher_progress_bar)
         val listView = view.findViewById<ListView>(R.id.group_and_teacher_list_view)
         GroupAndTeacherParser(this, progressBar, listView,object:GroupAndTeacherParser.OnTaskCompleted{
@@ -60,13 +85,11 @@ class SearchFragment : Fragment() {
                     val adapter = getAdapter(context, result!!)
                     if(adapter.count <= 0){
                         errorMessage.visibility = View.VISIBLE
-                        searchBox.visibility = View.GONE
                     }else{
                         errorMessage.visibility = View.GONE
-                        searchBox.visibility = View.VISIBLE
                     }
 
-                    searchBox.addTextChangedListener(object: TextWatcher{
+                    groupsAndTeacherSearch?.addTextChangedListener(object: TextWatcher{
                         override fun afterTextChanged(p0: Editable?) {
                         }
 
@@ -78,6 +101,11 @@ class SearchFragment : Fragment() {
                         }
 
                     })
+                    groupsAndTeacherSearch?.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+                        if(!hasFocus && groupsAndTeacherSearch?.text.toString() == ""){
+                            groupsAndTeacherSearch?.visibility=View.GONE
+                        }
+                    }
 
                     val listView = view.findViewById<ListView>(R.id.group_and_teacher_list_view)
                     listView.adapter = adapter

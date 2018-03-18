@@ -10,7 +10,9 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import pl.c0.sayard.studentUEK.BackButtonEditText
 import pl.c0.sayard.studentUEK.activities.AddLessonActivity
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.data.ScheduleItem
@@ -25,6 +27,8 @@ import pl.c0.sayard.studentUEK.parsers.ScheduleParser
 
 
 class ScheduleFragment : Fragment() {
+
+    private var scheduleSearch: BackButtonEditText? = null
 
     companion object {
         fun newInstance(): ScheduleFragment{
@@ -56,8 +60,8 @@ class ScheduleFragment : Fragment() {
             if (scheduleList.isNotEmpty()){
                 errorMessage.visibility = View.GONE
                 val adapter = getAdapter(scheduleList)
-                val scheduleSearch = view.findViewById<EditText>(R.id.schedule_search)
-                scheduleSearch.addTextChangedListener(object: TextWatcher{
+                scheduleSearch = view.findViewById<BackButtonEditText>(R.id.schedule_search)
+                scheduleSearch?.addTextChangedListener(object: TextWatcher{
                     override fun afterTextChanged(p0: Editable?) {
                     }
 
@@ -68,7 +72,11 @@ class ScheduleFragment : Fragment() {
                         adapter.filter.filter(p0.toString())
                     }
                 })
-                scheduleSearch.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus -> scheduleSearch.isCursorVisible = hasFocus }
+                scheduleSearch?.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+                    if(!hasFocus && scheduleSearch?.text.toString() == ""){
+                        scheduleSearch?.visibility = View.GONE
+                    }
+                }
                 val listView = view.findViewById<ListView>(R.id.schedule_list_view)
                 listView.adapter = adapter
                 listView.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
@@ -96,7 +104,7 @@ class ScheduleFragment : Fragment() {
                     val networkInfo = connMgr.activeNetworkInfo
                     if(networkInfo != null && networkInfo.isConnected){
                         ScheduleParser(context, null, null, errorMessage, adapter, scheduleSwipe).execute(urls)
-                        scheduleSearch.setText("", TextView.BufferType.EDITABLE)
+                        scheduleSearch?.setText("", TextView.BufferType.EDITABLE)
                         Toast.makeText(context, getString(R.string.schedule_refreshed), Toast.LENGTH_SHORT).show()
                         Thread{
                             kotlin.run {
@@ -134,6 +142,18 @@ class ScheduleFragment : Fragment() {
             R.id.new_schedule_item -> {
                 val newLessonIntent = Intent(context, AddLessonActivity::class.java)
                 startActivity(newLessonIntent)
+            }
+            R.id.search_schedule_item -> {
+                val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                if(scheduleSearch?.visibility == View.GONE){
+                    scheduleSearch?.visibility = View.VISIBLE
+                    scheduleSearch?.isFocusableInTouchMode = true
+                    scheduleSearch?.requestFocus()
+                    imm.showSoftInput(scheduleSearch, InputMethodManager.SHOW_IMPLICIT)
+                }else{
+                    scheduleSearch?.visibility = View.GONE
+                    imm.hideSoftInputFromWindow(scheduleSearch?.windowToken, 0)
+                }
             }
         }
         return super.onOptionsItemSelected(item)

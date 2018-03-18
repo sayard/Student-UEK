@@ -2,8 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pl.c0.sayard.studentUEK.fragments.SearchFragment"
-    android:focusableInTouchMode="true">
+    tools:context="pl.c0.sayard.studentUEK.fragments.SearchFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,11 +16,12 @@
             android:layout_height="match_parent"
             android:visibility="gone"/>
 
-        <EditText
+        <pl.c0.sayard.studentUEK.BackButtonEditText
             android:id="@+id/group_and_teacher_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/search"/>
+            android:hint="@string/search"
+            android:visibility="gone"/>
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/search_swipe"

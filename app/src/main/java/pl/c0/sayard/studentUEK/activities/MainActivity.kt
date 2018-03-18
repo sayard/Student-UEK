@@ -1,13 +1,17 @@
 package pl.c0.sayard.studentUEK.activities
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
@@ -41,6 +45,7 @@ class MainActivity : AppCompatActivity() {
 
             navigation.selectedItemId = R.id.navigation_schedule
             navigation.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
+                val view = this.currentFocus
                 when(item.itemId){
                     R.id.navigation_search ->{
                         viewPager.currentItem = 0
@@ -60,6 +65,8 @@ class MainActivity : AppCompatActivity() {
                     }
                     else -> return@OnNavigationItemSelectedListener false
                 }
+                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                imm.hideSoftInputFromWindow(view?.windowToken, 0)
                 true
             })
 
@@ -84,7 +91,7 @@ class MainActivity : AppCompatActivity() {
 
             })
             setUpViewPager(viewPager)
-            MobileAds.initialize(this, "") //TODO: supply admob app id
+            MobileAds.initialize(this, "ca-app-pub-4145044771989791~4410520862") //TODO: supply admob app id
             val adView = findViewById<AdView>(R.id.banner_ad)
             val adRequest = AdRequest.Builder().build()
             adView.loadAd(adRequest)
@@ -102,7 +109,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpViewPager(viewPager: ViewPager){
+    private fun setUpViewPager(viewPager: ViewPager) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
         val searchFragment = SearchFragment.newInstance()
         val scheduleFragment = ScheduleFragment.newInstance()
