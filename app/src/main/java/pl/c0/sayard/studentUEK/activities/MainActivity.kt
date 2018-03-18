@@ -7,16 +7,16 @@ import android.preference.PreferenceManager
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.view.KeyEvent
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.activity_main.*
+import pl.c0.sayard.studentUEK.BackButtonEditText
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
@@ -48,14 +48,26 @@ class MainActivity : AppCompatActivity() {
                 val view = this.currentFocus
                 when(item.itemId){
                     R.id.navigation_search ->{
+                        if(viewPager.currentItem == 0){
+                            val searchBox = findViewById<BackButtonEditText>(R.id.group_and_teacher_search)
+                            showSearchBox(searchBox)
+                        }
                         viewPager.currentItem = 0
                         setTitle(R.string.search)
                     }
                     R.id.navigation_schedule -> {
+                        if(viewPager.currentItem == 1){
+                            val searchBox = findViewById<BackButtonEditText>(R.id.schedule_search)
+                            showSearchBox(searchBox)
+                        }
                         viewPager.currentItem = 1
                         setTitle(R.string.schedule)
                     }
                     R.id.navigation_notes -> {
+                        if(viewPager.currentItem == 2){
+                            val searchBox = findViewById<BackButtonEditText>(R.id.notes_search)
+                            showSearchBox(searchBox)
+                        }
                         viewPager.currentItem = 2
                         setTitle(R.string.notes)
                     }
@@ -121,6 +133,20 @@ class MainActivity : AppCompatActivity() {
         adapter.addFragment(settingsFragment)
         viewPager.adapter = adapter
         viewPager.currentItem = 1
+    }
+
+    private fun showSearchBox(searchBox: BackButtonEditText){
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+        if(searchBox.visibility == View.GONE){
+            searchBox.visibility = View.VISIBLE
+            searchBox.isFocusableInTouchMode = true
+            searchBox.requestFocus()
+            searchBox.postDelayed({ imm.showSoftInput(searchBox, InputMethodManager.SHOW_IMPLICIT) }, 50)
+        }else{
+            searchBox.visibility = View.GONE
+            imm.hideSoftInputFromWindow(searchBox.windowToken, 0)
+        }
     }
 
 }
