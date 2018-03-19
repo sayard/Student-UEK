@@ -20,6 +20,7 @@ import pl.c0.sayard.studentUEK.BackButtonEditText
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
+import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
 import pl.c0.sayard.studentUEK.adapters.ViewPagerAdapter
 import pl.c0.sayard.studentUEK.fragments.NotesFragment
 import pl.c0.sayard.studentUEK.fragments.ScheduleFragment
@@ -103,19 +104,21 @@ class MainActivity : AppCompatActivity() {
 
             })
             setUpViewPager(viewPager)
-            MobileAds.initialize(this, "ca-app-pub-4145044771989791~4410520862") //TODO: supply admob app id
-            val adView = findViewById<AdView>(R.id.banner_ad)
-            val adRequest = AdRequest.Builder().build()
-            adView.loadAd(adRequest)
-            adView.adListener = object : AdListener(){
-                override fun onAdLoaded() {
-                    super.onAdLoaded()
-                    adView.visibility = View.VISIBLE
-                }
+            if(isDeviceOnline(this)){
+                MobileAds.initialize(this, "") //TODO: supply admob app id
+                val adView = findViewById<AdView>(R.id.banner_ad)
+                val adRequest = AdRequest.Builder().build()
+                adView.loadAd(adRequest)
+                adView.adListener = object : AdListener(){
+                    override fun onAdLoaded() {
+                        super.onAdLoaded()
+                        adView.visibility = View.VISIBLE
+                    }
 
-                override fun onAdFailedToLoad(p0: Int) {
-                    super.onAdFailedToLoad(p0)
-                    adView.visibility = View.GONE
+                    override fun onAdFailedToLoad(p0: Int) {
+                        super.onAdFailedToLoad(p0)
+                        adView.visibility = View.GONE
+                    }
                 }
             }
         }

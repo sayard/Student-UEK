@@ -2,7 +2,6 @@ package pl.c0.sayard.studentUEK.fragments
 
 import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
@@ -19,6 +18,7 @@ import pl.c0.sayard.studentUEK.data.ScheduleItem
 import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.Utils.Companion.getLanguageGroups
 import pl.c0.sayard.studentUEK.Utils.Companion.getScheduleCursor
+import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
 import pl.c0.sayard.studentUEK.activities.ScheduleItemDetailsActivity
 import pl.c0.sayard.studentUEK.adapters.ScheduleAdapter
 import pl.c0.sayard.studentUEK.db.ScheduleDbHelper
@@ -51,8 +51,12 @@ class ScheduleFragment : Fragment() {
         val languageGroups = getLanguageGroups(db)
         languageGroups.mapTo(urls) { it.url }
         val cursor = getScheduleCursor(db)
+        var cursorCount = cursor.count
+        if(!isDeviceOnline(context)){
+            cursorCount = -1
+        }
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        if(prefs.getBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false) || cursor.count == 0){
+        if((prefs.getBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false) || cursorCount == 0)){
             ScheduleParser(context, activity, progressBar, errorMessage, null, null).execute(urls)
             prefs.edit().putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false).apply()
         }else{
@@ -100,9 +104,7 @@ class ScheduleFragment : Fragment() {
                 }
                 val scheduleSwipe = view.findViewById<SwipeRefreshLayout>(R.id.schedule_swipe)
                 scheduleSwipe.setOnRefreshListener{
-                    val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-                    val networkInfo = connMgr.activeNetworkInfo
-                    if(networkInfo != null && networkInfo.isConnected){
+                    if(isDeviceOnline(context)){
                         ScheduleParser(context, null, null, errorMessage, adapter, scheduleSwipe).execute(urls)
                         scheduleSearch?.setText("", TextView.BufferType.EDITABLE)
                         Toast.makeText(context, getString(R.string.schedule_refreshed), Toast.LENGTH_SHORT).show()
@@ -113,8 +115,8 @@ class ScheduleFragment : Fragment() {
                         }.start()
                     }else{
                         Toast.makeText(context, getString(R.string.no_internet_conn), Toast.LENGTH_SHORT).show()
-                        scheduleSwipe.isRefreshing = false
                     }
+                    scheduleSwipe.isRefreshing = false
                 }
             }else{
                 errorMessage.visibility = View.VISIBLE
@@ -124,6 +126,7 @@ class ScheduleFragment : Fragment() {
                     ft.detach(this)
                     ft.attach(this)
                     ft.commit()
+                    scheduleSwipe.isRefreshing = false
                 }
             }
         }

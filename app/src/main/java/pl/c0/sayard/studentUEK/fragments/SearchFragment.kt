@@ -35,18 +35,18 @@ class SearchFragment : Fragment() {
         val view = inflater!!.inflate(R.layout.fragment_search, container, false)
         val searchSwipe = view.findViewById<SwipeRefreshLayout>(R.id.search_swipe)
         groupsAndTeacherSearch = view.findViewById<BackButtonEditText>(R.id.group_and_teacher_search)
-        executeGroupAndTeacherParser(view)
-        searchSwipe.setOnRefreshListener {
-            val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val networkInfo = connMgr.activeNetworkInfo
-            if(networkInfo != null && networkInfo.isConnected){
+        val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = connMgr.activeNetworkInfo
+        if(networkInfo != null && networkInfo.isConnected){
+            executeGroupAndTeacherParser(view)
+            searchSwipe.setOnRefreshListener {
                 executeGroupAndTeacherParser(view)
                 groupsAndTeacherSearch?.setText("", TextView.BufferType.EDITABLE)
                 Toast.makeText(context, getString(R.string.groups_and_teachers_refreshed), Toast.LENGTH_SHORT).show()
-            }else{
-                Toast.makeText(context, getString(R.string.no_internet_conn), Toast.LENGTH_SHORT).show()
+                searchSwipe.isRefreshing = false
             }
-            searchSwipe.isRefreshing = false
+        }else{
+            Toast.makeText(context, getString(R.string.no_internet_conn), Toast.LENGTH_SHORT).show()
         }
         setHasOptionsMenu(true)
         return view
