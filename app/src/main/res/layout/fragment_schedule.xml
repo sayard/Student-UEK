@@ -4,10 +4,6 @@
     android:layout_height="match_parent"
     tools:context="pl.c0.sayard.studentUEK.fragments.ScheduleFragment">
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/schedule_swipe"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -21,15 +17,6 @@
                     android:layout_height="match_parent"
                     android:visibility="gone"/>
 
-                <TextView
-                    android:id="@+id/schedule_error_message"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:text="@string/an_error_has_occurred_when_loading_schedule_please_try_again_later"
-                    android:padding="50dp"
-                    android:textAlignment="center"
-                    android:visibility="gone"/>
-
                 <pl.c0.sayard.studentUEK.BackButtonEditText
                     android:id="@+id/schedule_search"
                     android:layout_width="match_parent"
@@ -37,15 +24,36 @@
                     android:hint="@string/search"
                     android:visibility="gone"/>
 
-                <ListView
-                    android:id="@+id/schedule_list_view"
+                <android.support.v4.widget.SwipeRefreshLayout
+                    android:id="@+id/schedule_swipe"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:choiceMode="singleChoice"
-                    android:visibility="visible" />
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/schedule_error_message"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="@string/an_error_has_occurred_when_loading_schedule_please_try_again_later"
+                            android:padding="50dp"
+                            android:textAlignment="center"
+                            android:visibility="gone"/>
+
+                        <ListView
+                            android:id="@+id/schedule_list_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:choiceMode="singleChoice"
+                            android:visibility="visible" />
+
+                    </LinearLayout>
+
+                </android.support.v4.widget.SwipeRefreshLayout>
 
             </LinearLayout>
-
-        </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>

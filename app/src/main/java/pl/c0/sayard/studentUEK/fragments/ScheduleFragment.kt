@@ -118,6 +118,19 @@ class ScheduleFragment : Fragment() {
                     }
                     scheduleSwipe.isRefreshing = false
                 }
+                listView.setOnScrollListener(object: AbsListView.OnScrollListener{
+                    override fun onScroll(view: AbsListView?, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
+                        var topRowVerticalPosition = 0
+                        if(listView != null && listView.childCount != 0){
+                            topRowVerticalPosition = listView.getChildAt(0).top
+                        }
+                        scheduleSwipe.isEnabled = (firstVisibleItem == 0 && topRowVerticalPosition >= 0)
+                    }
+
+                    override fun onScrollStateChanged(p0: AbsListView?, p1: Int) {
+                    }
+
+                })
             }else{
                 errorMessage.visibility = View.VISIBLE
                 val scheduleSwipe = view.findViewById<SwipeRefreshLayout>(R.id.schedule_swipe)
