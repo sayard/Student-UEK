@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pl.c0.sayard.studentUEK.fragments.SearchFragment">
+    tools:context="pl.c0.sayard.studentUEK.fragments.SearchFragment"
+    android:background="?attr/colorBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,6 +22,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/search"
+            android:textColorHint="?attr/colorTextSecondary"
+            android:textColor="?attr/colorTextPrimary"
             android:visibility="gone"/>
 
         <android.support.v4.widget.SwipeRefreshLayout
@@ -40,6 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/error_try_again_later"
+                android:textColor="?attr/colorTextSecondary"
                 android:padding="50dp"
                 android:textAlignment="center"
                 android:visibility="gone"/>

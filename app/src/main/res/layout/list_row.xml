@@ -4,13 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/colorBackgroundRow">
 
     <TextView
         android:id="@+id/list_row_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
+        android:textColor="?attr/colorTextPrimary"
         android:textSize="20sp"
         android:padding="5dp"
         app:layout_constraintStart_toStartOf="parent"

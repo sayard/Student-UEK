@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="?attr/colorBackground">
 
     <EditText
         android:id="@+id/lesson_note_edit_field"
@@ -11,6 +12,8 @@
         android:layout_height="wrap_content"
         android:inputType="textCapSentences|textMultiLine"
         android:hint="@string/content"
+        android:textColorHint="?attr/colorTextSecondary"
+        android:textColor="?attr/colorTextPrimary"
         android:lines="4"
         android:minLines="1"
         android:maxLines="4"

@@ -1,14 +1,109 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="ThemeDefault" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimaryDefault</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkDefault</item>
+        <item name="colorAccent">@color/colorAccentDefault</item>
+        <item name="colorMonday">@color/colorMondayDefault</item>
+        <item name="colorTuesday">@color/colorTuesdayDefault</item>
+        <item name="colorWednesday">@color/colorWednesdayDefault</item>
+        <item name="colorThursday">@color/colorThursdayDefault</item>
+        <item name="colorFriday">@color/colorFridayDefault</item>
+        <item name="colorSaturday">@color/colorSaturdayDefault</item>
+        <item name="colorSunday">@color/colorSundayDefault</item>
+        <item name="colorBackground">@color/colorBackgroundDefault</item>
+        <item name="colorTextPrimary">@color/colorTextPrimaryDefault</item>
+        <item name="colorTextSecondary">@color/colorTextSecondaryDefault</item>
+        <item name="colorTextButton">@color/colorTextButtonDefault</item>
+        <item name="colorSeparatorLine">@color/colorSeparatorLineDefault</item>
+        <item name="colorScheduleRowHeader">@color/colorScheduleRowHeaderDefault</item>
+        <item name="colorBackgroundRow">@color/colorBackgroundRowDefault</item>
+        <item name="colorTextImportant">@color/colorTextImportantDefault</item>
+        <item name="colorActionMenuText">@color/colorActionMenuTextDefault</item>
+        <item name="colorActionMenuButton">@color/colorActionMenuButtonDefault</item>
+        <item name="android:actionBarStyle">@style/ThemeDefault.ActionBarStyle</item>
+        <item name="actionBarStyle">@style/ThemeDefault.ActionBarStyle</item>
     </style>
 
-    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="ThemeDefault.ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar.Solid">
+        <item name="background">@color/colorPrimaryDefault</item>
+        <item name="titleTextStyle">@style/ThemeDefault.ActionBarStyle.TextStyle</item>
+    </style>
+
+    <style name="ThemeDefault.ActionBarStyle.TextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/colorActionMenuTextDefault</item>
+    </style>
+
+    <style name="ThemeDark" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkDark</item>
+        <item name="colorAccent">@color/colorAccentDark</item>
+        <item name="colorMonday">@color/colorMondayDark</item>
+        <item name="colorTuesday">@color/colorTuesdayDark</item>
+        <item name="colorWednesday">@color/colorWednesdayDark</item>
+        <item name="colorThursday">@color/colorThursdayDark</item>
+        <item name="colorFriday">@color/colorFridayDark</item>
+        <item name="colorSaturday">@color/colorSaturdayDark</item>
+        <item name="colorSunday">@color/colorSundayDark</item>
+        <item name="colorBackground">@color/colorBackgroundDark</item>
+        <item name="colorTextPrimary">@color/colorTextPrimaryDark</item>
+        <item name="colorTextSecondary">@color/colorTextSecondaryDark</item>
+        <item name="colorTextButton">@color/colorTextButtonDark</item>
+        <item name="colorSeparatorLine">@color/colorSeparatorLineDark</item>
+        <item name="colorScheduleRowHeader">@color/colorScheduleRowHeaderDark</item>
+        <item name="colorBackgroundRow">@color/colorBackgroundRowDark</item>
+        <item name="colorTextImportant">@color/colorTextImportantDark</item>
+        <item name="colorActionMenuText">@color/colorActionMenuTextDark</item>
+        <item name="colorActionMenuButton">@color/colorActionMenuButtonDark</item>
+        <item name="android:actionBarStyle">@style/ThemeDark.ActionBarStyle</item>
+        <item name="actionBarStyle">@style/ThemeDark.ActionBarStyle</item>
+    </style>
+
+    <style name="ThemeDark.ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar.Solid">
+        <item name="background">@color/colorBackgroundDark</item>
+        <item name="titleTextStyle">@style/ThemeDark.ActionBarStyle.TextStyle</item>
+    </style>
+
+    <style name="ThemeDark.ActionBarStyle.TextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/colorActionMenuTextDark</item>
+    </style>
+
+    <style name="ThemeGold" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimaryGold</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkGold</item>
+        <item name="colorAccent">@color/colorAccentGold</item>
+        <item name="colorMonday">@color/colorMondayGold</item>
+        <item name="colorTuesday">@color/colorTuesdayGold</item>
+        <item name="colorWednesday">@color/colorWednesdayGold</item>
+        <item name="colorThursday">@color/colorThursdayGold</item>
+        <item name="colorFriday">@color/colorFridayGold</item>
+        <item name="colorSaturday">@color/colorSaturdayGold</item>
+        <item name="colorSunday">@color/colorSundayGold</item>
+        <item name="colorBackground">@color/colorBackgroundGold</item>
+        <item name="colorTextPrimary">@color/colorTextPrimaryGold</item>
+        <item name="colorTextSecondary">@color/colorTextSecondaryGold</item>
+        <item name="colorTextButton">@color/colorTextButtonGold</item>
+        <item name="colorSeparatorLine">@color/colorSeparatorLineGold</item>
+        <item name="colorScheduleRowHeader">@color/colorScheduleRowHeaderGold</item>
+        <item name="colorBackgroundRow">@color/colorBackgroundRowGold</item>
+        <item name="colorTextImportant">@color/colorTextImportantGold</item>
+        <item name="colorActionMenuText">@color/colorActionMenuTextGold</item>
+        <item name="colorActionMenuButton">@color/colorActionMenuButtonGold</item>
+        <item name="android:actionBarStyle">@style/ThemeGold.ActionBarStyle</item>
+        <item name="actionBarStyle">@style/ThemeGold.ActionBarStyle</item>
+    </style>
+
+    <style name="ThemeGold.ActionBarStyle" parent="@style/Widget.AppCompat.ActionBar.Solid">
+        <item name="background">@color/colorBackgroundGold</item>
+        <item name="titleTextStyle">@style/ThemeGold.ActionBarStyle.TextStyle</item>
+    </style>
+
+    <style name="ThemeGold.ActionBarStyle.TextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/colorActionMenuTextGold</item>
+    </style>
+
+    <style name="SplashTheme" parent="ThemeDefault">
         <item name="android:windowBackground">@drawable/splash_screen_background</item>
     </style>
 

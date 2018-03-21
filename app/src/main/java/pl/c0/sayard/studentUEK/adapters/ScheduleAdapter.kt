@@ -44,14 +44,15 @@ class ScheduleAdapter(var context: Context, var scheduleListOriginal:List<Schedu
         val dayString =
                 "${scheduleItemObj.dayOfTheWeekStr}, ${scheduleItemObj.dateStr}"
         vh.scheduleDayTv?.text = dayString
+        val typedArray = context.theme.obtainStyledAttributes(R.styleable.Style)
         when(calendar.get(Calendar.DAY_OF_WEEK)){
-            Calendar.MONDAY -> vh.scheduleDayTv?.setBackgroundColor(ContextCompat.getColor(context, R.color.colorMonday))
-            Calendar.TUESDAY -> vh.scheduleDayTv?.setBackgroundColor(ContextCompat.getColor(context, R.color.colorTuesday))
-            Calendar.WEDNESDAY -> vh.scheduleDayTv?.setBackgroundColor(ContextCompat.getColor(context, R.color.colorWednesday))
-            Calendar.THURSDAY -> vh.scheduleDayTv?.setBackgroundColor(ContextCompat.getColor(context, R.color.colorThursday))
-            Calendar.FRIDAY -> vh.scheduleDayTv?.setBackgroundColor(ContextCompat.getColor(context, R.color.colorFriday))
-            Calendar.SATURDAY -> vh.scheduleDayTv?.setBackgroundColor(ContextCompat.getColor(context, R.color.colorSaturday))
-            Calendar.SUNDAY -> vh.scheduleDayTv?.setBackgroundColor(ContextCompat.getColor(context, R.color.colorSunday))
+            Calendar.MONDAY -> vh.scheduleDayTv?.setBackgroundColor(typedArray.getColor(R.styleable.Style_colorMonday, ContextCompat.getColor(context, R.color.colorMondayDefault)))
+            Calendar.TUESDAY -> vh.scheduleDayTv?.setBackgroundColor(typedArray.getColor(R.styleable.Style_colorTuesday, ContextCompat.getColor(context, R.color.colorTuesdayDefault)))
+            Calendar.WEDNESDAY -> vh.scheduleDayTv?.setBackgroundColor(typedArray.getColor(R.styleable.Style_colorWednesday, ContextCompat.getColor(context, R.color.colorWednesdayDefault)))
+            Calendar.THURSDAY -> vh.scheduleDayTv?.setBackgroundColor(typedArray.getColor(R.styleable.Style_colorThursday, ContextCompat.getColor(context, R.color.colorThursdayDefault)))
+            Calendar.FRIDAY -> vh.scheduleDayTv?.setBackgroundColor(typedArray.getColor(R.styleable.Style_colorFriday, ContextCompat.getColor(context, R.color.colorFridayDefault)))
+            Calendar.SATURDAY -> vh.scheduleDayTv?.setBackgroundColor(typedArray.getColor(R.styleable.Style_colorSaturday, ContextCompat.getColor(context, R.color.colorSaturdayDefault)))
+            Calendar.SUNDAY -> vh.scheduleDayTv?.setBackgroundColor(typedArray.getColor(R.styleable.Style_colorSunday, ContextCompat.getColor(context, R.color.colorSundayDefault)))
         }
         if(scheduleItemObj.isFirstOnTheDay){
             vh.scheduleDayTv?.visibility = View.VISIBLE

@@ -13,6 +13,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import pl.c0.sayard.studentUEK.R
+import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.adapters.ScheduleAdapter
 import pl.c0.sayard.studentUEK.data.Group
 import pl.c0.sayard.studentUEK.data.ScheduleItem
@@ -25,6 +26,7 @@ class SearchedScheduleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Utils.onActivityCreateSetTheme(this)
         setContentView(R.layout.activity_searched_schedule)
         this.groupType = intent.getStringExtra(getString(R.string.EXTRA_SEARCHED_SCHEDULE_GROUP_TYPE))
         val groupName = intent.getStringExtra(getString(R.string.EXTRA_SEARCHED_SCHEDULE_GROUP_NAME))

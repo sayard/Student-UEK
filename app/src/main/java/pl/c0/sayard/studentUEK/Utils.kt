@@ -1,9 +1,12 @@
 package pl.c0.sayard.studentUEK
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.net.ConnectivityManager
+import android.preference.PreferenceManager
 import android.widget.TextView
 import pl.c0.sayard.studentUEK.data.Group
 import pl.c0.sayard.studentUEK.data.ScheduleGroup
@@ -209,6 +212,33 @@ class Utils {
             val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkInfo = connMgr.activeNetworkInfo
             return (networkInfo != null && networkInfo.isConnected)
+        }
+
+        fun getTranslatedThemeName(codeThemeName: Int, context: Context): String{
+            return when(codeThemeName){
+                0 -> context.getString(R.string.defaultTheme)
+                1 -> context.getString(R.string.darkTheme)
+                2 -> context.getString(R.string.premiumTheme)
+                else -> context.getString(R.string.defaultTheme)
+            }
+        }
+
+        fun setSelectedTheme(activity: Activity, theme: Int){
+            val prefs = PreferenceManager.getDefaultSharedPreferences(activity.applicationContext)
+            val editor = prefs.edit()
+            editor.putInt(activity.baseContext.getString(R.string.PREFS_SELECTED_THEME), theme).apply()
+            activity.finish()
+            activity.startActivity(Intent(activity, activity.javaClass))
+        }
+
+        fun onActivityCreateSetTheme(activity: Activity){
+            val prefs = PreferenceManager.getDefaultSharedPreferences(activity.applicationContext)
+            val themeId = prefs.getInt(activity.baseContext.getString(R.string.PREFS_SELECTED_THEME), 0)
+            when(themeId){
+                0 -> activity.setTheme(R.style.ThemeDefault)
+                1 -> activity.setTheme(R.style.ThemeDark)
+                2 -> activity.setTheme(R.style.ThemeGold)
+            }
         }
     }
 }

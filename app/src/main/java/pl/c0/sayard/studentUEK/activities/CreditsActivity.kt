@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import pl.c0.sayard.studentUEK.R
+import pl.c0.sayard.studentUEK.Utils
 import java.util.*
 
 class CreditsActivity : AppCompatActivity() {
@@ -35,6 +36,7 @@ class CreditsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Utils.onActivityCreateSetTheme(this)
         setContentView(R.layout.activity_credits)
         vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         eeCounter = 10

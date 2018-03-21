@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pl.c0.sayard.studentUEK.activities.AddNoteActivity">
+    tools:context="pl.c0.sayard.studentUEK.activities.AddNoteActivity"
+    android:background="?attr/colorBackground">
 
     <EditText
         android:id="@+id/note_title"
@@ -12,7 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="15dp"
-        android:hint="@string/title"/>
+        android:hint="@string/title"
+        android:textColor="?attr/colorTextPrimary"
+        android:textColorHint="?attr/colorTextSecondary"/>
 
     <EditText
         android:id="@+id/note_content"
@@ -22,6 +25,8 @@
         android:lines="5"
         android:maxLines="5"
         android:hint="@string/content"
+        android:textColor="?attr/colorTextPrimary"
+        android:textColorHint="?attr/colorTextSecondary"
         android:gravity="top|start"
         app:layout_constraintTop_toBottomOf="@id/note_title"/>
 
@@ -36,7 +41,8 @@
             android:id="@+id/note_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:textColor="?attr/colorTextSecondary"/>
 
         <TextView
             android:id="@+id/note_hour"
@@ -45,7 +51,8 @@
             android:paddingLeft="5dp"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
-            android:textSize="24sp" />
+            android:textSize="24sp"
+            android:textColor="?attr/colorTextSecondary"/>
 
     </LinearLayout>
 
@@ -56,12 +63,12 @@
         android:layout_marginBottom="0dp"
         android:layout_marginLeft="0dp"
         android:layout_marginStart="0dp"
-        android:background="@color/colorPrimary"
+        android:background="?attr/colorPrimary"
         android:clickable="false"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="@string/save_note"
-        android:textColor="@android:color/white"
+        android:textColor="?attr/colorTextButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 

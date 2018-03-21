@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SearchedScheduleActivity">
+    tools:context=".activities.SearchedScheduleActivity"
+    android:background="?attr/colorBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,6 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/an_error_has_occurred_when_loading_schedule_please_try_again_later"
+            android:textColor="?attr/colorTextSecondary"
             android:padding="50dp"
             android:textAlignment="center"
             android:visibility="gone"/>

@@ -24,6 +24,7 @@ class FirstRunStepTwoActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Utils.onActivityCreateSetTheme(this)
         setContentView(R.layout.activity_first_run_step_two)
         val retryButton = findViewById<Button>(R.id.language_group_retry_button)
         val nextStepButton = findViewById<Button>(R.id.next_step_button_two)
