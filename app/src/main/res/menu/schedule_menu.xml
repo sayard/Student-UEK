@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/new_schedule_item"
-        android:icon="@drawable/ic_add_white_24dp"
+        android:icon="@drawable/ic_add_24dp"
         android:title="@string/add_new_schedule_item"
         app:showAsAction="ifRoom"/>
     <item android:id="@+id/search_schedule_item"
-        android:icon="@drawable/ic_search_white_24dp"
+        android:icon="@drawable/ic_search_button_24dp"
         android:title="@string/search"
         app:showAsAction="ifRoom"/>
 </menu>

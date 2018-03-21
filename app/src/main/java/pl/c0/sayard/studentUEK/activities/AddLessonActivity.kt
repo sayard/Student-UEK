@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.widget.*
 import pl.c0.sayard.studentUEK.R
+import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.Utils.Companion.getTime
 import pl.c0.sayard.studentUEK.data.Building
 import pl.c0.sayard.studentUEK.db.ScheduleContract
@@ -33,6 +34,7 @@ class AddLessonActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Utils.onActivityCreateSetTheme(this)
         setContentView(R.layout.activity_add_lesson)
 
         var nameText = ""

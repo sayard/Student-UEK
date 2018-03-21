@@ -70,4 +70,11 @@
     <string name="buy_premium">Kup Premium</string>
     <string name="get_rid_of_the_ads_and_gain_extra_features_by_buying_premium">Pozbądź się reklam i zyskaj dodatkowe funkcje</string>
     <string name="no_internet_conn">Brak połączenia z internetem</string>
+    <string name="current_theme">Aktualny motyw: </string>
+    <string name="change_theme">Zmień motyw</string>
+    <string name="defaultTheme">Domyślny</string>
+    <string name="darkTheme">Ciemny</string>
+    <string name="premiumTheme">Bogaty</string>
+    <string name="choose_a_theme">Wybierz motyw</string>
+    <string name="apply">Akceptuj</string>
 </resources>

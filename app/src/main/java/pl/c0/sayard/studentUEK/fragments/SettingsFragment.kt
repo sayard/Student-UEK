@@ -13,6 +13,8 @@ import android.widget.*
 
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
+import pl.c0.sayard.studentUEK.Utils.Companion.getTranslatedThemeName
+import pl.c0.sayard.studentUEK.Utils.Companion.setSelectedTheme
 import pl.c0.sayard.studentUEK.activities.ActivateGoogleCalendarIntegrationActivity
 import pl.c0.sayard.studentUEK.activities.CreditsActivity
 import pl.c0.sayard.studentUEK.activities.FirstRunStepOneActivity
@@ -21,7 +23,7 @@ import pl.c0.sayard.studentUEK.jobs.RefreshScheduleJob
 class SettingsFragment : Fragment() {
 
 
-    val dialogClickListener = DialogInterface.OnClickListener { _, buttonClicked ->
+    private val dialogClickListener = DialogInterface.OnClickListener { _, buttonClicked ->
         when(buttonClicked){
             DialogInterface.BUTTON_POSITIVE -> {
                 val prefs = PreferenceManager.getDefaultSharedPreferences(context)
@@ -143,6 +145,31 @@ class SettingsFragment : Fragment() {
             }
 
         })
+
+        val currentTheme = view.findViewById<TextView>(R.id.currentTheme)
+        val selectedThemeId = prefs.getInt(context.getString(R.string.PREFS_SELECTED_THEME), 0)
+        currentTheme.append(" ${getTranslatedThemeName(selectedThemeId, context)}")
+
+        val changeTheme = view.findViewById<LinearLayout>(R.id.change_theme)
+        changeTheme.setOnClickListener {
+            val themes = arrayOf<CharSequence>(
+                    context.getString(R.string.defaultTheme),
+                    context.getString(R.string.darkTheme),
+                    context.getString(R.string.premiumTheme)
+            )
+            val dialogBuilder = AlertDialog.Builder(context)
+                    .setTitle(getString(R.string.choose_a_theme))
+                    .setSingleChoiceItems(themes, selectedThemeId, null)
+                    .setPositiveButton(getString(R.string.apply)) { dialog, _ ->
+                        dialog?.dismiss()
+                        val selectedPosition = (dialog as AlertDialog).listView.checkedItemPosition
+                        setSelectedTheme(activity, selectedPosition)
+                    }
+                    .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
+                        dialog?.dismiss()
+                    }
+                    .show()
+        }
 
         val reconfigure = view.findViewById<LinearLayout>(R.id.reconfigure)
         reconfigure.setOnClickListener {

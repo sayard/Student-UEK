@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     tools:context="pl.c0.sayard.studentUEK.activities.FirstRunStepTwoActivity"
     android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:background="?attr/colorBackground">
 
     <EditText
         android:id="@+id/step_two_search_box"
@@ -16,6 +17,7 @@
         android:drawableRight="@android:drawable/ic_menu_search"
         android:maxLines="1"
         android:inputType="text"
+        android:textColor="?attr/colorTextPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,16 +55,16 @@
             android:id="@+id/selected_language_group_s_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
+            android:background="?attr/colorPrimary"
             android:textSize="20sp"
             android:clickable="false"
             android:cursorVisible="false"
             android:focusable="false"
-            android:textColor="@android:color/white"
+            android:textColor="?attr/colorTextButton"
             android:padding="8dp"
             android:focusableInTouchMode="false"
-            android:drawableRight="@drawable/ic_cancel_white_24dp"
-            android:drawableEnd="@drawable/ic_cancel_white_24dp"
+            android:drawableRight="@drawable/ic_cancel_24dp"
+            android:drawableEnd="@drawable/ic_cancel_24dp"
             android:visibility="gone"/>
 
     </LinearLayout>
@@ -76,12 +78,12 @@
         android:layout_marginBottom="0dp"
         android:layout_marginLeft="0dp"
         android:layout_marginStart="0dp"
-        android:background="@color/colorPrimary"
+        android:background="?attr/colorPrimary"
         android:clickable="false"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="@string/next_step"
-        android:textColor="@android:color/white"
+        android:textColor="?attr/colorTextButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:visibility="gone"/>
@@ -93,12 +95,12 @@
         android:layout_marginBottom="0dp"
         android:layout_marginLeft="0dp"
         android:layout_marginStart="0dp"
-        android:background="@color/colorPrimary"
+        android:background="?attr/colorPrimary"
         android:clickable="false"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="@string/retry"
-        android:textColor="@android:color/white"
+        android:textColor="?attr/colorTextButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:visibility="gone"/>

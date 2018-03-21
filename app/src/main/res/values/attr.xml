@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Style">
+        <attr name="colorPrimary" format="color"/>
+        <attr name="colorPrimaryDark" format="color"/>
+        <attr name="colorAccent" format="color"/>
+        <attr name="colorMonday" format="color"/>
+        <attr name="colorTuesday" format="color"/>
+        <attr name="colorWednesday" format="color"/>
+        <attr name="colorThursday" format="color"/>
+        <attr name="colorFriday" format="color"/>
+        <attr name="colorSaturday" format="color"/>
+        <attr name="colorSunday" format="color"/>
+        <attr name="colorBackground" format="color"/>
+        <attr name="colorTextPrimary" format="color"/>
+        <attr name="colorTextSecondary" format="color"/>
+        <attr name="colorTextButton" format="color"/>
+        <attr name="colorSeparatorLine" format="color"/>
+        <attr name="colorBackgroundRow" format="color"/>
+        <attr name="colorTextImportant" format="color"/>
+        <attr name="colorScheduleRowHeader" format="color"/>
+        <attr name="colorActionMenuText" format="color"/>
+        <attr name="colorActionMenuButton" format="color"/>
+    </declare-styleable>
+</resources>

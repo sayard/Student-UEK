@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="pl.c0.sayard.studentUEK.activities.CreditsActivity"
-    android:layout_margin="5dp">
+    android:padding="5dp"
+    android:background="?attr/colorBackground">
 
     <TextView
         android:id="@+id/credits_android_version"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
+        android:textColor="?attr/colorTextPrimary"
         android:text="Android"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,7 +22,7 @@
         android:id="@+id/credits_android_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
+        android:textColor="?attr/colorTextPrimary"
         android:textSize="20sp"
         android:text="Karol Gracz"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,6 +34,7 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:text="graczu42@gmail.com"
+        android:textColor="?attr/colorPrimary"
         android:autoLink="email"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/credits_android_name"/>
@@ -43,6 +45,7 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:text="https://github.com/sayard"
+        android:textColor="?attr/colorPrimary"
         android:autoLink="web"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/credits_android_email"/>
@@ -51,7 +54,7 @@
         android:id="@+id/credits_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
+        android:background="?attr/colorSeparatorLine"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +64,7 @@
         android:id="@+id/credits_ios_version"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
+        android:textColor="?attr/colorTextPrimary"
         android:text="iOS"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -71,7 +74,7 @@
         android:id="@+id/credits_ios_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
+        android:textColor="?attr/colorTextPrimary"
         android:textSize="20sp"
         android:text="Michał Wójtowicz"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,6 +86,7 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:text="wojtowiczmichal97@gmail.com"
+        android:textColor="?attr/colorPrimary"
         android:autoLink="email"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/credits_ios_name"/>
@@ -93,6 +97,7 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:text="https://github.com/wojtowiczM"
+        android:textColor="?attr/colorPrimary"
         android:autoLink="web"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/credits_ios_email"/>
@@ -113,6 +118,7 @@
             android:minHeight="60dp"
             android:minWidth="60dp"
             android:text="▲"
+            android:textColor="?attr/colorTextPrimary"
             app:layout_constraintStart_toEndOf="@id/ee_left"/>
 
         <Button
@@ -122,6 +128,7 @@
             android:minHeight="60dp"
             android:minWidth="60dp"
             android:text="▼"
+            android:textColor="?attr/colorTextPrimary"
             app:layout_constraintTop_toBottomOf="@+id/ee_up"
             app:layout_constraintStart_toEndOf="@id/ee_left"/>
 
@@ -133,6 +140,7 @@
             android:minWidth="60dp"
             android:layout_marginTop="30dp"
             android:text="◀"
+            android:textColor="?attr/colorTextPrimary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
@@ -144,6 +152,7 @@
             android:minWidth="60dp"
             android:layout_marginTop="30dp"
             android:text="▶"
+            android:textColor="?attr/colorTextPrimary"
             app:layout_constraintStart_toEndOf="@id/ee_down"
             app:layout_constraintTop_toTopOf="parent"/>
 
@@ -155,6 +164,7 @@
             android:minWidth="60dp"
             android:layout_marginTop="30dp"
             android:text="A"
+            android:textColor="?attr/colorTextPrimary"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@id/ee_b"/>
 
@@ -166,6 +176,7 @@
             android:minWidth="60dp"
             android:layout_marginTop="30dp"
             android:text="B"
+            android:textColor="?attr/colorTextPrimary"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 

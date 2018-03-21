@@ -21,6 +21,7 @@ import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
 import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
+import pl.c0.sayard.studentUEK.Utils.Companion.onActivityCreateSetTheme
 import pl.c0.sayard.studentUEK.adapters.ViewPagerAdapter
 import pl.c0.sayard.studentUEK.fragments.NotesFragment
 import pl.c0.sayard.studentUEK.fragments.ScheduleFragment
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        onActivityCreateSetTheme(this)
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         val firstRun = prefs.getBoolean(FIRST_RUN_SHARED_PREFS_KEY, true)

@@ -2,13 +2,14 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/colorBackgroundRow">
 
     <TextView
         android:id="@+id/schedule_day_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
+        android:textColor="?attr/colorScheduleRowHeader"
         android:textAlignment="center"
         android:textSize="16sp"
         android:padding="5dp"
@@ -30,11 +31,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.7"
-            android:textColor="@android:color/black"
+            android:textColor="?attr/colorTextPrimary"
             android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/schedule_hours_tv"
+            android:textColor="?attr/colorTextSecondary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.3"
@@ -56,7 +58,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:textColor="@android:color/black"/>
+            android:textColor="?attr/colorTextPrimary"/>
 
         <TextView
             android:id="@+id/schedule_note_icon"
@@ -64,8 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:textAlignment="viewEnd"
-            android:drawableEnd="@drawable/ic_note_grey_24dp"
-            android:drawableRight="@drawable/ic_note_grey_24dp"
+            android:drawableEnd="@drawable/ic_note_24dp"
             android:layout_gravity="end"
             android:visibility="gone"/>
 
@@ -84,10 +85,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:textColor="@android:color/black"/>
+            android:textColor="?attr/colorTextPrimary"/>
 
         <TextView
             android:id="@+id/schedule_classroom_tv"
+            android:textColor="?attr/colorTextSecondary"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
@@ -110,7 +112,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:textColor="@android:color/holo_red_light"/>
+            android:textColor="?attr/colorTextImportant"/>
 
     </LinearLayout>
 

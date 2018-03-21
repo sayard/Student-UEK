@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     tools:context="pl.c0.sayard.studentUEK.activities.FirstRunStepThreeActivity"
     android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true">
+    android:focusableInTouchMode="true"
+    android:background="?attr/colorBackground">
 
     <Switch
         android:id="@+id/pe_switch"
@@ -15,6 +16,7 @@
         android:text="@string/weekly_p_e"
         android:textAlignment="center"
         android:textSize="25sp"
+        android:textColor="?attr/colorTextPrimary"
         android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
@@ -30,6 +32,8 @@
         android:layout_marginTop="16dp"
         android:layout_margin="8dp"
         android:hint="@string/name"
+        android:textColor="?attr/colorTextPrimary"
+        android:textColorHint="?attr/colorTextSecondary"
         android:maxLines="1"
         android:inputType="text"
         app:layout_constraintTop_toBottomOf="@id/pe_switch"
@@ -44,7 +48,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:entries="@array/days_of_week"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pe_name"
@@ -67,6 +70,7 @@
             android:layout_weight="0.5"
             android:gravity="center"
             android:textSize="18sp"
+            android:textColor="?attr/colorTextSecondary"
             android:text="@string/start_hour"/>
 
         <TextView
@@ -76,6 +80,7 @@
             android:layout_weight="0.5"
             android:gravity="center"
             android:textSize="18sp"
+            android:textColor="?attr/colorTextSecondary"
             android:text="@string/end_hour"/>
         
     </LinearLayout>
@@ -98,7 +103,7 @@
             android:gravity="center"
             android:text="12:00"
             android:textSize="18sp"
-            android:textColor="@android:color/black"/>
+            android:textColor="?attr/colorTextPrimary"/>
 
         <TextView
             android:id="@+id/end_hour_tv"
@@ -108,7 +113,7 @@
             android:gravity="center"
             android:text="13:30"
             android:textSize="18sp"
-            android:textColor="@android:color/black"/>
+            android:textColor="?attr/colorTextPrimary"/>
 
     </LinearLayout>
 
@@ -119,12 +124,12 @@
         android:layout_marginBottom="0dp"
         android:layout_marginLeft="0dp"
         android:layout_marginStart="0dp"
-        android:background="@color/colorPrimary"
+        android:background="?attr/colorPrimary"
         android:clickable="false"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="@string/next_step"
-        android:textColor="@android:color/white"
+        android:textColor="?attr/colorTextButton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 

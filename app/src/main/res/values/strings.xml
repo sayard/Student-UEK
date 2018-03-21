@@ -105,4 +105,12 @@
     <string name="EXTRA_SEARCHED_SCHEDULE_GROUP_NAME" translatable="false">pl.c0.sayard.studentUEK.EXTRA_SEARCHED_SCHEDULE_GROUP_NAME</string>
     <string name="EXTRA_SEARCHED_SCHEDULE_GROUP_TYPE" translatable="false">pl.c0.sayard.studentUEK.EXTRA_SEARCHED_SCHEDULE_GROUP_TYPE</string>
     <string name="no_internet_conn">You have no internet connection</string>
+    <string name="current_theme">Current theme: </string>
+    <string name="change_theme">Change Theme</string>
+    <string name="defaultTheme">Default</string>
+    <string name="darkTheme">Dark</string>
+    <string name="premiumTheme">Premium</string>
+    <string name="choose_a_theme">Choose a theme</string>
+    <string name="apply">Apply</string>
+    <string name="PREFS_SELECTED_THEME" translatable="false">pl.c0.sayard.studentUEK.PREFS_SELECTED_THEME</string>
 </resources>

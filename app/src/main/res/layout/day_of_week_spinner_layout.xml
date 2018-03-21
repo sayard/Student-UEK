@@ -5,7 +5,7 @@
     android:background="?attr/colorBackground">
 
     <TextView
-        android:id="@+id/building_spinner_layout_tv"
+        android:id="@+id/day_of_week_spinner_layout_tv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="24sp"

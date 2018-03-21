@@ -22,6 +22,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import pl.c0.sayard.studentUEK.R
+import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.data.Building
 import pl.c0.sayard.studentUEK.data.ScheduleItem
 import pl.c0.sayard.studentUEK.db.ScheduleContract
@@ -68,6 +69,7 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Utils.onActivityCreateSetTheme(this)
         setContentView(R.layout.activity_schedule_item_details)
         scheduleItem = ScheduleItem(
                 intent.getStringExtra(getString(R.string.subject_extra)),

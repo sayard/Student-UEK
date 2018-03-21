@@ -17,6 +17,7 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.util.ExponentialBackOff
 import com.google.api.services.calendar.CalendarScopes
 import pl.c0.sayard.studentUEK.R
+import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.tasks.CalendarEventsTask
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
@@ -41,6 +42,7 @@ class ActivateGoogleCalendarIntegrationActivity : AppCompatActivity(), EasyPermi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Utils.onActivityCreateSetTheme(this)
         PREFS_ACCOUNT_NAME = getString(R.string.PREFS_ACCOUNT_NAME)
         setContentView(R.layout.activity_activate_google_calendar_integration)
         progressBar = findViewById<ProgressBar>(R.id.activate_google_calendar_integration_progress_bar)

@@ -10,6 +10,7 @@ import android.preference.PreferenceManager
 import android.view.View
 import android.widget.*
 import pl.c0.sayard.studentUEK.R
+import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.jobs.RefreshScheduleJob
 import pl.c0.sayard.studentUEK.Utils.Companion.AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY
 import pl.c0.sayard.studentUEK.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
@@ -23,10 +24,16 @@ class FirstRunStepThreeActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Utils.onActivityCreateSetTheme(this)
         setContentView(R.layout.activity_first_run_step_three)
         val switch = findViewById<Switch>(R.id.pe_switch)
         val peName = findViewById<EditText>(R.id.pe_name)
         val dayOfWeekSpinner = findViewById<Spinner>(R.id.day_of_week_spinner)
+        dayOfWeekSpinner.adapter = ArrayAdapter<String>(
+                this,
+                R.layout.day_of_week_spinner_layout,
+                R.id.day_of_week_spinner_layout_tv,
+                resources.getStringArray(R.array.days_of_week))
         val peHoursHeader = findViewById<LinearLayout>(R.id.pe_hours_header)
         val peHours = findViewById<LinearLayout>(R.id.pe_hours)
         switch.setOnCheckedChangeListener { p0, isChecked ->

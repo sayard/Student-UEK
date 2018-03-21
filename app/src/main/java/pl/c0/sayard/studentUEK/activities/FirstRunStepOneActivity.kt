@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MotionEvent
@@ -25,6 +26,7 @@ class FirstRunStepOneActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Utils.onActivityCreateSetTheme(this)
         setContentView(R.layout.activity_first_run_step_one)
         val retryButton = findViewById<Button>(R.id.group_retry_button)
         nextStepButton = findViewById(R.id.next_step_button)
@@ -101,7 +103,8 @@ class FirstRunStepOneActivity : AppCompatActivity() {
         })
         selectedGroupsET.setText(groupNames.joinToString(", "))
         nextStepButton?.isClickable = true
-        nextStepButton?.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+        val ta = theme.obtainStyledAttributes(R.styleable.Style)
+        nextStepButton?.setBackgroundColor(ta.getColor(R.styleable.Style_colorPrimary, ContextCompat.getColor(this, R.color.colorPrimaryDefault)))
         nextStepButton?.setOnClickListener {
             val dbHelper = ScheduleDbHelper(this)
             val db = dbHelper.readableDatabase

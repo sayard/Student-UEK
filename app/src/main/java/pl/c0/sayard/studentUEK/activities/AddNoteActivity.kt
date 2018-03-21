@@ -10,6 +10,7 @@ import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.TextView
 import pl.c0.sayard.studentUEK.R
+import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.db.ScheduleContract
 import pl.c0.sayard.studentUEK.db.ScheduleDbHelper
 import java.text.SimpleDateFormat
@@ -22,6 +23,7 @@ class AddNoteActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener{
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Utils.onActivityCreateSetTheme(this)
         setContentView(R.layout.activity_add_note)
         title = getString(R.string.new_note)
 
