@@ -2,7 +2,6 @@ package pl.c0.sayard.studentUEK.fragments
 
 import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
@@ -10,13 +9,16 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import pl.c0.sayard.studentUEK.BackButtonEditText
 import pl.c0.sayard.studentUEK.activities.AddLessonActivity
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.data.ScheduleItem
 import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.Utils.Companion.getLanguageGroups
 import pl.c0.sayard.studentUEK.Utils.Companion.getScheduleCursor
+import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
 import pl.c0.sayard.studentUEK.activities.ScheduleItemDetailsActivity
 import pl.c0.sayard.studentUEK.adapters.ScheduleAdapter
 import pl.c0.sayard.studentUEK.db.ScheduleDbHelper
@@ -25,6 +27,8 @@ import pl.c0.sayard.studentUEK.parsers.ScheduleParser
 
 
 class ScheduleFragment : Fragment() {
+
+    private var scheduleSearch: BackButtonEditText? = null
 
     companion object {
         fun newInstance(): ScheduleFragment{
@@ -47,8 +51,12 @@ class ScheduleFragment : Fragment() {
         val languageGroups = getLanguageGroups(db)
         languageGroups.mapTo(urls) { it.url }
         val cursor = getScheduleCursor(db)
+        var cursorCount = cursor.count
+        if(!isDeviceOnline(context)){
+            cursorCount = -1
+        }
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        if(prefs.getBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false) || cursor.count == 0){
+        if((prefs.getBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false) || cursorCount == 0)){
             ScheduleParser(context, activity, progressBar, errorMessage, null, null).execute(urls)
             prefs.edit().putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false).apply()
         }else{
@@ -56,8 +64,8 @@ class ScheduleFragment : Fragment() {
             if (scheduleList.isNotEmpty()){
                 errorMessage.visibility = View.GONE
                 val adapter = getAdapter(scheduleList)
-                val scheduleSearch = view.findViewById<EditText>(R.id.schedule_search)
-                scheduleSearch.addTextChangedListener(object: TextWatcher{
+                scheduleSearch = view.findViewById<BackButtonEditText>(R.id.schedule_search)
+                scheduleSearch?.addTextChangedListener(object: TextWatcher{
                     override fun afterTextChanged(p0: Editable?) {
                     }
 
@@ -68,7 +76,11 @@ class ScheduleFragment : Fragment() {
                         adapter.filter.filter(p0.toString())
                     }
                 })
-                scheduleSearch.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus -> scheduleSearch.isCursorVisible = hasFocus }
+                scheduleSearch?.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+                    if(!hasFocus && scheduleSearch?.text.toString() == ""){
+                        scheduleSearch?.visibility = View.GONE
+                    }
+                }
                 val listView = view.findViewById<ListView>(R.id.schedule_list_view)
                 listView.adapter = adapter
                 listView.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
@@ -92,11 +104,9 @@ class ScheduleFragment : Fragment() {
                 }
                 val scheduleSwipe = view.findViewById<SwipeRefreshLayout>(R.id.schedule_swipe)
                 scheduleSwipe.setOnRefreshListener{
-                    val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-                    val networkInfo = connMgr.activeNetworkInfo
-                    if(networkInfo != null && networkInfo.isConnected){
+                    if(isDeviceOnline(context)){
                         ScheduleParser(context, null, null, errorMessage, adapter, scheduleSwipe).execute(urls)
-                        scheduleSearch.setText("", TextView.BufferType.EDITABLE)
+                        scheduleSearch?.setText("", TextView.BufferType.EDITABLE)
                         Toast.makeText(context, getString(R.string.schedule_refreshed), Toast.LENGTH_SHORT).show()
                         Thread{
                             kotlin.run {
@@ -105,9 +115,22 @@ class ScheduleFragment : Fragment() {
                         }.start()
                     }else{
                         Toast.makeText(context, getString(R.string.no_internet_conn), Toast.LENGTH_SHORT).show()
-                        scheduleSwipe.isRefreshing = false
                     }
+                    scheduleSwipe.isRefreshing = false
                 }
+                listView.setOnScrollListener(object: AbsListView.OnScrollListener{
+                    override fun onScroll(view: AbsListView?, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
+                        var topRowVerticalPosition = 0
+                        if(listView != null && listView.childCount != 0){
+                            topRowVerticalPosition = listView.getChildAt(0).top
+                        }
+                        scheduleSwipe.isEnabled = (firstVisibleItem == 0 && topRowVerticalPosition >= 0)
+                    }
+
+                    override fun onScrollStateChanged(p0: AbsListView?, p1: Int) {
+                    }
+
+                })
             }else{
                 errorMessage.visibility = View.VISIBLE
                 val scheduleSwipe = view.findViewById<SwipeRefreshLayout>(R.id.schedule_swipe)
@@ -116,6 +139,7 @@ class ScheduleFragment : Fragment() {
                     ft.detach(this)
                     ft.attach(this)
                     ft.commit()
+                    scheduleSwipe.isRefreshing = false
                 }
             }
         }
@@ -134,6 +158,18 @@ class ScheduleFragment : Fragment() {
             R.id.new_schedule_item -> {
                 val newLessonIntent = Intent(context, AddLessonActivity::class.java)
                 startActivity(newLessonIntent)
+            }
+            R.id.search_schedule_item -> {
+                val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                if(scheduleSearch?.visibility == View.GONE){
+                    scheduleSearch?.visibility = View.VISIBLE
+                    scheduleSearch?.isFocusableInTouchMode = true
+                    scheduleSearch?.requestFocus()
+                    imm.showSoftInput(scheduleSearch, InputMethodManager.SHOW_IMPLICIT)
+                }else{
+                    scheduleSearch?.visibility = View.GONE
+                    imm.hideSoftInputFromWindow(scheduleSearch?.windowToken, 0)
+                }
             }
         }
         return super.onOptionsItemSelected(item)

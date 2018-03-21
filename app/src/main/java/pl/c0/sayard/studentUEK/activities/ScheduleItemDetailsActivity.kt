@@ -26,6 +26,7 @@ import pl.c0.sayard.studentUEK.data.Building
 import pl.c0.sayard.studentUEK.data.ScheduleItem
 import pl.c0.sayard.studentUEK.db.ScheduleContract
 import pl.c0.sayard.studentUEK.db.ScheduleDbHelper
+import pl.c0.sayard.studentUEK.jobs.RefreshScheduleJob
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -45,10 +46,11 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                             "${ScheduleContract.UserAddedLessonEntry._ID} = $idToDelete",
                             null)
                     if(deleteCount > 0){
-                        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-                        val editor = prefs.edit()
-                        editor.putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
-                        editor.apply()
+                        Thread{
+                            kotlin.run {
+                                RefreshScheduleJob.refreshSchedule(this)
+                            }
+                        }.start()
                         val mainActivityIntent = Intent(this, MainActivity::class.java)
                         startActivity(mainActivityIntent)
                     }else{

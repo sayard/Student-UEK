@@ -175,10 +175,6 @@ class AddLessonActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
                         "${ScheduleContract.UserAddedLessonEntry._ID} = $id",
                         null)
             }
-            val prefs = PreferenceManager.getDefaultSharedPreferences(this@AddLessonActivity)
-            val editor = prefs.edit()
-            editor.putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
-            editor.apply()
             Thread{
                 kotlin.run {
                     RefreshScheduleJob.refreshSchedule(this)

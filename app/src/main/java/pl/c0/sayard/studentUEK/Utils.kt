@@ -1,7 +1,9 @@
 package pl.c0.sayard.studentUEK
 
+import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.net.ConnectivityManager
 import android.widget.TextView
 import pl.c0.sayard.studentUEK.data.Group
 import pl.c0.sayard.studentUEK.data.ScheduleGroup
@@ -201,6 +203,12 @@ class Utils {
                 3 -> R.string.settings
                 else -> R.string.app_name
             }
+        }
+
+        fun isDeviceOnline(context: Context): Boolean{
+            val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val networkInfo = connMgr.activeNetworkInfo
+            return (networkInfo != null && networkInfo.isConnected)
         }
     }
 }

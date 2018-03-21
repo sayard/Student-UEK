@@ -7,6 +7,7 @@ import android.widget.ListView
 import android.widget.ProgressBar
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
+import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
 import pl.c0.sayard.studentUEK.data.Group
 import pl.c0.sayard.studentUEK.fragments.SearchFragment
 import java.io.InputStream
@@ -32,27 +33,29 @@ class GroupAndTeacherParser(private val fragment: SearchFragment, private val pr
     override fun doInBackground(vararg p0: Void?): List<Group> {
         val groupAndTeacherList = mutableListOf<Group>()
         try{
-            for(url in listOf(GROUP_URL, TEACHER_URL)){
-                val parserUrl = URL(url)
-                val factory = XmlPullParserFactory.newInstance()
-                factory.isNamespaceAware = false
-                val xpp = factory.newPullParser()
-                xpp.setInput(getInputStream(parserUrl), "UTF_8")
-                var eventType = xpp.eventType
-                while(eventType != XmlPullParser.END_DOCUMENT){
-                    if(eventType == XmlPullParser.START_TAG){
-                        if(xpp.name.equals(RESOURCE_TAG, true)){
-                            val name = xpp.getAttributeValue(null, NAME_ATTRIBUTE)
-                            val id = xpp.getAttributeValue(null, ID_ATTRIBUTE).toInt()
-                            val group = if(url == TEACHER_URL){
-                                Group(id, name, "N")
-                            }else{
-                                Group(id, name)
+            if(isDeviceOnline(fragment.context)){
+                for(url in listOf(GROUP_URL, TEACHER_URL)){
+                    val parserUrl = URL(url)
+                    val factory = XmlPullParserFactory.newInstance()
+                    factory.isNamespaceAware = false
+                    val xpp = factory.newPullParser()
+                    xpp.setInput(getInputStream(parserUrl), "UTF_8")
+                    var eventType = xpp.eventType
+                    while(eventType != XmlPullParser.END_DOCUMENT){
+                        if(eventType == XmlPullParser.START_TAG){
+                            if(xpp.name.equals(RESOURCE_TAG, true)){
+                                val name = xpp.getAttributeValue(null, NAME_ATTRIBUTE)
+                                val id = xpp.getAttributeValue(null, ID_ATTRIBUTE).toInt()
+                                val group = if(url == TEACHER_URL){
+                                    Group(id, name, "N")
+                                }else{
+                                    Group(id, name)
+                                }
+                                groupAndTeacherList.add(group)
                             }
-                            groupAndTeacherList.add(group)
                         }
+                        eventType = xpp.next()
                     }
-                    eventType = xpp.next()
                 }
             }
             return groupAndTeacherList
