@@ -113,4 +113,15 @@
     <string name="choose_a_theme">Choose a theme</string>
     <string name="apply">Apply</string>
     <string name="PREFS_SELECTED_THEME" translatable="false">pl.c0.sayard.studentUEK.PREFS_SELECTED_THEME</string>
+    <string name="EXTRA_NOTIFICATION_TYPE" translatable="false">pl.c0.sayard.studentUEK.EXTRA_NOTIFICATION_TYPE</string>
+    <string name="EXTRA_NOTIFICATION_TEACHER" translatable="false">pl.c0.sayard.studentUEK.EXTRA_NOTIFICATION_TEACHER</string>
+    <string name="EXTRA_NOTIFICATION_TEACHER_ID" translatable="false">pl.c0.sayard.studentUEK.EXTRA_NOTIFICATION_TEACHER_ID</string>
+    <string name="EXTRA_NOTIFICATION_COMMENTS" translatable="false">pl.c0.sayard.studentUEK.EXTRA_NOTIFICATION_COMMENTS</string>
+    <string name="EXTRA_NOTIFICATION_DATE" translatable="false">pl.c0.sayard.studentUEK.EXTRA_NOTIFICATION_DATE</string>
+    <string name="EXTRA_NOTIFICATION_START_DATE" translatable="false">pl.c0.sayard.studentUEK.EXTRA_NOTIFICATION_START_DATE</string>
+    <string name="EXTRA_NOTIFICATION_END_DATE" translatable="false">pl.c0.sayard.studentUEK.EXTRA_NOTIFICATION_END_DATE</string>
+    <string name="EXTRA_NOTIFICATION_IS_CUSTOM" translatable="false">pl.c0.sayard.studentUEK.EXTRA_NOTIFICATION_IS_CUSTOM</string>
+    <string name="EXTRA_NOTIFICATION_CUSTOM_ID" translatable="false">pl.c0.sayard.studentUEK.EXTRA_NOTIFICATION_CUSTOM_ID</string>
+    <string name="EXTRA_NOTIFICATION_NOTE_ID" translatable="false">pl.c0.sayard.studentUEK.EXTRA_NOTIFICATION_NOTE_ID</string>
+    <string name="EXTRA_NOTIFICATION_NOTE_CONTENT" translatable="false">pl.c0.sayard.studentUEK.EXTRA_NOTIFICATION_NOTE_CONTENT</string>
 </resources>
