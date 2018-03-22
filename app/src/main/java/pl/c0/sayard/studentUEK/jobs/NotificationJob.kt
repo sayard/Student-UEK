@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.support.v4.app.NotificationCompat
 import com.evernote.android.job.Job
 import com.evernote.android.job.JobRequest
@@ -61,6 +62,8 @@ class NotificationJob: Job() {
                 .setContentText("${scheduleItem.classroom} $hour")
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true)
+                .setVibrate(arrayOf<Long>(0, 200, 200, 200).toLongArray())
+                .setLights(Color.RED, 500, 500)
                 .build()
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(SCHEDULE_ITEM_NOFITICATION_ID, notification)
