@@ -1,12 +1,15 @@
 package pl.c0.sayard.studentUEK.jobs
 
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.support.v4.app.NotificationCompat
 import com.evernote.android.job.Job
 import com.evernote.android.job.JobRequest
 import com.evernote.android.job.util.support.PersistableBundleCompat
 import pl.c0.sayard.studentUEK.R
+import pl.c0.sayard.studentUEK.activities.ScheduleItemDetailsActivity
 import pl.c0.sayard.studentUEK.data.ScheduleItem
 
 /**
@@ -35,10 +38,29 @@ class NotificationJob: Job() {
                 extras.getString(context.getString(R.string.EXTRA_NOTIFICATION_NOTE_CONTENT), "")
         )
         val hour = extras.getString(context.getString(R.string.EXTRA_NOTIFICATION_HOUR), "")
+        val intent = Intent(context, ScheduleItemDetailsActivity::class.java).apply {
+            putExtra(context.getString(R.string.subject_extra), scheduleItem.subject)
+            putExtra(context.getString(R.string.type_extra), scheduleItem.type)
+            putExtra(context.getString(R.string.teacher_extra), scheduleItem.teacher)
+            putExtra(context.getString(R.string.teacher_id_extra), scheduleItem.teacherId)
+            putExtra(context.getString(R.string.classroom_extra), scheduleItem.classroom)
+            putExtra(context.getString(R.string.comments_extra), scheduleItem.comments)
+            putExtra(context.getString(R.string.date_extra), scheduleItem.dateStr)
+            putExtra(context.getString(R.string.start_date_extra), scheduleItem.startDateStr)
+            putExtra(context.getString(R.string.end_date_extra), scheduleItem.endDateStr)
+            putExtra(context.getString(R.string.is_custom_extra), scheduleItem.isCustom)
+            putExtra(context.getString(R.string.extra_custom_id), scheduleItem.customId)
+            putExtra(context.getString(R.string.extra_note_id), scheduleItem.noteId)
+            putExtra(context.getString(R.string.extra_note_content), scheduleItem.noteContent)
+        }
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
         val notification = NotificationCompat.Builder(context, context.getString(R.string.SCHEDULE_ITEM_NOTIFICATION_CHANNEL))
                 .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setContentTitle("${scheduleItem.subject} - ${scheduleItem.type}")
                 .setContentText("${scheduleItem.classroom} $hour")
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
                 .build()
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(SCHEDULE_ITEM_NOFITICATION_ID, notification)
