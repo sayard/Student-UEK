@@ -21,9 +21,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable false
             signingConfig signingConfigs.studentUEKBeta
+            jniDebuggable false
         }
         debug {
             signingConfig signingConfigs.studentUEKBeta
+            debuggable true
+            jniDebuggable true
         }
     }
     configurations.all {
