@@ -34,13 +34,13 @@
     <color name="colorBackgroundDark">#1C1C1C</color>
     <color name="colorTextPrimaryDark">#9D9D9D</color>
     <color name="colorTextSecondaryDark">#CCCCCC</color>
-    <color name="colorTextButtonDark">#FF0D00</color>
+    <color name="colorTextButtonDark">#CCCCCC</color>
     <color name="colorSeparatorLineDark">#262626</color>
     <color name="colorScheduleRowHeaderDark">#9D9D9D</color>
     <color name="colorBackgroundRowDark">#2B2B2B</color>
     <color name="colorTextImportantDark">#FFFF4444</color>
-    <color name="colorActionMenuTextDark">#114871</color>
-    <color name="colorActionMenuButtonDark">#114871</color>
+    <color name="colorActionMenuTextDark">#CCCCCC</color>
+    <color name="colorActionMenuButtonDark">#CCCCCC</color>
 
     <color name="colorPrimaryGold">#FFD700</color>
     <color name="colorPrimaryDarkGold">#DCB400</color>
