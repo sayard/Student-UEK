@@ -24,16 +24,29 @@ class Utils {
         val FIRST_RUN_SHARED_PREFS_KEY = "firstRun"
         val AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY = "automaticScheduleRefresh"
 
-        fun getGroupURL(group: Group): String{
-            return "http://planzajec.uek.krakow.pl/index.php?xml&typ=G&id=" +
-                    group.id.toString() +
-                    "&okres=1"
+        fun getGroupURL(group: Group, isLongSchedule: Boolean = false): String{
+            return if(isLongSchedule){
+                "http://planzajec.uek.krakow.pl/index.php?xml&typ=G&id=" +
+                        group.id.toString() +
+                        "&okres=2"
+            }else{
+                "http://planzajec.uek.krakow.pl/index.php?xml&typ=G&id=" +
+                        group.id.toString() +
+                        "&okres=1"
+            }
+
         }
 
-        fun getTeacherURL(group: Group?): String {
-            return "http://planzajec.uek.krakow.pl/index.php?xml&typ=N&id=" +
-                    group?.id.toString() +
-                    "&okres=1"
+        fun getTeacherURL(group: Group?, isLongSchedule: Boolean = false): String {
+            return if(isLongSchedule){
+                "http://planzajec.uek.krakow.pl/index.php?xml&typ=N&id=" +
+                        group?.id.toString() +
+                        "&okres=2"
+            }else{
+                "http://planzajec.uek.krakow.pl/index.php?xml&typ=N&id=" +
+                        group?.id.toString() +
+                        "&okres=1"
+            }
         }
 
         fun getScheduleList(cursor: Cursor, db: SQLiteDatabase): MutableList<ScheduleItem> {
