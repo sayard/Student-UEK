@@ -123,7 +123,8 @@ class SettingsFragment : Fragment() {
         notificationsSeekBar.setOnSeekBarChangeListener(object: SeekBar.OnSeekBarChangeListener{
 
             override fun onProgressChanged(p0: SeekBar?, progress: Int, fromUser: Boolean) {
-                notificationMinutes.text = progress.toString()
+                notificationsSeekBar.progress = (progress/5)*5
+                notificationMinutes.text = notificationsSeekBar.progress.toString()
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {}

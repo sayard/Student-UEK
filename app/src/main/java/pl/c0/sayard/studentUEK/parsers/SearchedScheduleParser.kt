@@ -13,7 +13,7 @@ import pl.c0.sayard.studentUEK.data.ScheduleItem
 import java.net.URL
 import javax.xml.parsers.DocumentBuilderFactory
 
-class SearchedScheduleParser(val progressBar: ProgressBar, val errorMessage: TextView, val onTaskCompleted: OnTaskCompleted): AsyncTask<Group, Void, List<ScheduleItem>>(){
+class SearchedScheduleParser(val progressBar: ProgressBar, val errorMessage: TextView, val isLongSchedule:Boolean, val onTaskCompleted: OnTaskCompleted): AsyncTask<Group, Void, List<ScheduleItem>>(){
     private val CLASSES_TAG = "zajecia"
     private val DATE_TAG = "termin"
     private val START_HOUR_TAG = "od-godz"
@@ -43,9 +43,9 @@ class SearchedScheduleParser(val progressBar: ProgressBar, val errorMessage: Tex
         try{
             groups.map {
                 val url = if(it?.type == "G"){
-                    Utils.getGroupURL(it)
+                    Utils.getGroupURL(it, isLongSchedule)
                 }else{
-                    Utils.getTeacherURL(it)
+                    Utils.getTeacherURL(it, isLongSchedule)
                 }
                 val parsingUrl = URL(url)
                 val dbf = DocumentBuilderFactory.newInstance()

@@ -1,16 +1,19 @@
 package pl.c0.sayard.studentUEK.activities
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.view.ViewPager
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
@@ -121,6 +124,25 @@ class MainActivity : AppCompatActivity() {
                         super.onAdFailedToLoad(p0)
                         adView.visibility = View.GONE
                     }
+                }
+            }
+            if(prefs.getBoolean(getString(R.string.PREFS_APP_NOT_RATED), true)){
+                val editor = prefs.edit()
+                val ratingCounter = prefs.getInt(getString(R.string.PREFS_APP_RATING_DIALOG_COUNTER), 20) - 1
+                editor.putInt(getString(R.string.PREFS_APP_RATING_DIALOG_COUNTER), ratingCounter).apply()
+                if(ratingCounter == 0){
+                    AlertDialog.Builder(this)
+                            .setTitle(getString(R.string.do_you_like_this_app))
+                            .setMessage(getString(R.string.app_rating_message))
+                            .setNeutralButton(getString(R.string.maybe_later), null)
+                            .setNegativeButton(getString(R.string.no_thanks)) { _, _ -> editor.putBoolean(getString(R.string.PREFS_APP_NOT_RATED), false).apply() }
+                            .setPositiveButton(getString(R.string.sure_take_me_there)) { p0, p1 ->
+                                editor.putBoolean(getString(R.string.PREFS_APP_NOT_RATED), false).apply()
+                                Toast.makeText(this@MainActivity, "SOON", Toast.LENGTH_SHORT).show()
+                            }//TODO: redirect to google play
+                            .create()
+                            .show()
+                    editor.putInt(getString(R.string.PREFS_APP_RATING_DIALOG_COUNTER), 20).apply()
                 }
             }
         }

@@ -23,6 +23,7 @@ class SearchedScheduleActivity : AppCompatActivity() {
 
     private var groupType: String? = null
     private var teacherId = 0
+    private var isLongSchedule = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,18 +40,18 @@ class SearchedScheduleActivity : AppCompatActivity() {
             )
             val progressBar = findViewById<ProgressBar>(R.id.searched_schedule_progress_bar)
             val errorMessage= findViewById<TextView>(R.id.searched_schedule_error_message)
-            executeSearchedScheduleParser(progressBar, errorMessage, group)
+            executeSearchedScheduleParser(progressBar, errorMessage, group, isLongSchedule)
             val searchedScheduleSwipe = findViewById<SwipeRefreshLayout>(R.id.searched_schedule_swipe)
             searchedScheduleSwipe.setOnRefreshListener {
-                executeSearchedScheduleParser(progressBar, errorMessage, group)
+                executeSearchedScheduleParser(progressBar, errorMessage, group, isLongSchedule)
                 Toast.makeText(this, getString(R.string.schedule_refreshed), Toast.LENGTH_SHORT).show()
                 searchedScheduleSwipe.isRefreshing = false
             }
         }
     }
 
-    private fun executeSearchedScheduleParser(progressBar: ProgressBar, errorMessage: TextView, group: Group){
-        SearchedScheduleParser(progressBar, errorMessage, object: SearchedScheduleParser.OnTaskCompleted{
+    private fun executeSearchedScheduleParser(progressBar: ProgressBar, errorMessage: TextView, group: Group, isLongSchedule: Boolean){
+        SearchedScheduleParser(progressBar, errorMessage, isLongSchedule, object: SearchedScheduleParser.OnTaskCompleted{
             override fun onTaskCompleted(result: List<ScheduleItem>) {
                 for(i in 0 until result.size){
                     val scheduleItem = result[i]
@@ -96,6 +97,23 @@ class SearchedScheduleActivity : AppCompatActivity() {
             R.id.teacher_page -> {
                 val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://e-uczelnia.uek.krakow.pl/course/view.php?id=$teacherId"))
                 startActivity(browserIntent)
+            }
+            R.id.schedule_length -> {
+                val groupName = intent.getStringExtra(getString(R.string.EXTRA_SEARCHED_SCHEDULE_GROUP_NAME))
+                val group = Group(
+                        intent.getIntExtra(getString(R.string.EXTRA_SEARCHED_SCHEDULE_GROUP_ID), 0),
+                        groupName,
+                        groupType!!
+                )
+                val progressBar = findViewById<ProgressBar>(R.id.searched_schedule_progress_bar)
+                val errorMessage= findViewById<TextView>(R.id.searched_schedule_error_message)
+                isLongSchedule = !isLongSchedule
+                if(isLongSchedule){
+                    item.icon = getDrawable(R.drawable.ic_short_schedule_24dp)
+                }else{
+                    item.icon = getDrawable(R.drawable.ic_long_schedule_24dp)
+                }
+                executeSearchedScheduleParser(progressBar, errorMessage, group, isLongSchedule)
             }
         }
         return super.onOptionsItemSelected(item)

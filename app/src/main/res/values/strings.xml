@@ -124,4 +124,12 @@
     <string name="EXTRA_NOTIFICATION_CUSTOM_ID" translatable="false">pl.c0.sayard.studentUEK.EXTRA_NOTIFICATION_CUSTOM_ID</string>
     <string name="EXTRA_NOTIFICATION_NOTE_ID" translatable="false">pl.c0.sayard.studentUEK.EXTRA_NOTIFICATION_NOTE_ID</string>
     <string name="EXTRA_NOTIFICATION_NOTE_CONTENT" translatable="false">pl.c0.sayard.studentUEK.EXTRA_NOTIFICATION_NOTE_CONTENT</string>
+    <string name="PREFS_APP_NOT_RATED" translatable="false">pl.c0.sayard.StudentUEK.PREFS_APP_NOT_RATED</string>
+    <string name="PREFS_APP_RATING_DIALOG_COUNTER" translatable="false">pl.c0.sayard.StudentUEK.PREFS_APP_RATING_DIALOG_COUNTER</string>
+    <string name="do_you_like_this_app">Do you like this app?</string>
+    <string name="app_rating_message">I\'m glad that you\'re using my app! Would you mind giving me a 5-star rating in Google Play? Thanks for your support :)</string>
+    <string name="maybe_later">Maybe later</string>
+    <string name="no_thanks">No thanks</string>
+    <string name="sure_take_me_there">Sure, take me there</string>
+    <string name="schedule_length">Schedule length</string>
 </resources>

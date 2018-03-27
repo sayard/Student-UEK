@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:id="@+id/schedule_length"
+        android:icon="@drawable/ic_long_schedule_24dp"
+        android:title="@string/schedule_length"
+        app:showAsAction="ifRoom"/>
+
     <item android:id="@+id/teacher_page"
         android:icon="@drawable/ic_account_circle_24dp"
         android:title="@string/teacher_page"
