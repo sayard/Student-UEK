@@ -77,4 +77,9 @@
     <string name="premiumTheme">Bogaty</string>
     <string name="choose_a_theme">Wybierz motyw</string>
     <string name="apply">Akceptuj</string>
+    <string name="do_you_like_this_app">Podoba ci się aplikacja?</string>
+    <string name="app_rating_message">Fajnie że używasz mojej aplikacji! Jeżeli Ci się podoba daj proszę 5 gwiazdek w Sklepie Play. To naprawdę pomaga :)</string>
+    <string name="maybe_later">Może później</string>
+    <string name="no_thanks">Nie, dziękuję</string>
+    <string name="sure_take_me_there">Oceń</string>
 </resources>
