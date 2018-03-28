@@ -18,7 +18,7 @@
         android:theme="@style/ThemeDefault">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCtnSfmb1b5ScdqD0JXeuvI171YyEQHB5w" />
+            android:value="" /><!-- TODO supply maps API key -->
 
         <activity
             android:name=".activities.MainActivity"

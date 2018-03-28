@@ -111,6 +111,7 @@ class RefreshScheduleJob: DailyJob() {
                     val scheduleItem = scheduleList[i]
                     val calendar = Calendar.getInstance()
                     calendar.time = scheduleItem.startDate
+                    val hourStr = "${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE)}"
                     calendar.add(Calendar.MINUTE, notificationTimeThreshold*-1)
                     if(calendar.timeInMillis > System.currentTimeMillis()){
                         val timeInMillis = Math.abs(calendar.timeInMillis - System.currentTimeMillis())
@@ -128,7 +129,7 @@ class RefreshScheduleJob: DailyJob() {
                             putInt(context.getString(R.string.EXTRA_NOTIFICATION_CUSTOM_ID), scheduleItem.customId)
                             putInt(context.getString(R.string.EXTRA_NOTIFICATION_NOTE_ID), scheduleItem.noteId)
                             putString(context.getString(R.string.EXTRA_NOTIFICATION_NOTE_CONTENT), scheduleItem.noteContent)
-                            putString(context.getString(R.string.EXTRA_NOTIFICATION_HOUR), "${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE)}")
+                            putString(context.getString(R.string.EXTRA_NOTIFICATION_HOUR), hourStr)
                         }
                         NotificationJob.schedule(timeInMillis, extras)
                     }

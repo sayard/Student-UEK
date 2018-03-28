@@ -22,7 +22,7 @@ android:background="?attr/colorBackground">
     android:layout_height="wrap_content"
     android:layout_above="@+id/navigation"
     ads:adSize="BANNER"
-    ads:adUnitId="ca-app-pub-4145044771989791/5878202126"
+    ads:adUnitId=""
     android:visibility="gone"/>
     <!--TODO: supply banner unit id-->
 
