@@ -1,8 +1,10 @@
 package pl.c0.sayard.studentUEK.activities
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.design.widget.BottomNavigationView
@@ -136,10 +138,33 @@ class MainActivity : AppCompatActivity() {
                             .setMessage(getString(R.string.app_rating_message))
                             .setNeutralButton(getString(R.string.maybe_later), null)
                             .setNegativeButton(getString(R.string.no_thanks)) { _, _ -> editor.putBoolean(getString(R.string.PREFS_APP_NOT_RATED), false).apply() }
-                            .setPositiveButton(getString(R.string.sure_take_me_there)) { p0, p1 ->
+                            .setPositiveButton(getString(R.string.sure_take_me_there)) { _, _ ->
                                 editor.putBoolean(getString(R.string.PREFS_APP_NOT_RATED), false).apply()
-                                Toast.makeText(this@MainActivity, "SOON", Toast.LENGTH_SHORT).show()
-                            }//TODO: redirect to google play
+
+                                var marketFound = false
+                                val rateIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName"))
+                                val otherApps = packageManager.queryIntentActivities(rateIntent, 0)
+
+                                for(otherApp in otherApps){
+                                    if(otherApp.activityInfo.applicationInfo.packageName == "com.android.vending"){
+                                        val otherAppActivity = otherApp.activityInfo
+                                        val componentName = ComponentName(
+                                                otherAppActivity.applicationInfo.packageName,
+                                                otherAppActivity.name
+                                        )
+                                        rateIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        rateIntent.addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
+                                        rateIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                                        rateIntent.component = componentName
+                                        startActivity(rateIntent)
+                                        marketFound = true
+                                        break
+                                    }
+                                }
+                                if(!marketFound){
+                                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
+                                }
+                            }
                             .create()
                             .show()
                     editor.putInt(getString(R.string.PREFS_APP_RATING_DIALOG_COUNTER), 20).apply()

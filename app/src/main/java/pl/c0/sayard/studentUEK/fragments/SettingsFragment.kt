@@ -1,8 +1,10 @@
 package pl.c0.sayard.studentUEK.fragments
 
 import android.app.AlertDialog
+import android.content.ComponentName
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
@@ -183,7 +185,29 @@ class SettingsFragment : Fragment() {
 
         val buyPremium = view.findViewById<LinearLayout>(R.id.buy_premium)
         buyPremium.setOnClickListener {
-            Toast.makeText(context, "SOON", Toast.LENGTH_SHORT).show()
+            var marketFound = false
+            val rateIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=pl.c0.sayard.studentUEKPremium"))
+            val otherApps = context.packageManager.queryIntentActivities(rateIntent, 0)
+
+            for(otherApp in otherApps){
+                if(otherApp.activityInfo.applicationInfo.packageName == "com.android.vending"){
+                    val otherAppActivity = otherApp.activityInfo
+                    val componentName = ComponentName(
+                            otherAppActivity.applicationInfo.packageName,
+                            otherAppActivity.name
+                    )
+                    rateIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    rateIntent.addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
+                    rateIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    rateIntent.component = componentName
+                    startActivity(rateIntent)
+                    marketFound = true
+                    break
+                }
+            }
+            if(!marketFound){
+                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=pl.c0.sayard.studentUEKPremium")))
+            }
         }
 
         val credits = view.findViewById<LinearLayout>(R.id.credits)
