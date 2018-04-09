@@ -132,4 +132,10 @@
     <string name="no_thanks">No thanks</string>
     <string name="sure_take_me_there">Sure, take me there</string>
     <string name="schedule_length">Schedule length</string>
+    <string name="PREFS_PREMIUM_PURCHASED" translatable="false">pl.c0.sayard.StudentUEK.PREFS_PREMIUM_PURCHASED</string>
+    <string name="billing_no_network_error">You don\'t have internet connection</string>
+    <string name="billing_item_not_available_error">Requested item is not available right now</string>
+    <string name="billing_item_already_owned_error">This item has already been purchased by you</string>
+    <string name="student_uek_premium_item_id" translatable="false">student_uek_premium</string>
+    <string name="thanks_for_support">Thank you for your support :)</string>
 </resources>

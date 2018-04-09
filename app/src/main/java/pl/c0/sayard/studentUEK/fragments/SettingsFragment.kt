@@ -1,10 +1,7 @@
 package pl.c0.sayard.studentUEK.fragments
 
 import android.app.AlertDialog
-import android.content.ComponentName
-import android.content.DialogInterface
-import android.content.Intent
-import android.net.Uri
+import android.content.*
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
@@ -12,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.anjlab.android.iab.v3.BillingProcessor
 
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
@@ -20,6 +18,7 @@ import pl.c0.sayard.studentUEK.Utils.Companion.setSelectedTheme
 import pl.c0.sayard.studentUEK.activities.ActivateGoogleCalendarIntegrationActivity
 import pl.c0.sayard.studentUEK.activities.CreditsActivity
 import pl.c0.sayard.studentUEK.activities.FirstRunStepOneActivity
+import pl.c0.sayard.studentUEK.activities.MainActivity
 import pl.c0.sayard.studentUEK.jobs.RefreshScheduleJob
 
 class SettingsFragment : Fragment() {
@@ -184,29 +183,15 @@ class SettingsFragment : Fragment() {
         }
 
         val buyPremium = view.findViewById<LinearLayout>(R.id.buy_premium)
-        buyPremium.setOnClickListener {
-            var marketFound = false
-            val rateIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=pl.c0.sayard.studentUEKPremium"))
-            val otherApps = context.packageManager.queryIntentActivities(rateIntent, 0)
-
-            for(otherApp in otherApps){
-                if(otherApp.activityInfo.applicationInfo.packageName == "com.android.vending"){
-                    val otherAppActivity = otherApp.activityInfo
-                    val componentName = ComponentName(
-                            otherAppActivity.applicationInfo.packageName,
-                            otherAppActivity.name
-                    )
-                    rateIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    rateIntent.addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
-                    rateIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    rateIntent.component = componentName
-                    startActivity(rateIntent)
-                    marketFound = true
-                    break
-                }
-            }
-            if(!marketFound){
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=pl.c0.sayard.studentUEKPremium")))
+        buyPremium.setOnClickListener{
+            val isIabAvailable = BillingProcessor.isIabServiceAvailable(context)
+            val isOneTimePurchaseSupported = MainActivity.bp?.isOneTimePurchaseSupported
+            if(isIabAvailable && isOneTimePurchaseSupported != null && isOneTimePurchaseSupported){
+                MainActivity.bp?.purchase(activity, getString(R.string.student_uek_premium_item_id))
+                activity.finish()
+                activity.startActivity(Intent(activity, activity.javaClass))
+            }else{
+                Toast.makeText(context, getString(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
             }
         }
 

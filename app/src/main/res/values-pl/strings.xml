@@ -83,4 +83,8 @@
     <string name="no_thanks">Nie, dziękuję</string>
     <string name="sure_take_me_there">Oceń</string>
     <string name="schedule_length">Okres</string>
+    <string name="billing_item_not_available_error">Wybrany produkt nie jest teraz dostępny</string>
+    <string name="billing_item_already_owned_error">Ten produkt został już zakupiony</string>
+    <string name="thanks_for_support">Dzięki za wsparcie :)</string>
+    <string name="billing_no_network_error">Brak połączenia z internetem</string>
 </resources>
