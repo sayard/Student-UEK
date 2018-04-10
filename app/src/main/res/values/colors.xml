@@ -36,7 +36,7 @@
     <color name="colorTextSecondaryDark">#CCCCCC</color>
     <color name="colorTextButtonDark">#CCCCCC</color>
     <color name="colorSeparatorLineDark">#262626</color>
-    <color name="colorScheduleRowHeaderDark">#9D9D9D</color>
+    <color name="colorScheduleRowHeaderDark">#292929</color>
     <color name="colorBackgroundRowDark">#2B2B2B</color>
     <color name="colorTextImportantDark">#FFFF4444</color>
     <color name="colorActionMenuTextDark">#CCCCCC</color>
