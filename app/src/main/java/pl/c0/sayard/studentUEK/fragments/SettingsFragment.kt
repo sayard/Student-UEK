@@ -159,7 +159,7 @@ class SettingsFragment : Fragment() {
                     context.getString(R.string.darkTheme),
                     context.getString(R.string.premiumTheme)
             )
-            val dialogBuilder = AlertDialog.Builder(context)
+            AlertDialog.Builder(context)
                     .setTitle(getString(R.string.choose_a_theme))
                     .setSingleChoiceItems(themes, selectedThemeId, null)
                     .setPositiveButton(getString(R.string.apply)) { dialog, _ ->

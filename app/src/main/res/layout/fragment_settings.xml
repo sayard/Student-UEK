@@ -159,13 +159,18 @@
                     android:layout_height="wrap_content"
                     android:textColor="?attr/colorTextPrimary"
                     android:textSize="24sp"
-                    android:text="@string/buy_premium"/>
+                    android:text="@string/buy_activate_premium"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/get_rid_of_the_ads_and_gain_extra_features_by_buying_premium"
                     android:textColor="?attr/colorTextSecondary"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/premium_activate_note"/>
 
             </LinearLayout>
 
