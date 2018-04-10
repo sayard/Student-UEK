@@ -1,10 +1,7 @@
 package pl.c0.sayard.studentUEK.fragments
 
 import android.app.AlertDialog
-import android.content.ComponentName
-import android.content.DialogInterface
-import android.content.Intent
-import android.net.Uri
+import android.content.*
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
@@ -12,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.anjlab.android.iab.v3.BillingProcessor
 
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
@@ -20,6 +18,7 @@ import pl.c0.sayard.studentUEK.Utils.Companion.setSelectedTheme
 import pl.c0.sayard.studentUEK.activities.ActivateGoogleCalendarIntegrationActivity
 import pl.c0.sayard.studentUEK.activities.CreditsActivity
 import pl.c0.sayard.studentUEK.activities.FirstRunStepOneActivity
+import pl.c0.sayard.studentUEK.activities.MainActivity
 import pl.c0.sayard.studentUEK.jobs.RefreshScheduleJob
 
 class SettingsFragment : Fragment() {
@@ -58,29 +57,33 @@ class SettingsFragment : Fragment() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = prefs.edit()
 
-        val googleCalendarIntegrationSwitch = view.findViewById<Switch>(R.id.settings_calendar_switch)
-        googleCalendarIntegrationSwitch.isChecked = prefs.getBoolean(getString(R.string.PREFS_ENABLE_GC), false)
-        googleCalendarIntegrationSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if(isChecked){
-                val intent = Intent(context, ActivateGoogleCalendarIntegrationActivity::class.java)
-                startActivity(intent)
-                editor.putBoolean(getString(R.string.PREFS_ENABLE_GC), true)
-                editor.apply()
-                Thread{
-                    kotlin.run {
-                        RefreshScheduleJob.refreshSchedule(context)
-                    }
-                }.start()
-            }else{
-                editor.putString(getString(R.string.PREFS_ACCOUNT_NAME), null)
-                editor.putBoolean(getString(R.string.PREFS_ENABLE_GC), false)
-                editor.apply()
-                Thread{
-                    kotlin.run {
-                        RefreshScheduleJob.refreshSchedule(context)
-                    }
-                }.start()
+        if(prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false)){
+            val googleCalendarIntegrationSwitch = view.findViewById<Switch>(R.id.settings_calendar_switch)
+            googleCalendarIntegrationSwitch.isChecked = prefs.getBoolean(getString(R.string.PREFS_ENABLE_GC), false)
+            googleCalendarIntegrationSwitch.setOnCheckedChangeListener { _, isChecked ->
+                if(isChecked){
+                    val intent = Intent(context, ActivateGoogleCalendarIntegrationActivity::class.java)
+                    startActivity(intent)
+                    editor.putBoolean(getString(R.string.PREFS_ENABLE_GC), true)
+                    editor.apply()
+                    Thread{
+                        kotlin.run {
+                            RefreshScheduleJob.refreshSchedule(context)
+                        }
+                    }.start()
+                }else{
+                    editor.putString(getString(R.string.PREFS_ACCOUNT_NAME), null)
+                    editor.putBoolean(getString(R.string.PREFS_ENABLE_GC), false)
+                    editor.apply()
+                    Thread{
+                        kotlin.run {
+                            RefreshScheduleJob.refreshSchedule(context)
+                        }
+                    }.start()
+                }
             }
+        }else{
+            view.findViewById<LinearLayout>(R.id.gc_view).visibility = View.GONE
         }
 
         val notificationSwitch = view.findViewById<Switch>(R.id.settings_notification_switch)
@@ -155,12 +158,19 @@ class SettingsFragment : Fragment() {
 
         val changeTheme = view.findViewById<LinearLayout>(R.id.change_theme)
         changeTheme.setOnClickListener {
-            val themes = arrayOf<CharSequence>(
-                    context.getString(R.string.defaultTheme),
-                    context.getString(R.string.darkTheme),
-                    context.getString(R.string.premiumTheme)
-            )
-            val dialogBuilder = AlertDialog.Builder(context)
+            val themes = if(prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false)){
+                arrayOf<CharSequence>(
+                        context.getString(R.string.defaultTheme),
+                        context.getString(R.string.darkTheme),
+                        context.getString(R.string.premiumTheme)
+                )
+            }else{
+                arrayOf<CharSequence>(
+                        context.getString(R.string.defaultTheme),
+                        context.getString(R.string.darkTheme)
+                )
+            }
+            AlertDialog.Builder(context)
                     .setTitle(getString(R.string.choose_a_theme))
                     .setSingleChoiceItems(themes, selectedThemeId, null)
                     .setPositiveButton(getString(R.string.apply)) { dialog, _ ->
@@ -184,30 +194,18 @@ class SettingsFragment : Fragment() {
         }
 
         val buyPremium = view.findViewById<LinearLayout>(R.id.buy_premium)
-        buyPremium.setOnClickListener {
-            var marketFound = false
-            val rateIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=pl.c0.sayard.studentUEKPremium"))
-            val otherApps = context.packageManager.queryIntentActivities(rateIntent, 0)
-
-            for(otherApp in otherApps){
-                if(otherApp.activityInfo.applicationInfo.packageName == "com.android.vending"){
-                    val otherAppActivity = otherApp.activityInfo
-                    val componentName = ComponentName(
-                            otherAppActivity.applicationInfo.packageName,
-                            otherAppActivity.name
-                    )
-                    rateIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    rateIntent.addFlags(Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
-                    rateIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    rateIntent.component = componentName
-                    startActivity(rateIntent)
-                    marketFound = true
-                    break
+        if(!prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false)){
+            buyPremium.setOnClickListener{
+                val isIabAvailable = BillingProcessor.isIabServiceAvailable(context)
+                val isOneTimePurchaseSupported = MainActivity.bp?.isOneTimePurchaseSupported
+                if(isIabAvailable && isOneTimePurchaseSupported != null && isOneTimePurchaseSupported){
+                    MainActivity.bp?.purchase(activity, getString(R.string.student_uek_premium_item_id))
+                }else{
+                    Toast.makeText(context, getString(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
                 }
             }
-            if(!marketFound){
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=pl.c0.sayard.studentUEKPremium")))
-            }
+        }else{
+            buyPremium.visibility = View.GONE
         }
 
         val credits = view.findViewById<LinearLayout>(R.id.credits)

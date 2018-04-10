@@ -10,8 +10,8 @@ android {
         applicationId "pl.c0.sayard.studentUEK"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 5
-        versionName "1.0.4"
+        versionCode 26
+        versionName "1.2.0.20"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -42,11 +42,11 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.android.support:support-vector-drawable:26.1.0'
     implementation 'com.android.support:support-v4:26.1.0'
-    implementation 'com.google.android.gms:play-services-maps:11.8.0'
+    implementation 'com.google.android.gms:play-services-maps:12.0.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    implementation 'com.google.android.gms:play-services-auth:11.8.0'
+    implementation 'com.google.android.gms:play-services-auth:12.0.1'
     implementation 'pub.devrel:easypermissions:0.3.0'
     implementation('com.google.api-client:google-api-client-android:1.23.0') {
         exclude group: 'org.apache.httpcomponents'
@@ -55,6 +55,7 @@ dependencies {
         exclude group: 'org.apache.httpcomponents'
     }
     implementation 'com.evernote:android-job:1.2.4'
-    implementation 'com.google.android.gms:play-services-gcm:11.8.0'
-    implementation 'com.google.android.gms:play-services-ads:11.8.0'
+    implementation 'com.google.android.gms:play-services-gcm:12.0.1'
+    implementation 'com.google.android.gms:play-services-ads:12.0.1'
+    implementation 'com.anjlab.android.iab.v3:library:1.0.44'
 }

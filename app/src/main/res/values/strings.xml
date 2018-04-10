@@ -99,7 +99,7 @@
     <string name="choose_your_groups_one_more_time">Choose your groups one more time</string>
     <string name="groups_rechoosing_dialog_msg">Are you sure yo want to choose your groups one more time?</string>
     <string name="credits">Credits</string>
-    <string name="buy_premium">Buy Premium</string>
+    <string name="buy_activate_premium">Buy/Activate Premium</string>
     <string name="get_rid_of_the_ads_and_gain_extra_features_by_buying_premium">Get rid of the ads and gain extra features by buying premium</string>
     <string name="EXTRA_SEARCHED_SCHEDULE_GROUP_ID" translatable="false">pl.c0.sayard.studentUEK.EXTRA_SEARCHED_SCHEDULE_GROUP_ID</string>
     <string name="EXTRA_SEARCHED_SCHEDULE_GROUP_NAME" translatable="false">pl.c0.sayard.studentUEK.EXTRA_SEARCHED_SCHEDULE_GROUP_NAME</string>
@@ -132,4 +132,11 @@
     <string name="no_thanks">No thanks</string>
     <string name="sure_take_me_there">Sure, take me there</string>
     <string name="schedule_length">Schedule length</string>
+    <string name="PREFS_PREMIUM_PURCHASED" translatable="false">pl.c0.sayard.StudentUEK.PREFS_PREMIUM_PURCHASED</string>
+    <string name="billing_no_network_error">You don\'t have internet connection</string>
+    <string name="billing_item_not_available_error">Requested item is not available right now</string>
+    <string name="billing_item_already_owned_error">This item has already been purchased by you</string>
+    <string name="student_uek_premium_item_id" translatable="false">student_uek_premium</string>
+    <string name="thanks_for_support">Thank you for your support :)</string>
+    <string name="premium_activate_note">(If you have purchased premium before - activate it here)</string>
 </resources>

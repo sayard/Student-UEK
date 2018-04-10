@@ -67,7 +67,6 @@
     <string name="choose_your_groups_one_more_time">Wybierz swoje grupy jeszcze raz</string>
     <string name="groups_rechoosing_dialog_msg">Czy na pewno chcesz ponownie wybrać grupy?</string>
     <string name="credits">Autorzy</string>
-    <string name="buy_premium">Kup Premium</string>
     <string name="get_rid_of_the_ads_and_gain_extra_features_by_buying_premium">Pozbądź się reklam i zyskaj dodatkowe funkcje</string>
     <string name="no_internet_conn">Brak połączenia z internetem</string>
     <string name="current_theme">Aktualny motyw: </string>
@@ -83,4 +82,10 @@
     <string name="no_thanks">Nie, dziękuję</string>
     <string name="sure_take_me_there">Oceń</string>
     <string name="schedule_length">Okres</string>
+    <string name="billing_item_not_available_error">Wybrany produkt nie jest teraz dostępny</string>
+    <string name="billing_item_already_owned_error">Ten produkt został już zakupiony</string>
+    <string name="thanks_for_support">Dzięki za wsparcie :)</string>
+    <string name="billing_no_network_error">Brak połączenia z internetem</string>
+    <string name="buy_activate_premium">Kup/Aktywuj Premium</string>
+    <string name="premium_activate_note">(Jeżeli kupiłeś/łaś już Premium - aktywuj je tutaj)</string>
 </resources>

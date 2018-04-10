@@ -1,9 +1,6 @@
 package pl.c0.sayard.studentUEK.activities
 
-import android.content.ComponentName
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -15,13 +12,14 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
+import com.anjlab.android.iab.v3.BillingProcessor
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.activity_main.*
 import pl.c0.sayard.studentUEK.BackButtonEditText
+import pl.c0.sayard.studentUEK.BillingHandler
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
@@ -36,6 +34,10 @@ import pl.c0.sayard.studentUEK.fragments.SettingsFragment
 class MainActivity : AppCompatActivity() {
 
     private var prevMenuItem: MenuItem? = null
+
+    companion object {
+        var bp: BillingProcessor? = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -170,6 +172,16 @@ class MainActivity : AppCompatActivity() {
                     editor.putInt(getString(R.string.PREFS_APP_RATING_DIALOG_COUNTER), 20).apply()
                 }
             }
+            bp = BillingProcessor.newBillingProcessor(
+                    this,
+                    "",//TODO supply license key from google play
+                    BillingHandler(this)
+            )
+            bp?.initialize()
+            if(!prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false) &&
+                    bp?.getPurchaseTransactionDetails(getString(R.string.student_uek_premium_item_id))!=null){
+                prefs.edit().putBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), true).apply()
+            }
         }
     }
 
@@ -199,6 +211,19 @@ class MainActivity : AppCompatActivity() {
             searchBox.visibility = View.GONE
             imm.hideSoftInputFromWindow(searchBox.windowToken, 0)
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if(bp != null && !bp!!.handleActivityResult(requestCode, resultCode, data)){
+            super.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    override fun onDestroy() {
+        if(bp != null){
+            bp?.release()
+        }
+        super.onDestroy()
     }
 
 }

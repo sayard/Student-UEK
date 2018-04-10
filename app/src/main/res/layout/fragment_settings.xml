@@ -16,26 +16,34 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <Switch
-                android:id="@+id/settings_calendar_switch"
+            <LinearLayout
+                android:id="@+id/gc_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="?attr/colorTextPrimary"
-                android:textSize="24sp"
-                android:text="@string/google_calendar_integration" />
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/your_schedule_will_automatically_get_added_to_your_google_calendar"
-                android:textColor="?attr/colorTextSecondary"/>
+                <Switch
+                    android:id="@+id/settings_calendar_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorTextPrimary"
+                    android:textSize="24sp"
+                    android:text="@string/google_calendar_integration" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?attr/colorSeparatorLine"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/your_schedule_will_automatically_get_added_to_your_google_calendar"
+                    android:textColor="?attr/colorTextSecondary"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/colorSeparatorLine"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"/>
+
+            </LinearLayout>
 
             <Switch
                 android:id="@+id/settings_notification_switch"
@@ -159,7 +167,7 @@
                     android:layout_height="wrap_content"
                     android:textColor="?attr/colorTextPrimary"
                     android:textSize="24sp"
-                    android:text="@string/buy_premium"/>
+                    android:text="@string/buy_activate_premium"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -167,14 +175,19 @@
                     android:text="@string/get_rid_of_the_ads_and_gain_extra_features_by_buying_premium"
                     android:textColor="?attr/colorTextSecondary"/>
 
-            </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/premium_activate_note"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="?attr/colorSeparatorLine"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?attr/colorSeparatorLine"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
