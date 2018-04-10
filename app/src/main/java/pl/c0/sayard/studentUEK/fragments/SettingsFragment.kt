@@ -57,29 +57,33 @@ class SettingsFragment : Fragment() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = prefs.edit()
 
-        val googleCalendarIntegrationSwitch = view.findViewById<Switch>(R.id.settings_calendar_switch)
-        googleCalendarIntegrationSwitch.isChecked = prefs.getBoolean(getString(R.string.PREFS_ENABLE_GC), false)
-        googleCalendarIntegrationSwitch.setOnCheckedChangeListener { _, isChecked ->
-            if(isChecked){
-                val intent = Intent(context, ActivateGoogleCalendarIntegrationActivity::class.java)
-                startActivity(intent)
-                editor.putBoolean(getString(R.string.PREFS_ENABLE_GC), true)
-                editor.apply()
-                Thread{
-                    kotlin.run {
-                        RefreshScheduleJob.refreshSchedule(context)
-                    }
-                }.start()
-            }else{
-                editor.putString(getString(R.string.PREFS_ACCOUNT_NAME), null)
-                editor.putBoolean(getString(R.string.PREFS_ENABLE_GC), false)
-                editor.apply()
-                Thread{
-                    kotlin.run {
-                        RefreshScheduleJob.refreshSchedule(context)
-                    }
-                }.start()
+        if(prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false)){
+            val googleCalendarIntegrationSwitch = view.findViewById<Switch>(R.id.settings_calendar_switch)
+            googleCalendarIntegrationSwitch.isChecked = prefs.getBoolean(getString(R.string.PREFS_ENABLE_GC), false)
+            googleCalendarIntegrationSwitch.setOnCheckedChangeListener { _, isChecked ->
+                if(isChecked){
+                    val intent = Intent(context, ActivateGoogleCalendarIntegrationActivity::class.java)
+                    startActivity(intent)
+                    editor.putBoolean(getString(R.string.PREFS_ENABLE_GC), true)
+                    editor.apply()
+                    Thread{
+                        kotlin.run {
+                            RefreshScheduleJob.refreshSchedule(context)
+                        }
+                    }.start()
+                }else{
+                    editor.putString(getString(R.string.PREFS_ACCOUNT_NAME), null)
+                    editor.putBoolean(getString(R.string.PREFS_ENABLE_GC), false)
+                    editor.apply()
+                    Thread{
+                        kotlin.run {
+                            RefreshScheduleJob.refreshSchedule(context)
+                        }
+                    }.start()
+                }
             }
+        }else{
+            view.findViewById<LinearLayout>(R.id.gc_view).visibility = View.GONE
         }
 
         val notificationSwitch = view.findViewById<Switch>(R.id.settings_notification_switch)
@@ -154,11 +158,18 @@ class SettingsFragment : Fragment() {
 
         val changeTheme = view.findViewById<LinearLayout>(R.id.change_theme)
         changeTheme.setOnClickListener {
-            val themes = arrayOf<CharSequence>(
-                    context.getString(R.string.defaultTheme),
-                    context.getString(R.string.darkTheme),
-                    context.getString(R.string.premiumTheme)
-            )
+            val themes = if(prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false)){
+                arrayOf<CharSequence>(
+                        context.getString(R.string.defaultTheme),
+                        context.getString(R.string.darkTheme),
+                        context.getString(R.string.premiumTheme)
+                )
+            }else{
+                arrayOf<CharSequence>(
+                        context.getString(R.string.defaultTheme),
+                        context.getString(R.string.darkTheme)
+                )
+            }
             AlertDialog.Builder(context)
                     .setTitle(getString(R.string.choose_a_theme))
                     .setSingleChoiceItems(themes, selectedThemeId, null)
@@ -183,16 +194,18 @@ class SettingsFragment : Fragment() {
         }
 
         val buyPremium = view.findViewById<LinearLayout>(R.id.buy_premium)
-        buyPremium.setOnClickListener{
-            val isIabAvailable = BillingProcessor.isIabServiceAvailable(context)
-            val isOneTimePurchaseSupported = MainActivity.bp?.isOneTimePurchaseSupported
-            if(isIabAvailable && isOneTimePurchaseSupported != null && isOneTimePurchaseSupported){
-                MainActivity.bp?.purchase(activity, getString(R.string.student_uek_premium_item_id))
-                activity.finish()
-                activity.startActivity(Intent(activity, activity.javaClass))
-            }else{
-                Toast.makeText(context, getString(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
+        if(!prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false)){
+            buyPremium.setOnClickListener{
+                val isIabAvailable = BillingProcessor.isIabServiceAvailable(context)
+                val isOneTimePurchaseSupported = MainActivity.bp?.isOneTimePurchaseSupported
+                if(isIabAvailable && isOneTimePurchaseSupported != null && isOneTimePurchaseSupported){
+                    MainActivity.bp?.purchase(activity, getString(R.string.student_uek_premium_item_id))
+                }else{
+                    Toast.makeText(context, getString(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
+                }
             }
+        }else{
+            buyPremium.visibility = View.GONE
         }
 
         val credits = view.findViewById<LinearLayout>(R.id.credits)
