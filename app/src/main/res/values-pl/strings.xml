@@ -88,4 +88,5 @@
     <string name="billing_no_network_error">Brak połączenia z internetem</string>
     <string name="buy_activate_premium">Kup/Aktywuj Premium</string>
     <string name="premium_activate_note">(Jeżeli kupiłeś/łaś już Premium - aktywuj je tutaj)</string>
+    <string name="courses">Kursy</string>
 </resources>

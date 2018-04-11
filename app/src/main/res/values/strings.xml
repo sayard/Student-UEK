@@ -139,4 +139,6 @@
     <string name="student_uek_premium_item_id" translatable="false">student_uek_premium</string>
     <string name="thanks_for_support">Thank you for your support :)</string>
     <string name="premium_activate_note">(If you have purchased premium before - activate it here)</string>
+    <string name="courses">Courses</string>
+    <string name="pl.c0.sayard.StudentUEK.PREFS_MOODLE_TOKEN">PREFS_MOODLE_TOKEN</string>
 </resources>

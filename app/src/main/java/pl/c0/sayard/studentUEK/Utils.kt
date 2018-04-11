@@ -213,10 +213,11 @@ class Utils {
 
         fun getTitleBasedOnPosition(position: Int): Int{
             return when(position){
-                0 -> R.string.search
-                1 -> R.string.schedule
-                2 -> R.string.notes
-                3 -> R.string.settings
+                0 -> R.string.courses
+                1 -> R.string.search
+                2 -> R.string.schedule
+                3 -> R.string.notes
+                4 -> R.string.settings
                 else -> R.string.app_name
             }
         }
