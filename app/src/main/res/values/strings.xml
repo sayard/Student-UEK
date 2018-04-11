@@ -143,4 +143,6 @@
     <string name="pl.c0.sayard.StudentUEK.PREFS_MOODLE_TOKEN" translatable="false">PREFS_MOODLE_TOKEN</string>
     <string name="login">Login</string>
     <string name="password">Password</string>
+    <string name="moodle_connection_error">Couldn\'t connect to Moodle</string>
+    <string name="invalid_login_or_password">Invalid login or password</string>
 </resources>

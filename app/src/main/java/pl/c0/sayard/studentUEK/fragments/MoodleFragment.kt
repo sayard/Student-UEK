@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import pl.c0.sayard.studentUEK.R
+import pl.c0.sayard.studentUEK.parsers.MoodleTokenParser
 
 class MoodleFragment : Fragment() {
 
@@ -37,11 +38,10 @@ class MoodleFragment : Fragment() {
             val password = view.findViewById<EditText>(R.id.moodle_password)
             val loginButton = view.findViewById<Button>(R.id.mooodle_login_button)
             val loginProgressBar = view.findViewById<ProgressBar>(R.id.moodle_login_progress)
-
             loginButton.setOnClickListener{
-                Toast.makeText(context, "Login: ${login.text} Password: ${password.text}", Toast.LENGTH_SHORT).show()
+                MoodleTokenParser(context, this, loginProgressBar, loginButton).execute(login.text.toString(), password.text.toString())
             }
-            password.setOnKeyListener(View.OnKeyListener { v, keyCode, event ->
+            password.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
                 if((event?.action == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
                     loginButton.performClick()
                     return@OnKeyListener true
