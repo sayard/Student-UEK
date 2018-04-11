@@ -89,4 +89,6 @@
     <string name="buy_activate_premium">Kup/Aktywuj Premium</string>
     <string name="premium_activate_note">(Jeżeli kupiłeś/łaś już Premium - aktywuj je tutaj)</string>
     <string name="courses">Kursy</string>
+    <string name="login">Login</string>
+    <string name="password">Hasło</string>
 </resources>
