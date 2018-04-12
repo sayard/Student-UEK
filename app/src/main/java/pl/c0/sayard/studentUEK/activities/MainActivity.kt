@@ -55,6 +55,10 @@ class MainActivity : AppCompatActivity() {
                 val view = this.currentFocus
                 when(item.itemId){
                     R.id.navigation_moodle ->{
+                        if(viewPager.currentItem == 0){
+                            val searchBox = findViewById<BackButtonEditText>(R.id.courses_search)
+                            showSearchBox(searchBox)
+                        }
                         viewPager.currentItem = 0
                         setTitle(getString(R.string.courses))
                     }

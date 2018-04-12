@@ -145,4 +145,6 @@
     <string name="password">Password</string>
     <string name="moodle_connection_error">Couldn\'t connect to Moodle</string>
     <string name="invalid_login_or_password">Invalid login or password</string>
+    <string name="an_error_has_occurred_when_loading_courses_please_try_again_later">An error has occurred when loading courses, please try again later</string>
+    <string name="log_in_again">Log in again</string>
 </resources>

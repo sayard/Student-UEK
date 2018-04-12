@@ -93,4 +93,6 @@
     <string name="password">Hasło</string>
     <string name="moodle_connection_error">Nie można się połączyć z Moodle</string>
     <string name="invalid_login_or_password">Nieprawidłowy login lub hasło</string>
+    <string name="an_error_has_occurred_when_loading_courses_please_try_again_later">Podczał ładowania kursów wystąpił błąd, spróbuj ponownie później</string>
+    <string name="log_in_again">Zaloguj się ponownie</string>
 </resources>
