@@ -26,10 +26,7 @@ import pl.c0.sayard.studentUEK.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
 import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
 import pl.c0.sayard.studentUEK.Utils.Companion.onActivityCreateSetTheme
 import pl.c0.sayard.studentUEK.adapters.ViewPagerAdapter
-import pl.c0.sayard.studentUEK.fragments.NotesFragment
-import pl.c0.sayard.studentUEK.fragments.ScheduleFragment
-import pl.c0.sayard.studentUEK.fragments.SearchFragment
-import pl.c0.sayard.studentUEK.fragments.SettingsFragment
+import pl.c0.sayard.studentUEK.fragments.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -57,32 +54,40 @@ class MainActivity : AppCompatActivity() {
             navigation.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
                 val view = this.currentFocus
                 when(item.itemId){
-                    R.id.navigation_search ->{
+                    R.id.navigation_moodle ->{
                         if(viewPager.currentItem == 0){
-                            val searchBox = findViewById<BackButtonEditText>(R.id.group_and_teacher_search)
+                            val searchBox = findViewById<BackButtonEditText>(R.id.courses_search)
                             showSearchBox(searchBox)
                         }
                         viewPager.currentItem = 0
-                        setTitle(R.string.search)
+                        setTitle(getString(R.string.courses))
                     }
-                    R.id.navigation_schedule -> {
+                    R.id.navigation_search ->{
                         if(viewPager.currentItem == 1){
-                            val searchBox = findViewById<BackButtonEditText>(R.id.schedule_search)
+                            val searchBox = findViewById<BackButtonEditText>(R.id.group_and_teacher_search)
                             showSearchBox(searchBox)
                         }
                         viewPager.currentItem = 1
-                        setTitle(R.string.schedule)
+                        setTitle(R.string.search)
                     }
-                    R.id.navigation_notes -> {
+                    R.id.navigation_schedule -> {
                         if(viewPager.currentItem == 2){
-                            val searchBox = findViewById<BackButtonEditText>(R.id.notes_search)
+                            val searchBox = findViewById<BackButtonEditText>(R.id.schedule_search)
                             showSearchBox(searchBox)
                         }
                         viewPager.currentItem = 2
+                        setTitle(R.string.schedule)
+                    }
+                    R.id.navigation_notes -> {
+                        if(viewPager.currentItem == 3){
+                            val searchBox = findViewById<BackButtonEditText>(R.id.notes_search)
+                            showSearchBox(searchBox)
+                        }
+                        viewPager.currentItem = 3
                         setTitle(R.string.notes)
                     }
                     R.id.navigation_settings -> {
-                        viewPager.currentItem = 3
+                        viewPager.currentItem = 4
                         setTitle(R.string.settings)
                     }
                     else -> return@OnNavigationItemSelectedListener false
@@ -103,7 +108,7 @@ class MainActivity : AppCompatActivity() {
                     if(prevMenuItem != null){
                         prevMenuItem!!.isChecked = false
                     }else{
-                        navigation.menu.getItem(1).isChecked = false
+                        navigation.menu.getItem(2).isChecked = false
                     }
                     val menuItem = navigation.menu.getItem(position)
                     menuItem.isChecked = true
@@ -187,16 +192,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpViewPager(viewPager: ViewPager) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
+        val moodleFragment = MoodleFragment.newInstance()
         val searchFragment = SearchFragment.newInstance()
         val scheduleFragment = ScheduleFragment.newInstance()
         val notesFragment = NotesFragment.newInstance()
         val settingsFragment = SettingsFragment.newInstance()
+        adapter.addFragment(moodleFragment)
         adapter.addFragment(searchFragment)
         adapter.addFragment(scheduleFragment)
         adapter.addFragment(notesFragment)
         adapter.addFragment(settingsFragment)
         viewPager.adapter = adapter
-        viewPager.currentItem = 1
+        viewPager.currentItem = 2
     }
 
     private fun showSearchBox(searchBox: BackButtonEditText){

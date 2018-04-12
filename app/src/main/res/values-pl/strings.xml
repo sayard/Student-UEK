@@ -88,4 +88,11 @@
     <string name="billing_no_network_error">Brak połączenia z internetem</string>
     <string name="buy_activate_premium">Kup/Aktywuj Premium</string>
     <string name="premium_activate_note">(Jeżeli kupiłeś/łaś już Premium - aktywuj je tutaj)</string>
+    <string name="courses">Kursy</string>
+    <string name="login">Login</string>
+    <string name="password">Hasło</string>
+    <string name="moodle_connection_error">Nie można się połączyć z Moodle</string>
+    <string name="invalid_login_or_password">Nieprawidłowy login lub hasło</string>
+    <string name="an_error_has_occurred_when_loading_courses_please_try_again_later">Podczał ładowania kursów wystąpił błąd, spróbuj ponownie później</string>
+    <string name="log_in_again">Zaloguj się ponownie</string>
 </resources>

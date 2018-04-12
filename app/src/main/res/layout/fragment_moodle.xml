@@ -1,0 +1,159 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="pl.c0.sayard.studentUEK.fragments.SettingsFragment"
+    android:padding="5dp"
+    android:background="?attr/colorBackground">
+
+    <LinearLayout
+        android:id="@+id/moodle_courses_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:ignore="UselessParent"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/courses_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+
+        <pl.c0.sayard.studentUEK.BackButtonEditText
+            android:id="@+id/courses_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/search"
+            android:textColorHint="?attr/colorTextSecondary"
+            android:textColor="?attr/colorTextPrimary"
+            android:visibility="gone"/>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/courses_swipe"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <android.support.constraint.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:id="@+id/courses_error"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/courses_error_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/an_error_has_occurred_when_loading_courses_please_try_again_later"
+                        android:padding="50dp"
+                        android:textAlignment="center"
+                        android:textColor="?attr/colorTextSecondary"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"/>
+
+                    <Button
+                        android:id="@+id/log_in_again_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/colorPrimary"
+                        android:textColor="?attr/colorTextButton"
+                        android:padding="5dp"
+                        android:text="@string/log_in_again"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/courses_error_message"/>
+
+                </android.support.constraint.ConstraintLayout>
+
+                <ListView
+                    android:id="@+id/courses_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:choiceMode="singleChoice"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
+
+    </LinearLayout>
+    
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/moodle_login_view"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/moodle_login_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/moodle_logo_large"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <EditText
+            android:id="@+id/moodle_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="30dp"
+            android:hint="@string/login"
+            android:textColorHint="?attr/colorTextSecondary"
+            android:textColor="?attr/colorTextSecondary"
+            android:inputType="text"
+            app:layout_constraintTop_toBottomOf="@id/moodle_login_logo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <EditText
+            android:id="@+id/moodle_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:hint="@string/password"
+            android:textColorHint="?attr/colorTextSecondary"
+            android:textColor="?attr/colorTextSecondary"
+            android:inputType="textPassword"
+            app:layout_constraintTop_toBottomOf="@id/moodle_login"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <Button
+            android:id="@+id/mooodle_login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="@string/login"
+            android:background="?attr/colorPrimary"
+            android:textColor="?attr/colorTextButton"
+            app:layout_constraintTop_toBottomOf="@id/moodle_password"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <ProgressBar
+            android:id="@+id/moodle_login_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/moodle_password"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</FrameLayout>
