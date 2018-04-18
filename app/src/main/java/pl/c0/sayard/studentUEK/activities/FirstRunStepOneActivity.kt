@@ -65,7 +65,7 @@ class FirstRunStepOneActivity : AppCompatActivity() {
                 val selectedGroups = mutableListOf<Group>()
                 listView.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
                     val group = parent.getItemAtPosition(position) as Group
-                    if(!selectedGroups.remove(group) && selectedGroups.count()<2){
+                    if(!selectedGroups.remove(group) && selectedGroups.count()<5){
                         selectedGroups.add(group)
                     }
                     updateSelectedGroupsAndActivateNextButton(selectedGroups)

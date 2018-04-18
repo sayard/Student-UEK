@@ -180,7 +180,7 @@ class MainActivity : AppCompatActivity() {
             bp = BillingProcessor.newBillingProcessor(
                     this,
                     "",//TODO supply license key from google play
-                    BillingHandler(this)
+                    BillingHandler(this, this)
             )
             bp?.initialize()
             if(!prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false) &&
