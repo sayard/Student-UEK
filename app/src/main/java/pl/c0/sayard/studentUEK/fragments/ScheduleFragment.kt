@@ -1,6 +1,8 @@
 package pl.c0.sayard.studentUEK.fragments
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -155,6 +157,18 @@ class ScheduleFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
+            R.id.schedule_filter_item->{
+                val dialogBuilder = AlertDialog.Builder(context)
+                val inflater = activity.layoutInflater
+                val dialogView = inflater.inflate(R.layout.schedule_filter, null)
+                dialogBuilder
+                        .setView(dialogView)
+                        .setTitle(getString(R.string.schedule_filters))
+                        .setPositiveButton(getString(R.string.accept)) { _, _ -> Toast.makeText(context, "Accept", Toast.LENGTH_SHORT).show() }
+                        .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
+                        .create()
+                        .show()
+            }
             R.id.new_schedule_item -> {
                 val newLessonIntent = Intent(context, AddLessonActivity::class.java)
                 startActivity(newLessonIntent)

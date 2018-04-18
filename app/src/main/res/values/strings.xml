@@ -147,4 +147,10 @@
     <string name="invalid_login_or_password">Invalid login or password</string>
     <string name="an_error_has_occurred_when_loading_courses_please_try_again_later">An error has occurred when loading courses, please try again later</string>
     <string name="log_in_again">Log in again</string>
+    <string name="filter">Filter</string>
+    <string name="discourses">Discourses</string>
+    <string name="exercises">Exercises</string>
+    <string name="lectures">Lectures</string>
+    <string name="schedule_filters">Schedule filters</string>
+    <string name="accept">Accept</string>
 </resources>
