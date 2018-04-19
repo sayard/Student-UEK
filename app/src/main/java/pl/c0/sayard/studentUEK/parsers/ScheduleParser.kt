@@ -143,7 +143,7 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
             }
             if(adapter != null){
                 val cursor = Utils.getScheduleCursor(db)
-                val scheduleList = Utils.getScheduleList(cursor, db)
+                val scheduleList = Utils.getScheduleList(cursor, db, context)
                 adapter.changeAdapterData(scheduleList)
                 adapter.notifyDataSetChanged()
                 scheduleSwipe?.isRefreshing = false

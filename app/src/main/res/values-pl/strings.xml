@@ -95,4 +95,10 @@
     <string name="invalid_login_or_password">Nieprawidłowy login lub hasło</string>
     <string name="an_error_has_occurred_when_loading_courses_please_try_again_later">Podczał ładowania kursów wystąpił błąd, spróbuj ponownie później</string>
     <string name="log_in_again">Zaloguj się ponownie</string>
+    <string name="filter">Filtruj</string>
+    <string name="discourses">Wykłady</string>
+    <string name="exercises">Ćwiczenia</string>
+    <string name="lectures">Lektoraty</string>
+    <string name="schedule_filters">Filtry</string>
+    <string name="accept">Akceptuj</string>
 </resources>

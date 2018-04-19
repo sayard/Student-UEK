@@ -2,7 +2,6 @@ package pl.c0.sayard.studentUEK.fragments
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -21,6 +20,8 @@ import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.Utils.Companion.getLanguageGroups
 import pl.c0.sayard.studentUEK.Utils.Companion.getScheduleCursor
 import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
+import pl.c0.sayard.studentUEK.Utils.Companion.setFilters
+import pl.c0.sayard.studentUEK.Utils.Companion.setFiltersUiState
 import pl.c0.sayard.studentUEK.activities.ScheduleItemDetailsActivity
 import pl.c0.sayard.studentUEK.adapters.ScheduleAdapter
 import pl.c0.sayard.studentUEK.db.ScheduleDbHelper
@@ -62,7 +63,7 @@ class ScheduleFragment : Fragment() {
             ScheduleParser(context, activity, progressBar, errorMessage, null, null).execute(urls)
             prefs.edit().putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false).apply()
         }else{
-            val scheduleList = Utils.getScheduleList(cursor, db)
+            val scheduleList = Utils.getScheduleList(cursor, db, context)
             if (scheduleList.isNotEmpty()){
                 errorMessage.visibility = View.GONE
                 val adapter = getAdapter(scheduleList)
@@ -161,10 +162,22 @@ class ScheduleFragment : Fragment() {
                 val dialogBuilder = AlertDialog.Builder(context)
                 val inflater = activity.layoutInflater
                 val dialogView = inflater.inflate(R.layout.schedule_filter, null)
+                val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+                setFiltersUiState(dialogView, prefs, context)
                 dialogBuilder
                         .setView(dialogView)
                         .setTitle(getString(R.string.schedule_filters))
-                        .setPositiveButton(getString(R.string.accept)) { _, _ -> Toast.makeText(context, "Accept", Toast.LENGTH_SHORT).show() }
+                        .setPositiveButton(getString(R.string.accept)) { _, _ ->
+                            setFilters(dialogView, prefs, context)
+                            prefs.edit()
+                                    .putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
+                                    .apply()
+                            activity.supportFragmentManager
+                                    .beginTransaction()
+                                    .detach(this)
+                                    .attach(this)
+                                    .commit()
+                        }
                         .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
                         .create()
                         .show()

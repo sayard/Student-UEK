@@ -51,7 +51,7 @@ class CalendarEventsTask(credential: GoogleAccountCredential, val instance: Acti
         val dbHelper = ScheduleDbHelper(context)
         val db = dbHelper.readableDatabase
         val cursor = Utils.getScheduleCursor(db)
-        val scheduleList = Utils.getScheduleList(cursor, db)
+        val scheduleList = Utils.getScheduleList(cursor, db, context)
         db.close()
         if(scheduleList.isNotEmpty()){
             for(i in 0 until scheduleList.size){

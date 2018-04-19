@@ -105,7 +105,7 @@ class RefreshScheduleJob: DailyJob() {
             val dbHelper = ScheduleDbHelper(context)
             val db = dbHelper.readableDatabase
             val cursor = Utils.getScheduleCursor(db)
-            val scheduleList = getScheduleList(cursor, db)
+            val scheduleList = getScheduleList(cursor, db, context)
             if(scheduleList.isNotEmpty()){
                 for(i in 0 until scheduleList.size){
                     val scheduleItem = scheduleList[i]

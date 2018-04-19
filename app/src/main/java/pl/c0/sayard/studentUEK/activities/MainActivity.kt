@@ -41,6 +41,15 @@ class MainActivity : AppCompatActivity() {
         onActivityCreateSetTheme(this)
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+        if(!prefs.contains(getString(R.string.PREFS_DISCOURSES_VISIBLE))
+            || !prefs.contains(getString(R.string.PREFS_EXERCISES_VISIBLE))
+            || !prefs.contains(getString(R.string.PREFS_LECTURES_VISIBLE))){
+            prefs.edit()
+                    .putBoolean(getString(R.string.PREFS_DISCOURSES_VISIBLE), true)
+                    .putBoolean(getString(R.string.PREFS_EXERCISES_VISIBLE), true)
+                    .putBoolean(getString(R.string.PREFS_LECTURES_VISIBLE), true)
+                    .apply()
+        }
         val firstRun = prefs.getBoolean(FIRST_RUN_SHARED_PREFS_KEY, true)
         if(firstRun){
             val intent = Intent(this, FirstRunStepOneActivity::class.java)

@@ -3,10 +3,13 @@ package pl.c0.sayard.studentUEK
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.net.ConnectivityManager
 import android.preference.PreferenceManager
+import android.view.View
+import android.widget.CheckBox
 import android.widget.TextView
 import pl.c0.sayard.studentUEK.data.Group
 import pl.c0.sayard.studentUEK.data.ScheduleGroup
@@ -15,6 +18,7 @@ import pl.c0.sayard.studentUEK.data.SchedulePE
 import pl.c0.sayard.studentUEK.db.ScheduleContract
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by Karol on 1/1/2018.
@@ -23,6 +27,7 @@ class Utils {
     companion object {
         val FIRST_RUN_SHARED_PREFS_KEY = "firstRun"
         val AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY = "automaticScheduleRefresh"
+        val TYPES = listOf<String>("wykład", "ćwiczenia", "lektorat")
 
         fun getGroupURL(group: Group, isLongSchedule: Boolean = false): String{
             return if(isLongSchedule){
@@ -49,9 +54,21 @@ class Utils {
             }
         }
 
-        fun getScheduleList(cursor: Cursor, db: SQLiteDatabase): MutableList<ScheduleItem> {
+        fun getScheduleList(cursor: Cursor, db: SQLiteDatabase, context: Context): MutableList<ScheduleItem> {
             val scheduleList = mutableListOf<ScheduleItem>()
             cursor.moveToFirst()
+            val visibleTypes = TYPES.toMutableList()
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            if(!prefs.getBoolean(context.getString(R.string.PREFS_DISCOURSES_VISIBLE), true)){
+                visibleTypes[0] = ""
+            }
+            if(!prefs.getBoolean(context.getString(R.string.PREFS_EXERCISES_VISIBLE), true)){
+                visibleTypes[1] = ""
+            }
+            if(!prefs.getBoolean(context.getString(R.string.PREFS_LECTURES_VISIBLE), true)){
+                visibleTypes[2] = ""
+            }
+
             if(cursor != null && cursor.count >0){
                 do{
                     val dateStr = cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.DATE))
@@ -73,7 +90,9 @@ class Utils {
                             isCustom = isCustom,
                             customId = cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.CUSTOM_ID))
                     )
-                    scheduleList.add(scheduleItem)
+                    if(visibleTypes.contains(scheduleItem.type)){
+                        scheduleList.add(scheduleItem)
+                    }
                 }while(cursor.moveToNext())
             }else{
                 return mutableListOf<ScheduleItem>()
@@ -253,6 +272,26 @@ class Utils {
                 1 -> activity.setTheme(R.style.ThemeDark)
                 2 -> activity.setTheme(R.style.ThemeGold)
             }
+        }
+
+        fun setFiltersUiState(dialogView: View, prefs: SharedPreferences, context: Context){
+            val discoursesCheck = dialogView.findViewById<CheckBox>(R.id.filter_discourses)
+            val exercisesCheck = dialogView.findViewById<CheckBox>(R.id.filter_exercises)
+            val lecturesCheck = dialogView.findViewById<CheckBox>(R.id.filter_lectures)
+            discoursesCheck.isChecked = prefs.getBoolean(context.getString(R.string.PREFS_DISCOURSES_VISIBLE), true)
+            exercisesCheck.isChecked = prefs.getBoolean(context.getString(R.string.PREFS_EXERCISES_VISIBLE), true)
+            lecturesCheck.isChecked = prefs.getBoolean(context.getString(R.string.PREFS_LECTURES_VISIBLE), true)
+        }
+
+        fun setFilters(dialogView: View, prefs:SharedPreferences, context: Context){
+            val discoursesCheck = dialogView.findViewById<CheckBox>(R.id.filter_discourses)
+            val exercisesCheck = dialogView.findViewById<CheckBox>(R.id.filter_exercises)
+            val lecturesCheck = dialogView.findViewById<CheckBox>(R.id.filter_lectures)
+            prefs.edit()
+                    .putBoolean(context.getString(R.string.PREFS_DISCOURSES_VISIBLE), discoursesCheck.isChecked)
+                    .putBoolean(context.getString(R.string.PREFS_EXERCISES_VISIBLE), exercisesCheck.isChecked)
+                    .putBoolean(context.getString(R.string.PREFS_LECTURES_VISIBLE), lecturesCheck.isChecked)
+                    .apply()
         }
     }
 }

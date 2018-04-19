@@ -153,4 +153,7 @@
     <string name="lectures">Lectures</string>
     <string name="schedule_filters">Schedule filters</string>
     <string name="accept">Accept</string>
+    <string name="PREFS_DISCOURSES_VISIBLE" translatable="false">pl.c0.sayard.studentUEK.PREFS_DISCOURSES_VISIBLE</string>
+    <string name="PREFS_EXERCISES_VISIBLE" translatable="false">pl.c0.sayard.studentUEK.PREFS_EXERCISES_VISIBLE</string>
+    <string name="PREFS_LECTURES_VISIBLE" translatable="false">pl.c0.sayard.studentUEK.PREFS_LECTURES_VISIBLE</string>
 </resources>
