@@ -102,4 +102,17 @@ class ScheduleContract private constructor(){
             val JOB_TAG: String = "job_tag"
         }
     }
+
+    class FilteredLessonEntry: BaseColumns{
+        companion object {
+            val TABLE_NAME: String = "filtered_lesson"
+            val _ID: String = BaseColumns._ID
+            val LESSON_SUBJECT: String = "lesson_subject"
+            val LESSON_TYPE: String = "lesson_type"
+            val LESSON_TEACHER: String = "lesson_teacher"
+            val LESSON_TEACHER_ID: String = "lesson_teacher_id"
+            val LESSON_CLASSROOM: String = "lesson_classroom"
+            val LESSON_DAY_OF_WEEK: String = "lesson_day_of_week"
+        }
+    }
 }
