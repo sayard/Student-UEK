@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="5dp">
+
+    <LinearLayout
+        android:id="@+id/filtered_lesson_top_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/filtered_lesson_row_subject"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorTextPrimary"
+            android:layout_weight="0.95"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/filtered_lesson_remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.05"
+            android:drawableEnd="@drawable/ic_delete_dark_24dp"/>
+
+    </LinearLayout>
+    
+    <TextView
+        android:id="@+id/filtered_lesson_row_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/colorTextSecondary"
+        app:layout_constraintTop_toBottomOf="@id/filtered_lesson_top_wrapper"/>
+
+    <TextView
+        android:id="@+id/filtered_lesson_day_of_week_and_hour"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/colorTextSecondary"
+        app:layout_constraintTop_toBottomOf="@id/filtered_lesson_row_type"/>
+
+</android.support.constraint.ConstraintLayout>

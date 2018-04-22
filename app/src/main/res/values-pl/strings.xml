@@ -101,4 +101,8 @@
     <string name="lectures">Lektoraty</string>
     <string name="schedule_filters">Filtry</string>
     <string name="accept">Akceptuj</string>
+    <string name="hide_lesson_from_schedule">Ukryj zajęcia</string>
+    <string name="hide_lesson_from_schedule_message">Te zajęcia nie będą już wyświetlane w twoim planie. Można je przywrócić z menu filtrów.</string>
+    <string name="remove">Ukryj</string>
+    <string name="long_click_schedule_item_to_hide_it_you_will_be_able_to_restore_it_here">Przytrzymaj zajęcia w planie aby je ukryć. Można je przywrócić z tego menu.</string>
 </resources>

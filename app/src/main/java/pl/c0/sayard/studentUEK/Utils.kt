@@ -1,24 +1,23 @@
 package pl.c0.sayard.studentUEK
 
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.database.Cursor
+import android.database.CursorIndexOutOfBoundsException
 import android.database.sqlite.SQLiteDatabase
 import android.net.ConnectivityManager
 import android.preference.PreferenceManager
 import android.view.View
 import android.widget.CheckBox
 import android.widget.TextView
-import pl.c0.sayard.studentUEK.data.Group
-import pl.c0.sayard.studentUEK.data.ScheduleGroup
-import pl.c0.sayard.studentUEK.data.ScheduleItem
-import pl.c0.sayard.studentUEK.data.SchedulePE
+import pl.c0.sayard.studentUEK.data.*
 import pl.c0.sayard.studentUEK.db.ScheduleContract
+import pl.c0.sayard.studentUEK.db.ScheduleDbHelper
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * Created by Karol on 1/1/2018.
@@ -292,6 +291,86 @@ class Utils {
                     .putBoolean(context.getString(R.string.PREFS_EXERCISES_VISIBLE), exercisesCheck.isChecked)
                     .putBoolean(context.getString(R.string.PREFS_LECTURES_VISIBLE), lecturesCheck.isChecked)
                     .apply()
+        }
+
+        fun addLessonToFilteredLessons(context: Context, scheduleItem: ScheduleItem){
+            val dbHelper = ScheduleDbHelper(context)
+            val db = dbHelper.writableDatabase
+            val calendar = Calendar.getInstance()
+            calendar.time = scheduleItem.startDate
+
+            val values = ContentValues().apply{
+                put(ScheduleContract.FilteredLessonEntry.LESSON_SUBJECT, scheduleItem.subject)
+                put(ScheduleContract.FilteredLessonEntry.LESSON_TYPE, scheduleItem.type)
+                put(ScheduleContract.FilteredLessonEntry.LESSON_TEACHER, scheduleItem.teacher)
+                put(ScheduleContract.FilteredLessonEntry.LESSON_TEACHER_ID, scheduleItem.teacherId)
+                put(ScheduleContract.FilteredLessonEntry.LESSON_DAY_OF_WEEK, scheduleItem.dayOfTheWeekStr)
+                put(ScheduleContract.FilteredLessonEntry.LESSON_START_HOUR, "${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE)}")
+            }
+
+            db.insert(ScheduleContract.FilteredLessonEntry.TABLE_NAME, null, values)
+
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            prefs.edit().putBoolean(context.getString(R.string.PREFS_REFRESH_SCHEDULE), true).apply()
+        }
+
+        fun getFilteredLessons(context: Context): List<FilteredLesson>{
+            val dbHelper = ScheduleDbHelper(context)
+            val db = dbHelper.readableDatabase
+
+            val cursor = db.query(
+                    ScheduleContract.FilteredLessonEntry.TABLE_NAME,
+                    arrayOf(
+                            ScheduleContract.FilteredLessonEntry._ID,
+                            ScheduleContract.FilteredLessonEntry.LESSON_SUBJECT,
+                            ScheduleContract.FilteredLessonEntry.LESSON_TYPE,
+                            ScheduleContract.FilteredLessonEntry.LESSON_TEACHER,
+                            ScheduleContract.FilteredLessonEntry.LESSON_TEACHER_ID,
+                            ScheduleContract.FilteredLessonEntry.LESSON_DAY_OF_WEEK,
+                            ScheduleContract.FilteredLessonEntry.LESSON_START_HOUR
+                    ),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            )
+
+            val filteredLessonsList = mutableListOf<FilteredLesson>()
+
+            try{
+                cursor.moveToFirst()
+                do{
+                    val filteredLesson = FilteredLesson(
+                            cursor.getInt(cursor.getColumnIndex(ScheduleContract.FilteredLessonEntry._ID)),
+                            cursor.getString(cursor.getColumnIndex(ScheduleContract.FilteredLessonEntry.LESSON_SUBJECT)),
+                            cursor.getString(cursor.getColumnIndex(ScheduleContract.FilteredLessonEntry.LESSON_TYPE)),
+                            cursor.getString(cursor.getColumnIndex(ScheduleContract.FilteredLessonEntry.LESSON_TEACHER)),
+                            cursor.getInt(cursor.getColumnIndex(ScheduleContract.FilteredLessonEntry.LESSON_TEACHER_ID)),
+                            cursor.getString(cursor.getColumnIndex(ScheduleContract.FilteredLessonEntry.LESSON_DAY_OF_WEEK)),
+                            cursor.getString(cursor.getColumnIndex(ScheduleContract.FilteredLessonEntry.LESSON_START_HOUR))
+                    )
+                    filteredLessonsList.add(filteredLesson)
+                }while(cursor.moveToNext())
+
+                cursor.close()
+                return filteredLessonsList
+            }catch(e: CursorIndexOutOfBoundsException){
+                return emptyList()
+            }
+
+        }
+
+        fun removeFilteredLesson(id: Int, context: Context){
+            val db = ScheduleDbHelper(context).readableDatabase
+            db.delete(
+                    ScheduleContract.FilteredLessonEntry.TABLE_NAME,
+                    "${ScheduleContract.FilteredLessonEntry._ID}=?",
+                    arrayOf("$id")
+            )
+
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            prefs.edit().putBoolean(context.getString(R.string.PREFS_REFRESH_SCHEDULE), true).apply()
         }
     }
 }

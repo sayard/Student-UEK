@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper
 /**
  * Created by Karol on 1/1/2018.
  */
-class ScheduleDbHelper(context: Context): SQLiteOpenHelper(context, "ScheduleUEK.db", null, 11) {
+class ScheduleDbHelper(context: Context): SQLiteOpenHelper(context, "ScheduleUEK.db", null, 12) {
 
     private val SQL_CREATE_GROUP = "CREATE TABLE IF NOT EXISTS " +
             ScheduleContract.GroupEntry.TABLE_NAME + "( " +
@@ -99,8 +99,8 @@ class ScheduleDbHelper(context: Context): SQLiteOpenHelper(context, "ScheduleUEK
             ScheduleContract.FilteredLessonEntry.LESSON_TYPE + " TEXT, " +
             ScheduleContract.FilteredLessonEntry.LESSON_TEACHER + " TEXT, " +
             ScheduleContract.FilteredLessonEntry.LESSON_TEACHER_ID + " INTEGER, " +
-            ScheduleContract.FilteredLessonEntry.LESSON_CLASSROOM + " TEXT, " +
-            ScheduleContract.FilteredLessonEntry.LESSON_DAY_OF_WEEK + " INTEGER)"
+            ScheduleContract.FilteredLessonEntry.LESSON_DAY_OF_WEEK + " TEXT, " +
+            ScheduleContract.FilteredLessonEntry.LESSON_START_HOUR + " TEXT)"
 
     private val SQL_DELETE_FILTERED_LESSONS = "DROP TABLE IF EXISTS " + ScheduleContract.FilteredLessonEntry.TABLE_NAME
 

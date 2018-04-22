@@ -17,13 +17,17 @@ import pl.c0.sayard.studentUEK.activities.AddLessonActivity
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.data.ScheduleItem
 import pl.c0.sayard.studentUEK.Utils
+import pl.c0.sayard.studentUEK.Utils.Companion.addLessonToFilteredLessons
+import pl.c0.sayard.studentUEK.Utils.Companion.getFilteredLessons
 import pl.c0.sayard.studentUEK.Utils.Companion.getLanguageGroups
 import pl.c0.sayard.studentUEK.Utils.Companion.getScheduleCursor
 import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
 import pl.c0.sayard.studentUEK.Utils.Companion.setFilters
 import pl.c0.sayard.studentUEK.Utils.Companion.setFiltersUiState
 import pl.c0.sayard.studentUEK.activities.ScheduleItemDetailsActivity
+import pl.c0.sayard.studentUEK.adapters.FilteredLessonsAdapter
 import pl.c0.sayard.studentUEK.adapters.ScheduleAdapter
+import pl.c0.sayard.studentUEK.data.FilteredLesson
 import pl.c0.sayard.studentUEK.db.ScheduleDbHelper
 import pl.c0.sayard.studentUEK.jobs.RefreshScheduleJob
 import pl.c0.sayard.studentUEK.parsers.ScheduleParser
@@ -105,6 +109,25 @@ class ScheduleFragment : Fragment() {
                     }
                     startActivity(intent)
                 }
+                listView.isLongClickable = true
+                listView.onItemLongClickListener = AdapterView.OnItemLongClickListener { parent, _, position, _ ->
+                    val dialogBuilder = AlertDialog.Builder(context)
+                    val scheduleItem = parent.getItemAtPosition(position) as ScheduleItem
+
+                    dialogBuilder
+                            .setTitle(getString(R.string.hide_lesson_from_schedule))
+                            .setMessage(getString(R.string.hide_lesson_from_schedule_message))
+                            .setPositiveButton(getString(R.string.remove)) { _, _ ->
+                                addLessonToFilteredLessons(context, scheduleItem)
+                                val ft = activity.supportFragmentManager.beginTransaction()
+                                ft.detach(this)
+                                ft.attach(this)
+                                ft.commit()
+                            }
+                            .setNegativeButton(context.getString(R.string.cancel)) { _, _ ->}
+                            .show()
+                    true
+                }
                 val scheduleSwipe = view.findViewById<SwipeRefreshLayout>(R.id.schedule_swipe)
                 scheduleSwipe.setOnRefreshListener{
                     if(isDeviceOnline(context)){
@@ -164,6 +187,18 @@ class ScheduleFragment : Fragment() {
                 val dialogView = inflater.inflate(R.layout.schedule_filter, null)
                 val prefs = PreferenceManager.getDefaultSharedPreferences(context)
                 setFiltersUiState(dialogView, prefs, context)
+                val filteredLessonsList = getFilteredLessons(context)
+                val message = dialogView.findViewById<TextView>(R.id.filtered_lessons_empty_message)
+
+                if(filteredLessonsList.isNotEmpty()){
+                    val filteredLessonAdapter = FilteredLessonsAdapter(context, filteredLessonsList as MutableList<FilteredLesson>)
+                    val filteredLessonsListView = dialogView.findViewById<ListView>(R.id.filtered_lessons_lv)
+                    filteredLessonsListView.adapter = filteredLessonAdapter
+                    message.visibility = View.GONE
+                }else{
+                    message.visibility = View.VISIBLE
+                }
+
                 dialogBuilder
                         .setView(dialogView)
                         .setTitle(getString(R.string.schedule_filters))
