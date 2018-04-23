@@ -160,4 +160,7 @@
     <string name="hide_lesson_from_schedule_message">This lesson will no longer be displayed in your schedule. You can reverse that from filters menu.</string>
     <string name="remove">Remove</string>
     <string name="long_click_schedule_item_to_hide_it_you_will_be_able_to_restore_it_here">Long click schedule item to hide it. You will be able to restore it here.</string>
+    <string name="PREFS_MOODLE_LOGIN" translatable="false">pl.c0.sayard.studentUEK.PREFS_MOODLE_LOGIN</string>
+    <string name="PREFS_MOODLE_PASSWORD" translatable="false">pl.c0.sayard.studentUEK.PREFS_MOODLE_PASSWORD</string>
+    <string name="writing_perms_required">Writing permissions required to download</string>
 </resources>
