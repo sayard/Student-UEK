@@ -1,9 +1,14 @@
 package pl.c0.sayard.studentUEK.fragments
 
+import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.preference.PreferenceManager
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
@@ -12,6 +17,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.webkit.*
 import android.widget.*
 import pl.c0.sayard.studentUEK.BackButtonEditText
 import pl.c0.sayard.studentUEK.R
@@ -21,9 +27,12 @@ import pl.c0.sayard.studentUEK.data.Course
 import pl.c0.sayard.studentUEK.parsers.CourseParser
 import pl.c0.sayard.studentUEK.parsers.MoodleTokenParser
 
+
 class MoodleFragment : Fragment() {
 
     private var searchBox:BackButtonEditText? = null
+    private val WRITE_PERMISSIONS_REQUEST_CODE = 222
+    private var requestPermissionsState = false
 
     companion object {
         fun newInstance(): MoodleFragment{
@@ -35,7 +44,7 @@ class MoodleFragment : Fragment() {
         val view = inflater!!.inflate(R.layout.fragment_moodle, container, false)
 
         val coursesView = view.findViewById<LinearLayout>(R.id.moodle_courses_view)
-        val loginView = view.findViewById<ConstraintLayout>(R.id.moodle_login_view)
+        val loginView = view.findViewById<ScrollView>(R.id.moodle_login_view)
         val swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.courses_swipe)
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val token = prefs.getString(getString(R.string.pl_c0_sayard_StudentUEK_PREFS_MOODLE_TOKEN), null)
@@ -61,6 +70,10 @@ class MoodleFragment : Fragment() {
             val loginProgressBar = view.findViewById<ProgressBar>(R.id.moodle_login_progress)
             loginButton.setOnClickListener{
                 MoodleTokenParser(context, this, loginProgressBar, loginButton).execute(login.text.toString(), password.text.toString())
+                prefs.edit()
+                        .putString(getString(R.string.PREFS_MOODLE_LOGIN), login.text.toString())
+                        .putString(getString(R.string.PREFS_MOODLE_PASSWORD), password.text.toString())
+                        .apply()
             }
             password.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
                 if((event?.action == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
@@ -104,6 +117,9 @@ class MoodleFragment : Fragment() {
         val listView = view.findViewById<ListView>(R.id.courses_list_view)
         val swipeRefreshLayout = view.findViewById<SwipeRefreshLayout>(R.id.courses_swipe)
         val logInAgainButton = view.findViewById<Button>(R.id.log_in_again_button)
+        val webView = view.findViewById<WebView>(R.id.moodle_web_view)
+
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
         if(isDeviceOnline(context)){
             errorView.visibility = View.GONE
@@ -128,16 +144,63 @@ class MoodleFragment : Fragment() {
                         listView.adapter = adapter
                         listView.onItemClickListener = AdapterView.OnItemClickListener {_, _, position, _ ->
                             val courseId = result[position].id
-                            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://e-uczelnia.uek.krakow.pl/course/view.php?id=$courseId"))
-                            context.startActivity(browserIntent)
+                            val courseUrl = "https://e-uczelnia.uek.krakow.pl/course/view.php?id=$courseId"
+                            webView.visibility = View.VISIBLE
+                            webView.settings.javaScriptEnabled = true
+                            webView.webViewClient = object: WebViewClient(){
+
+                                override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+                                    super.onPageStarted(view, url, favicon)
+                                    view?.visibility = View.GONE
+                                    progressBar.visibility = View.VISIBLE
+                                }
+
+                                override fun onPageFinished(view: WebView?, url: String?) {
+                                    view?.visibility = View.VISIBLE
+                                    progressBar.visibility = View.GONE
+                                    val login = prefs.getString(context.getString(R.string.PREFS_MOODLE_LOGIN), "")
+                                    val password = prefs.getString(context.getString(R.string.PREFS_MOODLE_PASSWORD), "")
+                                    val js = "$('#inputName').val('$login'); $('#inputPassword').val('$password'); $('#submit').click();"
+                                    webView.evaluateJavascript(
+                                            js,
+                                            null)
+                                }
+                            }
+                            swipeRefreshLayout.isEnabled = false
+                            webView.setDownloadListener(DownloadListener { url, userAgent, contentDescription, mimetype, _ ->
+                                if(!isWriteStoragePermissionGranted()){
+                                    requestPermissions(arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), WRITE_PERMISSIONS_REQUEST_CODE)
+                                    if(!requestPermissionsState){
+                                        Toast.makeText(context, getString(R.string.writing_perms_required), Toast.LENGTH_LONG).show()
+                                        return@DownloadListener
+                                    }
+                                }
+                                val request = DownloadManager.Request(Uri.parse(url))
+                                request.setMimeType(mimetype)
+                                val cookies = CookieManager.getInstance().getCookie(url)
+                                request.addRequestHeader("cookie", cookies)
+                                request.addRequestHeader("User-Agent", userAgent)
+                                request.allowScanningByMediaScanner()
+                                request.setNotificationVisibility(
+                                        DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                                val fileName = URLUtil.guessFileName(url, contentDescription, mimetype)
+                                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
+                                val dManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                                dManager.enqueue(request)
+                            })
+                            webView.loadUrl(courseUrl)
                         }
                         listView.setOnScrollListener(object: AbsListView.OnScrollListener{
                             override fun onScroll(view: AbsListView?, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
-                                var topRowVerticalPosition = 0
-                                if(listView != null && listView.childCount != 0){
-                                    topRowVerticalPosition = listView.getChildAt(0).top
+                                if(webView.visibility == View.GONE){
+                                    var topRowVerticalPosition = 0
+                                    if(listView != null && listView.childCount != 0){
+                                        topRowVerticalPosition = listView.getChildAt(0).top
+                                    }
+                                    swipeRefreshLayout.isEnabled = (firstVisibleItem == 0 && topRowVerticalPosition >= 0)
+                                }else{
+                                    swipeRefreshLayout.isEnabled = false
                                 }
-                                swipeRefreshLayout.isEnabled = (firstVisibleItem == 0 && topRowVerticalPosition >= 0)
                             }
 
                             override fun onScrollStateChanged(p0: AbsListView?, p1: Int) {
@@ -153,7 +216,6 @@ class MoodleFragment : Fragment() {
             errorView.visibility = View.VISIBLE
         }
         logInAgainButton.setOnClickListener{
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
             prefs.edit().putString(context.getString(R.string.pl_c0_sayard_StudentUEK_PREFS_MOODLE_TOKEN), null).apply()
             val fragmentManager = fragmentManager
             fragmentManager.beginTransaction()
@@ -165,6 +227,21 @@ class MoodleFragment : Fragment() {
 
     private fun getAdapter(context: Context, coursesList: List<Course>): CoursesAdapter {
         return CoursesAdapter(context, coursesList)
+    }
+
+    private fun isWriteStoragePermissionGranted(): Boolean{
+        return if(Build.VERSION.SDK_INT >= 23){
+            context.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        }else{
+            true
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(requestCode == WRITE_PERMISSIONS_REQUEST_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+            requestPermissionsState = true
+        }
     }
 
 }

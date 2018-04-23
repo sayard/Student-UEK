@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import android.webkit.WebView
 import com.anjlab.android.iab.v3.BillingProcessor
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -240,6 +241,15 @@ class MainActivity : AppCompatActivity() {
             bp?.release()
         }
         super.onDestroy()
+    }
+
+    override fun onBackPressed(){
+        val webView = findViewById<WebView>(R.id.moodle_web_view)
+        if(webView.visibility == View.VISIBLE){
+            webView.visibility = View.GONE
+        }else{
+            super.onBackPressed()
+        }
     }
 
 }
