@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <CheckBox
+        android:id="@+id/filter_discourses"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/colorTextPrimary"
+        android:textSize="20sp"
+        android:text="@string/discourses"/>
+
+    <CheckBox
+        android:id="@+id/filter_exercises"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/colorTextPrimary"
+        android:textSize="20sp"
+        android:text="@string/exercises"/>
+
+    <CheckBox
+        android:id="@+id/filter_lectures"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/colorTextPrimary"
+        android:textSize="20sp"
+        android:text="@string/lectures"/>
+
+    <View
+        android:id="@+id/filter_separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?attr/colorSeparatorLine"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"/>
+
+    <TextView
+        android:id="@+id/filtered_lessons_empty_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:textAlignment="center"
+        android:visibility="gone"
+        android:text="@string/long_click_schedule_item_to_hide_it_you_will_be_able_to_restore_it_here"/>
+
+    <ListView
+        android:id="@+id/filtered_lessons_lv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"/>
+
+</LinearLayout>
