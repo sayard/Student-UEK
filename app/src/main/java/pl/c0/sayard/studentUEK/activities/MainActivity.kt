@@ -245,7 +245,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed(){
         val webView = findViewById<WebView>(R.id.moodle_web_view)
-        if(webView.visibility == View.VISIBLE){
+        if(webView != null && webView.visibility == View.VISIBLE){
             webView.visibility = View.GONE
         }else{
             super.onBackPressed()

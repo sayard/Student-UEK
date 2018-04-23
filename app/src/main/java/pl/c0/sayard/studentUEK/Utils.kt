@@ -129,8 +129,15 @@ class Utils {
             val filteredList = mutableListOf<ScheduleItem>()
             for(i in 0 until scheduleList.size){
                 val scheduleItem = scheduleList[i]
-                if(!isInFilteredLessons(scheduleItem, filteredLessons)){
-                    filteredList.add(scheduleItem)
+                if(i !=0 ){
+                    val previousScheduleItem = scheduleList[i-1]
+                    if(previousScheduleItem != scheduleItem && !isInFilteredLessons(scheduleItem, filteredLessons)){
+                        filteredList.add(scheduleItem)
+                    }
+                }else{
+                    if(!isInFilteredLessons(scheduleItem, filteredLessons)){
+                        filteredList.add(scheduleItem)
+                    }
                 }
             }
 
