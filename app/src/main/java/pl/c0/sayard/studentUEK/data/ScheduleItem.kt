@@ -49,4 +49,14 @@ class ScheduleItem(
     override fun toString(): String {
         return "$subject\n $type\n $teacher\n $teacherId\n $classroom\n comments:$comments\n $dateStr\n $isFirstOnTheDay\n $isCustom"
     }
+
+    override fun equals(other: Any?): Boolean {
+        val otherScheduleItem = other as ScheduleItem
+        return (subject == otherScheduleItem.subject
+                && type == otherScheduleItem.type
+                && teacher == otherScheduleItem.teacher
+                && teacherId == otherScheduleItem.teacherId
+                && classroom == otherScheduleItem.classroom
+                && comments == otherScheduleItem.comments)
+    }
 }
