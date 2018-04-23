@@ -125,12 +125,21 @@ class Utils {
                 scheduleList.sortWith(Comparator { p0, p1 -> p0?.startDate!!.compareTo(p1?.startDate) })
             }
 
+            val filteredLessons = getFilteredLessons(context)
+            val filteredList = mutableListOf<ScheduleItem>()
             for(i in 0 until scheduleList.size){
                 val scheduleItem = scheduleList[i]
+                if(!isInFilteredLessons(scheduleItem, filteredLessons)){
+                    filteredList.add(scheduleItem)
+                }
+            }
+
+            for(i in 0 until filteredList.size){
+                val scheduleItem = filteredList[i]
                 if(i==0){
                     scheduleItem.isFirstOnTheDay = true
                 }else{
-                    val previousScheduleItem = scheduleList[i-1]
+                    val previousScheduleItem = filteredList[i-1]
                     if(scheduleItem.dateStr != previousScheduleItem.dateStr){
                         scheduleItem.isFirstOnTheDay = true
                     }
@@ -166,7 +175,7 @@ class Utils {
                 }
                 lessonNoteCursor.close()
             }
-            return scheduleList
+            return filteredList
         }
 
         private fun getPe(db: SQLiteDatabase): SchedulePE?{
@@ -371,6 +380,24 @@ class Utils {
 
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
             prefs.edit().putBoolean(context.getString(R.string.PREFS_REFRESH_SCHEDULE), true).apply()
+        }
+
+        private fun isInFilteredLessons(scheduleItem: ScheduleItem, filteredLessons: List<FilteredLesson>): Boolean{
+            val calendar = Calendar.getInstance()
+            calendar.time = scheduleItem.startDate
+            val startHour = "${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE)}"
+
+            for(lesson in filteredLessons){
+                if(lesson.subject == scheduleItem.subject
+                && lesson.type == scheduleItem.type
+                && lesson.teacher == scheduleItem.teacher
+                && lesson.teacherId == scheduleItem.teacherId
+                && lesson.dayOfWeek == scheduleItem.dayOfTheWeekStr
+                && lesson.startHour == startHour){
+                    return true
+                }
+            }
+            return false
         }
     }
 }

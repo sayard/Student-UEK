@@ -27,7 +27,7 @@
             android:drawableEnd="@drawable/ic_delete_dark_24dp"/>
 
     </LinearLayout>
-    
+
     <TextView
         android:id="@+id/filtered_lesson_row_type"
         android:layout_width="match_parent"
