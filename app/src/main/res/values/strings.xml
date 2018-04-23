@@ -147,4 +147,17 @@
     <string name="invalid_login_or_password">Invalid login or password</string>
     <string name="an_error_has_occurred_when_loading_courses_please_try_again_later">An error has occurred when loading courses, please try again later</string>
     <string name="log_in_again">Log in again</string>
+    <string name="filter">Filter</string>
+    <string name="discourses">Discourses</string>
+    <string name="exercises">Exercises</string>
+    <string name="lectures">Lectures</string>
+    <string name="schedule_filters">Schedule filters</string>
+    <string name="accept">Accept</string>
+    <string name="PREFS_DISCOURSES_VISIBLE" translatable="false">pl.c0.sayard.studentUEK.PREFS_DISCOURSES_VISIBLE</string>
+    <string name="PREFS_EXERCISES_VISIBLE" translatable="false">pl.c0.sayard.studentUEK.PREFS_EXERCISES_VISIBLE</string>
+    <string name="PREFS_LECTURES_VISIBLE" translatable="false">pl.c0.sayard.studentUEK.PREFS_LECTURES_VISIBLE</string>
+    <string name="hide_lesson_from_schedule">Hide lesson from schedule</string>
+    <string name="hide_lesson_from_schedule_message">This lesson will no longer be displayed in your schedule. You can reverse that from filters menu.</string>
+    <string name="remove">Remove</string>
+    <string name="long_click_schedule_item_to_hide_it_you_will_be_able_to_restore_it_here">Long click schedule item to hide it. You will be able to restore it here.</string>
 </resources>

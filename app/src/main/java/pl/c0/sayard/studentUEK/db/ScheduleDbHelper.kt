@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper
 /**
  * Created by Karol on 1/1/2018.
  */
-class ScheduleDbHelper(context: Context): SQLiteOpenHelper(context, "ScheduleUEK.db", null, 10) {
+class ScheduleDbHelper(context: Context): SQLiteOpenHelper(context, "ScheduleUEK.db", null, 12) {
 
     private val SQL_CREATE_GROUP = "CREATE TABLE IF NOT EXISTS " +
             ScheduleContract.GroupEntry.TABLE_NAME + "( " +
@@ -92,6 +92,18 @@ class ScheduleDbHelper(context: Context): SQLiteOpenHelper(context, "ScheduleUEK
 
     private val SQL_DELETE_LESSON_NOTES = "DROP TABLE IF EXISTS " + ScheduleContract.LessonNoteEntry.TABLE_NAME
 
+    private val SQL_CREATE_FILTERED_LESSONS = "CREATE TABLE IF NOT EXISTS " +
+            ScheduleContract.FilteredLessonEntry.TABLE_NAME + "( " +
+            ScheduleContract.FilteredLessonEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            ScheduleContract.FilteredLessonEntry.LESSON_SUBJECT + " TEXT, " +
+            ScheduleContract.FilteredLessonEntry.LESSON_TYPE + " TEXT, " +
+            ScheduleContract.FilteredLessonEntry.LESSON_TEACHER + " TEXT, " +
+            ScheduleContract.FilteredLessonEntry.LESSON_TEACHER_ID + " INTEGER, " +
+            ScheduleContract.FilteredLessonEntry.LESSON_DAY_OF_WEEK + " TEXT, " +
+            ScheduleContract.FilteredLessonEntry.LESSON_START_HOUR + " TEXT)"
+
+    private val SQL_DELETE_FILTERED_LESSONS = "DROP TABLE IF EXISTS " + ScheduleContract.FilteredLessonEntry.TABLE_NAME
+
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SQL_CREATE_GROUP)
         db.execSQL(SQL_CREATE_LANGUAGE_GROUP)
@@ -100,16 +112,10 @@ class ScheduleDbHelper(context: Context): SQLiteOpenHelper(context, "ScheduleUEK
         db.execSQL(SQL_CREATE_USER_ADDED_LESSON)
         db.execSQL(SQL_CREATE_NOTES)
         db.execSQL(SQL_CREATE_LESSON_NOTES)
+        db.execSQL(SQL_CREATE_FILTERED_LESSONS)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        db.execSQL(SQL_DELETE_GROUP)
-        db.execSQL(SQL_DELETE_LANGUAGE_GROUP)
-        db.execSQL(SQL_DELETE_PE)
-        db.execSQL(SQL_DELETE_LESSON)
-        db.execSQL(SQL_DELETE_USER_ADDED_LESSON)
-        db.execSQL(SQL_DELETE_NOTES)
-        db.execSQL(SQL_DELETE_LESSON_NOTES)
         onCreate(db)
     }
 
