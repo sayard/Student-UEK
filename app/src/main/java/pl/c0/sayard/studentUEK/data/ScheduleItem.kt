@@ -57,6 +57,7 @@ class ScheduleItem(
                 && teacher == otherScheduleItem.teacher
                 && teacherId == otherScheduleItem.teacherId
                 && classroom == otherScheduleItem.classroom
-                && comments == otherScheduleItem.comments)
+                && comments == otherScheduleItem.comments
+                && startDateStr == otherScheduleItem.startDateStr)
     }
 }
