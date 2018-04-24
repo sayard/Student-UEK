@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
 
             })
             setUpViewPager(viewPager)
-            if(isDeviceOnline(this)){
+            if(isDeviceOnline(this) && !prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false)){
                 MobileAds.initialize(this, "") //TODO: supply admob app id
                 val adView = findViewById<AdView>(R.id.banner_ad)
                 val adRequest = AdRequest.Builder().build()
