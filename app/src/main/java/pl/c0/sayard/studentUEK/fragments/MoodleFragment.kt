@@ -121,7 +121,9 @@ class MoodleFragment : Fragment() {
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
-        if(isDeviceOnline(context)){
+        if(isDeviceOnline(context)
+                && prefs.getString(context.getString(R.string.PREFS_MOODLE_LOGIN), null) != null
+                && prefs.getString(context.getString(R.string.PREFS_MOODLE_PASSWORD), null) != null){
             errorView.visibility = View.GONE
             CourseParser(progressBar, object: CourseParser.OnTaskCompleted{
                 override fun onTaskCompleted(result: List<Course>?) {
