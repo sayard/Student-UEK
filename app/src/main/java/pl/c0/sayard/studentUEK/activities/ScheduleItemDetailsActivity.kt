@@ -34,11 +34,11 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale("pl", "PL"))
     private var scheduleItem: ScheduleItem? = null
     private var idToDelete: Int? = null
-    private val dbManager = DatabaseManager(this)
     private val dialogClickListener = DialogInterface.OnClickListener { _, which ->
         when(which){
             DialogInterface.BUTTON_POSITIVE ->{
                 try{
+                    val dbManager = DatabaseManager(this)
                     val deleteCount = dbManager.removeUserLesson(idToDelete)
                     if(deleteCount > 0){
                         Thread{
@@ -193,7 +193,7 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         val noteContentTextView = findViewById<TextView>(R.id.schedule_item_details_note_content)
         val addOrEditLessonNoteButton = findViewById<Button>(R.id.add_or_edit_lesson_note)
 
-
+        val dbManager = DatabaseManager(this)
         val noteContent = noteContentField.text.toString()
         if(noteId == -1){
             dialogBuilder.setTitle(getString(R.string.add_note))

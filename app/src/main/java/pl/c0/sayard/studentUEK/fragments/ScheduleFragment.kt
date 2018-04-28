@@ -31,7 +31,6 @@ import pl.c0.sayard.studentUEK.parsers.ScheduleParser
 class ScheduleFragment : Fragment() {
 
     private var scheduleSearch: BackButtonEditText? = null
-    private val dbManager = DatabaseManager(context)
 
     companion object {
         fun newInstance(): ScheduleFragment{
@@ -45,6 +44,7 @@ class ScheduleFragment : Fragment() {
         val view = inflater!!.inflate(R.layout.fragment_schedule, container, false)
         val progressBar = view.findViewById<ProgressBar>(R.id.schedule_progress_bar)
         val errorMessage = view.findViewById<TextView>(R.id.schedule_error_message)
+        val dbManager = DatabaseManager(context)
 
         val urls = mutableListOf<String>()
         val groups = dbManager.getGroups()
@@ -181,6 +181,7 @@ class ScheduleFragment : Fragment() {
                 val dialogView = inflater.inflate(R.layout.schedule_filter, null)
                 val prefs = PreferenceManager.getDefaultSharedPreferences(context)
                 setFiltersUiState(dialogView, prefs, context)
+                val dbManager = DatabaseManager(context)
                 val filteredLessonsList = dbManager.getFilteredLessons()
                 val message = dialogView.findViewById<TextView>(R.id.filtered_lessons_empty_message)
 

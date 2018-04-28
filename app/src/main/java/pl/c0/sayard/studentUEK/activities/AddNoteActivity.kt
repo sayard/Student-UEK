@@ -19,7 +19,6 @@ class AddNoteActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener{
 
     private val dateCalendar = Calendar.getInstance()
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy")
-    private val dbManager = DatabaseManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +63,7 @@ class AddNoteActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener{
 
         val noteTitleET = findViewById<EditText>(R.id.note_title)
         val noteContent = findViewById<EditText>(R.id.note_content)
+        val dbManager = DatabaseManager(this)
         if(id != 0){
             val cursor = dbManager.getNotesCursorById(id)
             cursor.moveToFirst()

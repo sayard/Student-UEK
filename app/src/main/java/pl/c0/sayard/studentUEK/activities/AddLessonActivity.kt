@@ -51,7 +51,7 @@ class AddLessonActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
             buildingText = intent.getStringExtra(getString(R.string.extra_custom_lesson_building))
             val buildingInstance = Building(this)
             classroomText = buildingInstance.getClassroomWithoutBuilding(intent.getStringExtra(getString(R.string.extra_custom_lesson_classroom)))
-            dateText = dateFormat.format(intent.getStringExtra(getString(R.string.extra_custom_lesson_date)))
+            dateText = intent.getStringExtra(getString(R.string.extra_custom_lesson_date))
             startHourText = intent.getStringExtra(getString(R.string.extra_custom_lesson_start_hour))
             endHourText = intent.getStringExtra(getString(R.string.extra_custom_lesson_end_hour))
         }catch (e: Exception){

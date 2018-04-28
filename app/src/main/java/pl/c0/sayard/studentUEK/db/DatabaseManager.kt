@@ -21,14 +21,14 @@ class DatabaseManager(val context: Context) {
     fun getScheduleList(): MutableList<ScheduleItem> {
 
         val scheduleList = mutableListOf<ScheduleItem>()
-        val visibleTypes = getVisibleTypes()
+        val hiddenTypes = getHiddenTypes()
         val cursor = getScheduleCursor()
         cursor.moveToFirst()
 
         if(cursor.count > 0){
             do{
                 val scheduleItem = getScheduleItemFromCursor(cursor)
-                if(visibleTypes.contains(scheduleItem.type)){
+                if(!hiddenTypes.contains(scheduleItem.type)){
                     scheduleList.add(scheduleItem)
                 }
             }while(cursor.moveToNext())
@@ -139,19 +139,19 @@ class DatabaseManager(val context: Context) {
         return peDays
     }
 
-    private fun getVisibleTypes(): MutableList<String>{
-        val visibleTypes = Utils.TYPES.toMutableList()
+    private fun getHiddenTypes(): MutableList<String>{
+        val hiddenTypes = mutableListOf<String>()
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         if(!prefs.getBoolean(context.getString(R.string.PREFS_DISCOURSES_VISIBLE), true)){
-            visibleTypes[0] = ""
+            hiddenTypes.add("wykład")
         }
         if(!prefs.getBoolean(context.getString(R.string.PREFS_EXERCISES_VISIBLE), true)){
-            visibleTypes[1] = ""
+            hiddenTypes.add("ćwiczenia")
         }
         if(!prefs.getBoolean(context.getString(R.string.PREFS_LECTURES_VISIBLE), true)){
-            visibleTypes[2] = ""
+            hiddenTypes.add("lektorat")
         }
-        return visibleTypes
+        return hiddenTypes
     }
 
     private fun getScheduleItemFromCursor(cursor: Cursor): ScheduleItem{
