@@ -30,4 +30,8 @@ class Lesson(var date: String,
             0
         }
     }
+
+    override fun toString(): String {
+        return "Date: $date, start date: $startDate, end date: $endDate, subject: $subject, type: $type, teacher: $teacher, classroom: $classroom, comments: $comments"
+    }
 }

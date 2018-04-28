@@ -2,21 +2,19 @@ package pl.c0.sayard.studentUEK.activities
 
 import android.annotation.SuppressLint
 import android.app.TimePickerDialog
-import android.content.ContentValues
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.*
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
-import pl.c0.sayard.studentUEK.jobs.RefreshScheduleJob
 import pl.c0.sayard.studentUEK.Utils.Companion.AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY
 import pl.c0.sayard.studentUEK.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
 import pl.c0.sayard.studentUEK.Utils.Companion.getTime
-import pl.c0.sayard.studentUEK.db.ScheduleContract
-import pl.c0.sayard.studentUEK.db.ScheduleDbHelper
+import pl.c0.sayard.studentUEK.db.DatabaseManager
+import pl.c0.sayard.studentUEK.jobs.RefreshScheduleJob
 import java.util.*
 
 class FirstRunStepThreeActivity : AppCompatActivity() {
@@ -83,9 +81,8 @@ class FirstRunStepThreeActivity : AppCompatActivity() {
         }
         val nextStepButton = findViewById<Button>(R.id.next_step_button_three)
         nextStepButton.setOnClickListener(View.OnClickListener {
-            val dbHelper = ScheduleDbHelper(this@FirstRunStepThreeActivity)
-            val db = dbHelper.readableDatabase
-            db.execSQL("DELETE FROM "+ScheduleContract.PeEntry.TABLE_NAME)
+            val dbManager = DatabaseManager(this)
+            dbManager.clearPeTable()
             if(switch.isChecked){
                 if(peName.text.isEmpty()){
                     Toast.makeText(this@FirstRunStepThreeActivity, getString(R.string.pe_name_field_error), Toast.LENGTH_SHORT).show()
@@ -97,12 +94,12 @@ class FirstRunStepThreeActivity : AppCompatActivity() {
                     Toast.makeText(this@FirstRunStepThreeActivity, getString(R.string.hour_error), Toast.LENGTH_SHORT).show()
                     return@OnClickListener
                 }
-                val contentValues = ContentValues()
-                contentValues.put(ScheduleContract.PeEntry.PE_NAME, peName.text.toString())
-                contentValues.put(ScheduleContract.PeEntry.PE_DAY, dayOfWeekSpinner.selectedItemPosition)
-                contentValues.put(ScheduleContract.PeEntry.PE_START_HOUR, startHourTv.text.toString())
-                contentValues.put(ScheduleContract.PeEntry.PE_END_HOUR, endHourTv.text.toString())
-                db.insert(ScheduleContract.PeEntry.TABLE_NAME, null, contentValues)
+                dbManager.addPeToDb(
+                        peName.text.toString(),
+                        dayOfWeekSpinner.selectedItemPosition,
+                        startHourTv.text.toString(),
+                        endHourTv.text.toString()
+                )
             }
             val prefs = PreferenceManager.getDefaultSharedPreferences(this)
             if(prefs.getBoolean(FIRST_RUN_SHARED_PREFS_KEY, true)){
@@ -113,11 +110,5 @@ class FirstRunStepThreeActivity : AppCompatActivity() {
             val intent = Intent(this@FirstRunStepThreeActivity, MainActivity::class.java)
             startActivity(intent)
         })
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        val intent = Intent(this, FirstRunStepOneActivity::class.java)
-        startActivity(intent)
     }
 }

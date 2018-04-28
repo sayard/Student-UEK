@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import pl.c0.sayard.studentUEK.R
-import pl.c0.sayard.studentUEK.Utils.Companion.removeFilteredLesson
 import pl.c0.sayard.studentUEK.data.FilteredLesson
+import pl.c0.sayard.studentUEK.db.DatabaseManager
 
 class FilteredLessonsAdapter(val context: Context, private val filteredLessonsList: MutableList<FilteredLesson>): BaseAdapter() {
 
@@ -32,7 +32,7 @@ class FilteredLessonsAdapter(val context: Context, private val filteredLessonsLi
         val dayAndHourText = "${filteredListItem.dayOfWeek} ${filteredListItem.startHour}"
         vh.dayAndHour?.text = dayAndHourText
         vh.removeButton?.setOnClickListener{
-            removeFilteredLesson(filteredListItem.id, context)
+            DatabaseManager(context).removeFilteredLesson(filteredListItem.id)
             filteredLessonsList.removeAt(position)
             notifyDataSetChanged()
         }

@@ -1,7 +1,8 @@
 package pl.c0.sayard.studentUEK.fragments
 
 import android.app.AlertDialog
-import android.content.*
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
@@ -10,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.anjlab.android.iab.v3.BillingProcessor
-
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.Utils.Companion.getTranslatedThemeName

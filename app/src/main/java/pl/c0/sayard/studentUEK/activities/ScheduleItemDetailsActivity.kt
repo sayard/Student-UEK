@@ -1,13 +1,12 @@
 package pl.c0.sayard.studentUEK.activities
 
 import android.app.AlertDialog
-import android.content.ContentValues
 import android.content.DialogInterface
 import android.content.Intent
 import android.net.Uri
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -19,14 +18,12 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.data.Building
 import pl.c0.sayard.studentUEK.data.ScheduleItem
-import pl.c0.sayard.studentUEK.db.ScheduleContract
-import pl.c0.sayard.studentUEK.db.ScheduleDbHelper
+import pl.c0.sayard.studentUEK.db.DatabaseManager
 import pl.c0.sayard.studentUEK.jobs.RefreshScheduleJob
 import java.text.SimpleDateFormat
 import java.util.*
@@ -37,15 +34,12 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy", Locale("pl", "PL"))
     private var scheduleItem: ScheduleItem? = null
     private var idToDelete: Int? = null
+    private val dbManager = DatabaseManager(this)
     private val dialogClickListener = DialogInterface.OnClickListener { _, which ->
         when(which){
             DialogInterface.BUTTON_POSITIVE ->{
                 try{
-                    val dbHelper = ScheduleDbHelper(this)
-                    val db = dbHelper.readableDatabase
-                    val deleteCount = db.delete(ScheduleContract.UserAddedLessonEntry.TABLE_NAME,
-                            "${ScheduleContract.UserAddedLessonEntry._ID} = $idToDelete",
-                            null)
+                    val deleteCount = dbManager.removeUserLesson(idToDelete)
                     if(deleteCount > 0){
                         Thread{
                             kotlin.run {
@@ -196,31 +190,15 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val noteContentField = dialogView.findViewById<EditText>(R.id.lesson_note_edit_field)
 
-        val dbHelper = ScheduleDbHelper(this)
-        val db = dbHelper.readableDatabase
-
         val noteContentTextView = findViewById<TextView>(R.id.schedule_item_details_note_content)
         val addOrEditLessonNoteButton = findViewById<Button>(R.id.add_or_edit_lesson_note)
 
-        val contentValues = ContentValues()
-        contentValues.put(ScheduleContract.LessonNoteEntry.LESSON_SUBJECT, scheduleItem?.subject)
-        contentValues.put(ScheduleContract.LessonNoteEntry.LESSON_TYPE, scheduleItem?.type)
-        contentValues.put(ScheduleContract.LessonNoteEntry.LESSON_TEACHER, scheduleItem?.teacher)
-        contentValues.put(ScheduleContract.LessonNoteEntry.LESSON_TEACHER_ID, scheduleItem?.teacherId)
-        contentValues.put(ScheduleContract.LessonNoteEntry.LESSON_CLASSROOM, scheduleItem?.classroom)
-        contentValues.put(ScheduleContract.LessonNoteEntry.LESSON_DATE, scheduleItem?.dateStr)
-        contentValues.put(ScheduleContract.LessonNoteEntry.LESSON_START_DATE, scheduleItem?.startDateStr)
-        contentValues.put(ScheduleContract.LessonNoteEntry.LESSON_END_DATE, scheduleItem?.endDateStr)
+
+        val noteContent = noteContentField.text.toString()
         if(noteId == -1){
             dialogBuilder.setTitle(getString(R.string.add_note))
             dialogBuilder.setPositiveButton(getString(R.string.save)) { _, _ ->
-                val noteContent = noteContentField.text.toString()
-                contentValues.put(ScheduleContract.LessonNoteEntry.CONTENT, noteContent)
-                val insertCount = db.insert(
-                        ScheduleContract.LessonNoteEntry.TABLE_NAME,
-                        null,
-                        contentValues
-                )
+                val insertCount = dbManager.addLessonNoteToDb(scheduleItem, noteContentField.text.toString())
                 if(insertCount > 0){
                     noteContentTextView.text = noteContent
                     noteContentTextView.visibility = View.VISIBLE
@@ -233,14 +211,7 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             dialogBuilder.setTitle(getString(R.string.edit_note))
             noteContentField.setText(dbNoteContent, TextView.BufferType.EDITABLE)
             dialogBuilder.setPositiveButton(getString(R.string.save)){_, _ ->
-                val noteContent = noteContentField.text.toString()
-                contentValues.put(ScheduleContract.LessonNoteEntry.CONTENT, noteContent)
-                val updateCount = db.update(
-                        ScheduleContract.LessonNoteEntry.TABLE_NAME,
-                        contentValues,
-                        "${ScheduleContract.LessonNoteEntry._ID} = $noteId",
-                        null
-                )
+                val updateCount = dbManager.updateLessonNote(scheduleItem, noteContentField.text.toString(), noteId)
                 if(updateCount > 0){
                     noteContentTextView.text = noteContent
                 }else{
@@ -251,11 +222,7 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
                 val deleteDialogBuilder = AlertDialog.Builder(this)
                 deleteDialogBuilder.setTitle(getString(R.string.note_delete_message))
                 deleteDialogBuilder.setPositiveButton(getString(R.string.yes)){_,_ ->
-                    val deleteCount = db.delete(
-                            ScheduleContract.LessonNoteEntry.TABLE_NAME,
-                            "${ScheduleContract.LessonNoteEntry._ID} = $noteId",
-                            null
-                    )
+                    val deleteCount = dbManager.removeLessonNote(noteId)
                     if(deleteCount > 0){
                         noteContentTextView.text = ""
                         noteContentTextView.visibility = View.GONE

@@ -13,22 +13,17 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import pl.c0.sayard.studentUEK.BackButtonEditText
-import pl.c0.sayard.studentUEK.activities.AddLessonActivity
 import pl.c0.sayard.studentUEK.R
-import pl.c0.sayard.studentUEK.data.ScheduleItem
-import pl.c0.sayard.studentUEK.Utils
-import pl.c0.sayard.studentUEK.Utils.Companion.addLessonToFilteredLessons
-import pl.c0.sayard.studentUEK.Utils.Companion.getFilteredLessons
-import pl.c0.sayard.studentUEK.Utils.Companion.getLanguageGroups
-import pl.c0.sayard.studentUEK.Utils.Companion.getScheduleCursor
 import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
 import pl.c0.sayard.studentUEK.Utils.Companion.setFilters
 import pl.c0.sayard.studentUEK.Utils.Companion.setFiltersUiState
+import pl.c0.sayard.studentUEK.activities.AddLessonActivity
 import pl.c0.sayard.studentUEK.activities.ScheduleItemDetailsActivity
 import pl.c0.sayard.studentUEK.adapters.FilteredLessonsAdapter
 import pl.c0.sayard.studentUEK.adapters.ScheduleAdapter
 import pl.c0.sayard.studentUEK.data.FilteredLesson
-import pl.c0.sayard.studentUEK.db.ScheduleDbHelper
+import pl.c0.sayard.studentUEK.data.ScheduleItem
+import pl.c0.sayard.studentUEK.db.DatabaseManager
 import pl.c0.sayard.studentUEK.jobs.RefreshScheduleJob
 import pl.c0.sayard.studentUEK.parsers.ScheduleParser
 
@@ -36,6 +31,7 @@ import pl.c0.sayard.studentUEK.parsers.ScheduleParser
 class ScheduleFragment : Fragment() {
 
     private var scheduleSearch: BackButtonEditText? = null
+    private val dbManager = DatabaseManager(context)
 
     companion object {
         fun newInstance(): ScheduleFragment{
@@ -47,17 +43,15 @@ class ScheduleFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
 
         val view = inflater!!.inflate(R.layout.fragment_schedule, container, false)
-
-        val dbHelper = ScheduleDbHelper(activity)
-        val db = dbHelper.readableDatabase
         val progressBar = view.findViewById<ProgressBar>(R.id.schedule_progress_bar)
         val errorMessage = view.findViewById<TextView>(R.id.schedule_error_message)
+
         val urls = mutableListOf<String>()
-        val groups = Utils.getGroups(db)
+        val groups = dbManager.getGroups()
         groups.mapTo(urls){it.url}
-        val languageGroups = getLanguageGroups(db)
+        val languageGroups = dbManager.getLanguageGroups()
         languageGroups.mapTo(urls) { it.url }
-        val cursor = getScheduleCursor(db)
+        val cursor = dbManager.getScheduleCursor()
         var cursorCount = cursor.count
         if(!isDeviceOnline(context)){
             cursorCount = -1
@@ -67,7 +61,7 @@ class ScheduleFragment : Fragment() {
             ScheduleParser(context, activity, progressBar, errorMessage, null, null).execute(urls)
             prefs.edit().putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false).apply()
         }else{
-            val scheduleList = Utils.getScheduleList(cursor, db, context)
+            val scheduleList = dbManager.getScheduleList()
             if (scheduleList.isNotEmpty()){
                 errorMessage.visibility = View.GONE
                 val adapter = getAdapter(scheduleList)
@@ -118,7 +112,7 @@ class ScheduleFragment : Fragment() {
                             .setTitle(getString(R.string.hide_lesson_from_schedule))
                             .setMessage(getString(R.string.hide_lesson_from_schedule_message))
                             .setPositiveButton(getString(R.string.remove)) { _, _ ->
-                                addLessonToFilteredLessons(context, scheduleItem)
+                                DatabaseManager(context).addLessonToFilteredLessons(scheduleItem)
                                 val ft = activity.supportFragmentManager.beginTransaction()
                                 ft.detach(this)
                                 ft.attach(this)
@@ -187,7 +181,7 @@ class ScheduleFragment : Fragment() {
                 val dialogView = inflater.inflate(R.layout.schedule_filter, null)
                 val prefs = PreferenceManager.getDefaultSharedPreferences(context)
                 setFiltersUiState(dialogView, prefs, context)
-                val filteredLessonsList = getFilteredLessons(context)
+                val filteredLessonsList = dbManager.getFilteredLessons()
                 val message = dialogView.findViewById<TextView>(R.id.filtered_lessons_empty_message)
 
                 if(filteredLessonsList.isNotEmpty()){

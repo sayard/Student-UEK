@@ -9,8 +9,7 @@ import android.view.ViewGroup
 import android.widget.*
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.data.Note
-import pl.c0.sayard.studentUEK.db.ScheduleContract
-import pl.c0.sayard.studentUEK.db.ScheduleDbHelper
+import pl.c0.sayard.studentUEK.db.DatabaseManager
 
 /**
  * Created by karol on 27.02.18.
@@ -20,15 +19,12 @@ class NotesAdapter(private val context: Context, private var notesListOriginal: 
     private var notesListDisplay = notesListOriginal
     private var positionToDelete: Int? = null
     private val mInflater: LayoutInflater = LayoutInflater.from(context)
-    private val dialogClickListener = DialogInterface.OnClickListener { dialog, which ->
+    private val dialogClickListener = DialogInterface.OnClickListener { _, which ->
         when(which){
             DialogInterface.BUTTON_POSITIVE ->{
                 try{
-                    val dbHelper = ScheduleDbHelper(context)
-                    val db = dbHelper.readableDatabase
-                    val deleteCount = db.delete(ScheduleContract.NotesEntry.TABLE_NAME,
-                            "${ScheduleContract.NotesEntry._ID} = ${(getItem(positionToDelete!!) as Note).id}",
-                            null)
+                    val dbManager = DatabaseManager(context)
+                    val deleteCount = dbManager.getNotesDeleteCount(getItem(positionToDelete!!))
                     if(deleteCount > 0){
                         notesListDisplay.removeAt(positionToDelete!!)
                         notifyDataSetChanged()

@@ -1,5 +1,7 @@
 package pl.c0.sayard.studentUEK.data
 
+import android.database.Cursor
+import pl.c0.sayard.studentUEK.db.ScheduleContract
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -59,5 +61,14 @@ class ScheduleItem(
                 && classroom == otherScheduleItem.classroom
                 && comments == otherScheduleItem.comments
                 && startDateStr == otherScheduleItem.startDateStr)
+    }
+
+    fun setNotes(lessonNoteCursor: Cursor?){
+        if(lessonNoteCursor != null && lessonNoteCursor.count > 0){
+            lessonNoteCursor.moveToFirst()
+            this@ScheduleItem.noteId = lessonNoteCursor.getInt(lessonNoteCursor.getColumnIndex(ScheduleContract.LessonNoteEntry._ID))
+            this@ScheduleItem.noteContent = lessonNoteCursor.getString(lessonNoteCursor.getColumnIndex(ScheduleContract.LessonNoteEntry.CONTENT))
+        }
+        lessonNoteCursor?.close()
     }
 }

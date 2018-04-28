@@ -8,9 +8,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ListView
+import android.widget.ProgressBar
+import android.widget.TextView
 import pl.c0.sayard.studentUEK.BackButtonEditText
-
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.activities.AddNoteActivity
 import pl.c0.sayard.studentUEK.adapters.NotesAdapter

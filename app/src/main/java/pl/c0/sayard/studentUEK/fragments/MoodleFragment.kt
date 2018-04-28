@@ -2,7 +2,6 @@ package pl.c0.sayard.studentUEK.fragments
 
 import android.app.DownloadManager
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
