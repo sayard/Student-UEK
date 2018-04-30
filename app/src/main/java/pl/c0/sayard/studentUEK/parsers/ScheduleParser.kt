@@ -2,7 +2,6 @@ package pl.c0.sayard.studentUEK.parsers
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.ContentValues
 import android.content.Context
 import android.os.AsyncTask
 import android.support.v4.widget.SwipeRefreshLayout
@@ -11,12 +10,10 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import org.w3c.dom.Element
 import org.xml.sax.InputSource
-import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
 import pl.c0.sayard.studentUEK.adapters.ScheduleAdapter
 import pl.c0.sayard.studentUEK.data.Lesson
-import pl.c0.sayard.studentUEK.db.ScheduleContract
-import pl.c0.sayard.studentUEK.db.ScheduleDbHelper
+import pl.c0.sayard.studentUEK.db.DatabaseManager
 import java.net.URL
 import javax.xml.parsers.DocumentBuilderFactory
 
@@ -42,15 +39,12 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
     private val COMMENTS_TAG = "uwagi"
     private val LECTURESHIP = "lektorat"
 
+    private val dbManager = DatabaseManager(context)
+
     override fun onPreExecute() {
         super.onPreExecute()
         progressBar?.visibility = View.VISIBLE
-        val dbHelper = ScheduleDbHelper(context)
-        val db = dbHelper.writableDatabase
-        db.delete(ScheduleContract.LessonEntry.TABLE_NAME, null, null)
-        db.delete(ScheduleContract.UserAddedLessonEntry.TABLE_NAME, "? < date('now')", arrayOf(ScheduleContract.UserAddedLessonEntry.DATE))
-        db.delete(ScheduleContract.LessonNoteEntry.TABLE_NAME, "? < date('now')", arrayOf(ScheduleContract.LessonNoteEntry.LESSON_DATE))
-        dbHelper.close()
+        dbManager.deleteUnnecessaryEntries()
     }
 
     override fun doInBackground(vararg groupUrls: List<String>?): List<Lesson>? {
@@ -86,35 +80,8 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
                     }
                 }
             }
-            val dbHelper = ScheduleDbHelper(context)
-            val db = dbHelper.writableDatabase
-            val userLessonsCursor = db.query(
-                    ScheduleContract.UserAddedLessonEntry.TABLE_NAME,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
-            )
-            while (userLessonsCursor.moveToNext()){
-                val lesson = Lesson(
-                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.DATE)),
-                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.START_HOUR)),
-                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.END_HOUR)),
-                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.SUBJECT)),
-                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.TYPE)),
-                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.TEACHER)),
-                        "-1",
-                        userLessonsCursor.getString(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry.CLASSROOM)),
-                        "",
-                        true,
-                        userLessonsCursor.getInt(userLessonsCursor.getColumnIndex(ScheduleContract.UserAddedLessonEntry._ID))
-                )
-                lessonList.add(lesson)
-            }
-            userLessonsCursor.close()
-            dbHelper.close()
+            val userLessonsCursor = dbManager.getUserLessonCursor()
+            lessonList.addAll(dbManager.getUserLessonsFromCursor(userLessonsCursor))
             return lessonList
         }catch (e: Exception){
             return emptyList()
@@ -124,31 +91,16 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
     override fun onPostExecute(lessons: List<Lesson>?) {
         super.onPostExecute(lessons)
         if (lessons != null) {
-            val dbHelper = ScheduleDbHelper(context)
-            val db = dbHelper.writableDatabase
-            val contentValues = ContentValues()
-            for(lesson in lessons){
-                contentValues.put(ScheduleContract.LessonEntry.SUBJECT, lesson.subject)
-                contentValues.put(ScheduleContract.LessonEntry.TYPE, lesson.type)
-                contentValues.put(ScheduleContract.LessonEntry.TEACHER, lesson.teacher)
-                contentValues.put(ScheduleContract.LessonEntry.TEACHER_ID, lesson.teacherIdParsed)
-                contentValues.put(ScheduleContract.LessonEntry.CLASSROOM, lesson.classroom)
-                contentValues.put(ScheduleContract.LessonEntry.COMMENTS, lesson.comments)
-                contentValues.put(ScheduleContract.LessonEntry.DATE, lesson.date)
-                contentValues.put(ScheduleContract.LessonEntry.START_DATE, lesson.startDate)
-                contentValues.put(ScheduleContract.LessonEntry.END_DATE, lesson.endDate)
-                contentValues.put(ScheduleContract.LessonEntry.IS_CUSTOM, lesson.isCustomLesson)
-                contentValues.put(ScheduleContract.LessonEntry.CUSTOM_ID, lesson.customId)
-                db.insert(ScheduleContract.LessonEntry.TABLE_NAME, null, contentValues)
-            }
+
+            dbManager.addLessonsToDb(lessons)
+
             if(adapter != null){
-                val cursor = Utils.getScheduleCursor(db)
-                val scheduleList = Utils.getScheduleList(cursor, db, context)
+                val dbManager = DatabaseManager(context)
+                val scheduleList = dbManager.getScheduleList()
                 adapter.changeAdapterData(scheduleList)
                 adapter.notifyDataSetChanged()
                 scheduleSwipe?.isRefreshing = false
             }
-            dbHelper.close()
             activity?.recreate()
         }else{
             progressBar?.visibility = View.GONE

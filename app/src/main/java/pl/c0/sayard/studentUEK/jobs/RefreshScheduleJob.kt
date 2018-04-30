@@ -5,7 +5,6 @@ import android.preference.PreferenceManager
 import com.evernote.android.job.DailyJob
 import com.evernote.android.job.JobManager
 import com.evernote.android.job.JobRequest
-import com.evernote.android.job.util.support.PersistableBundleCompat
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
@@ -13,9 +12,8 @@ import com.google.api.client.util.ExponentialBackOff
 import com.google.api.services.calendar.CalendarScopes
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
-import pl.c0.sayard.studentUEK.Utils.Companion.getScheduleList
 import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
-import pl.c0.sayard.studentUEK.db.ScheduleDbHelper
+import pl.c0.sayard.studentUEK.db.DatabaseManager
 import pl.c0.sayard.studentUEK.parsers.ScheduleParser
 import pl.c0.sayard.studentUEK.tasks.CalendarEventsTask
 import java.util.*
@@ -53,20 +51,17 @@ class RefreshScheduleJob: DailyJob() {
         }
 
         fun refreshSchedule(context: Context){
-            val dbHelper = ScheduleDbHelper(context)
-            val db = dbHelper.readableDatabase
+            val dbManager = DatabaseManager(context)
             val urls = mutableListOf<String>()
-            val groups = Utils.getGroups(db)
+            val groups = dbManager.getGroups()
             groups.mapTo(urls) { it.url }
-            val languageGroups = Utils.getLanguageGroups(db)
+            val languageGroups = dbManager.getLanguageGroups()
             languageGroups.mapTo(urls) { it.url }
             ScheduleParser(context, null, null, null, null, null).execute(urls).get()
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
             val editor = prefs.edit()
             editor.putBoolean(context.getString(R.string.PREFS_REFRESH_SCHEDULE), true)
             editor.apply()
-            dbHelper.close()
-            db.close()
             if(prefs.getBoolean(context.getString(R.string.PREFS_ENABLE_GC), false)){
                 exportScheduleToGC(context)
             }
@@ -102,10 +97,8 @@ class RefreshScheduleJob: DailyJob() {
 
         private fun setScheduleNotifications(notificationTimeThreshold:Int, context: Context){
             cancelScheduleNotifications()
-            val dbHelper = ScheduleDbHelper(context)
-            val db = dbHelper.readableDatabase
-            val cursor = Utils.getScheduleCursor(db)
-            val scheduleList = getScheduleList(cursor, db, context)
+            val dbManager = DatabaseManager(context)
+            val scheduleList = dbManager.getScheduleList()
             if(scheduleList.isNotEmpty()){
                 for(i in 0 until scheduleList.size){
                     val scheduleItem = scheduleList[i]
@@ -115,22 +108,7 @@ class RefreshScheduleJob: DailyJob() {
                     calendar.add(Calendar.MINUTE, notificationTimeThreshold*-1)
                     if(calendar.timeInMillis > System.currentTimeMillis()){
                         val timeInMillis = Math.abs(calendar.timeInMillis - System.currentTimeMillis())
-                        val extras = PersistableBundleCompat().apply {
-                            putString(context.getString(R.string.EXTRA_NOTIFICATION_SUBJECT), scheduleItem.subject)
-                            putString(context.getString(R.string.EXTRA_NOTIFICATION_TYPE), scheduleItem.type)
-                            putString(context.getString(R.string.EXTRA_NOTIFICATION_TEACHER), scheduleItem.teacher)
-                            putInt(context.getString(R.string.EXTRA_NOTIFICATION_TEACHER_ID), scheduleItem.teacherId)
-                            putString(context.getString(R.string.EXTRA_NOTIFICATION_CLASSROOM), scheduleItem.classroom)
-                            putString(context.getString(R.string.EXTRA_NOTIFICATION_COMMENTS), scheduleItem.comments)
-                            putString(context.getString(R.string.EXTRA_NOTIFICATION_DATE), scheduleItem.dateStr)
-                            putString(context.getString(R.string.EXTRA_NOTIFICATION_START_DATE), scheduleItem.startDateStr)
-                            putString(context.getString(R.string.EXTRA_NOTIFICATION_END_DATE), scheduleItem.endDateStr)
-                            putBoolean(context.getString(R.string.EXTRA_NOTIFICATION_IS_CUSTOM), scheduleItem.isCustom)
-                            putInt(context.getString(R.string.EXTRA_NOTIFICATION_CUSTOM_ID), scheduleItem.customId)
-                            putInt(context.getString(R.string.EXTRA_NOTIFICATION_NOTE_ID), scheduleItem.noteId)
-                            putString(context.getString(R.string.EXTRA_NOTIFICATION_NOTE_CONTENT), scheduleItem.noteContent)
-                            putString(context.getString(R.string.EXTRA_NOTIFICATION_HOUR), hourStr)
-                        }
+                        val extras = Utils.getScheduleItemExtras(context, scheduleItem, hourStr)
                         NotificationJob.schedule(timeInMillis, extras)
                     }
                 }

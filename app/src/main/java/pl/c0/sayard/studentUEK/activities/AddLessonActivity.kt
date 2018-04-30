@@ -2,18 +2,15 @@ package pl.c0.sayard.studentUEK.activities
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.ContentValues
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.preference.PreferenceManager
+import android.support.v7.app.AppCompatActivity
 import android.widget.*
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.Utils.Companion.getTime
 import pl.c0.sayard.studentUEK.data.Building
-import pl.c0.sayard.studentUEK.db.ScheduleContract
-import pl.c0.sayard.studentUEK.db.ScheduleDbHelper
+import pl.c0.sayard.studentUEK.db.DatabaseManager
 import pl.c0.sayard.studentUEK.jobs.RefreshScheduleJob
 import java.text.SimpleDateFormat
 import java.util.*
@@ -54,7 +51,7 @@ class AddLessonActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
             buildingText = intent.getStringExtra(getString(R.string.extra_custom_lesson_building))
             val buildingInstance = Building(this)
             classroomText = buildingInstance.getClassroomWithoutBuilding(intent.getStringExtra(getString(R.string.extra_custom_lesson_classroom)))
-            dateText = dateFormat.format(intent.getStringExtra(getString(R.string.extra_custom_lesson_date)))
+            dateText = intent.getStringExtra(getString(R.string.extra_custom_lesson_date))
             startHourText = intent.getStringExtra(getString(R.string.extra_custom_lesson_start_hour))
             endHourText = intent.getStringExtra(getString(R.string.extra_custom_lesson_end_hour))
         }catch (e: Exception){
@@ -157,26 +154,19 @@ class AddLessonActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListene
             }else{
                 buildingAbbreviation = buildingInstance.getBuildingAbbreviation(selectedBuilding)
             }
+            val dbManager = DatabaseManager(this)
+            dbManager.addUserLessonToDb(
+                    name.text.toString(),
+                    type.text.toString(),
+                    teacher.text.toString(),
+                    buildingAbbreviation,
+                    classroomVal,
+                    dateTv.text.toString(),
+                    startHourTv.text.toString(),
+                    endHourTv.text.toString(),
+                    intent.getIntExtra(getString(R.string.extra_custom_id), -1)
+            )
 
-            val dbHelper = ScheduleDbHelper(this@AddLessonActivity)
-            val db = dbHelper.readableDatabase
-            val contentValues = ContentValues()
-            contentValues.put(ScheduleContract.UserAddedLessonEntry.SUBJECT, name.text.toString())
-            contentValues.put(ScheduleContract.UserAddedLessonEntry.TYPE, type.text.toString())
-            contentValues.put(ScheduleContract.UserAddedLessonEntry.TEACHER, teacher.text.toString())
-            contentValues.put(ScheduleContract.UserAddedLessonEntry.CLASSROOM, "$buildingAbbreviation$classroomVal")
-            contentValues.put(ScheduleContract.UserAddedLessonEntry.DATE, dateTv.text.toString())
-            contentValues.put(ScheduleContract.UserAddedLessonEntry.START_HOUR, "${startHourTv.text}")
-            contentValues.put(ScheduleContract.UserAddedLessonEntry.END_HOUR, "${endHourTv.text}")
-            val id = intent.getIntExtra(getString(R.string.extra_custom_id), -1)
-            if(id == -1){
-                db.insert(ScheduleContract.UserAddedLessonEntry.TABLE_NAME, null, contentValues)
-            }else{
-                db.update(ScheduleContract.UserAddedLessonEntry.TABLE_NAME,
-                        contentValues,
-                        "${ScheduleContract.UserAddedLessonEntry._ID} = $id",
-                        null)
-            }
             Thread{
                 kotlin.run {
                     RefreshScheduleJob.refreshSchedule(this)

@@ -1,5 +1,7 @@
 package pl.c0.sayard.studentUEK.data
 
+import android.database.Cursor
+import pl.c0.sayard.studentUEK.db.ScheduleContract
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -47,7 +49,7 @@ class ScheduleItem(
     }
 
     override fun toString(): String {
-        return "$subject\n $type\n $teacher\n $teacherId\n $classroom\n comments:$comments\n $dateStr\n $isFirstOnTheDay\n $isCustom"
+        return "$subject\n $type\n $teacher\n $teacherId\n $classroom\n comments:$comments\n $dateStr\n $isFirstOnTheDay\n $isCustom\n $noteId\n $noteContent\n"
     }
 
     override fun equals(other: Any?): Boolean {
@@ -58,6 +60,17 @@ class ScheduleItem(
                 && teacherId == otherScheduleItem.teacherId
                 && classroom == otherScheduleItem.classroom
                 && comments == otherScheduleItem.comments
-                && startDateStr == otherScheduleItem.startDateStr)
+                && startDateStr == otherScheduleItem.startDateStr
+                && noteId == otherScheduleItem.noteId
+                && noteContent == otherScheduleItem.noteContent)
+    }
+
+    fun setNotes(lessonNoteCursor: Cursor?){
+        if(lessonNoteCursor != null && lessonNoteCursor.count > 0){
+            lessonNoteCursor.moveToFirst()
+            this@ScheduleItem.noteId = lessonNoteCursor.getInt(lessonNoteCursor.getColumnIndex(ScheduleContract.LessonNoteEntry._ID))
+            this@ScheduleItem.noteContent = lessonNoteCursor.getString(lessonNoteCursor.getColumnIndex(ScheduleContract.LessonNoteEntry.CONTENT))
+        }
+        lessonNoteCursor?.close()
     }
 }

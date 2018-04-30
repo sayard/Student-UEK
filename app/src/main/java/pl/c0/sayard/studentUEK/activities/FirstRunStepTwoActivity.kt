@@ -2,11 +2,10 @@ package pl.c0.sayard.studentUEK.activities
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MotionEvent
@@ -16,8 +15,7 @@ import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.adapters.GroupListAdapter
 import pl.c0.sayard.studentUEK.data.Group
-import pl.c0.sayard.studentUEK.db.ScheduleContract
-import pl.c0.sayard.studentUEK.db.ScheduleDbHelper
+import pl.c0.sayard.studentUEK.db.DatabaseManager
 import pl.c0.sayard.studentUEK.parsers.GroupParser
 
 class FirstRunStepTwoActivity : AppCompatActivity() {
@@ -71,21 +69,9 @@ class FirstRunStepTwoActivity : AppCompatActivity() {
                     updateSelectedGroups(selectedGroups)
                 }
                 nextStepButton.setOnClickListener{
-                    val dbHelper = ScheduleDbHelper(activity)
-                    val db = dbHelper.readableDatabase
-                    val contentValues = ContentValues()
-                    db.execSQL("DELETE FROM " + ScheduleContract.LanguageGroupsEntry.TABLE_NAME)
-                    selectedGroups.forEach({
-                        contentValues.put(
-                                ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_NAME,
-                                it.name
-                        )
-                        contentValues.put(
-                                ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_URL,
-                                Utils.getGroupURL(it)
-                        )
-                        db.insert(ScheduleContract.LanguageGroupsEntry.TABLE_NAME, null, contentValues)
-                    })
+                    val dbManager = DatabaseManager(this@FirstRunStepTwoActivity)
+                    dbManager.addLanguageGroupsToDb(selectedGroups)
+
                     val intent = Intent(activity, FirstRunStepThreeActivity::class.java)
                     startActivity(intent)
                 }
@@ -121,11 +107,5 @@ class FirstRunStepTwoActivity : AppCompatActivity() {
             groupNames.add(it.name)
         })
         selectedGroupsET.setText(groupNames.joinToString(", "))
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        val intent = Intent(this, FirstRunStepOneActivity::class.java)
-        startActivity(intent)
     }
 }

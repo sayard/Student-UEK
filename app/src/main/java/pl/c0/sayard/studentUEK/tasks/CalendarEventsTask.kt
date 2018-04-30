@@ -13,10 +13,9 @@ import com.google.api.client.util.DateTime
 import com.google.api.services.calendar.Calendar
 import com.google.api.services.calendar.model.*
 import pl.c0.sayard.studentUEK.R
-import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.activities.ActivateGoogleCalendarIntegrationActivity
 import pl.c0.sayard.studentUEK.data.Building
-import pl.c0.sayard.studentUEK.db.ScheduleDbHelper
+import pl.c0.sayard.studentUEK.db.DatabaseManager
 import pl.c0.sayard.studentUEK.jobs.RefreshScheduleJob
 import java.io.IOException
 
@@ -48,11 +47,8 @@ class CalendarEventsTask(credential: GoogleAccountCredential, val instance: Acti
 
     @Throws(IOException::class)
     private fun insertCalendarEvents(){
-        val dbHelper = ScheduleDbHelper(context)
-        val db = dbHelper.readableDatabase
-        val cursor = Utils.getScheduleCursor(db)
-        val scheduleList = Utils.getScheduleList(cursor, db, context)
-        db.close()
+        val dbManager = DatabaseManager(context)
+        val scheduleList = dbManager.getScheduleList()
         if(scheduleList.isNotEmpty()){
             for(i in 0 until scheduleList.size){
                 val scheduleItem = scheduleList[i]

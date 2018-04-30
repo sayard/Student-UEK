@@ -2,17 +2,16 @@ package pl.c0.sayard.studentUEK.activities
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.ContentValues
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.TextView
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
+import pl.c0.sayard.studentUEK.db.DatabaseManager
 import pl.c0.sayard.studentUEK.db.ScheduleContract
-import pl.c0.sayard.studentUEK.db.ScheduleDbHelper
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -64,18 +63,9 @@ class AddNoteActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener{
 
         val noteTitleET = findViewById<EditText>(R.id.note_title)
         val noteContent = findViewById<EditText>(R.id.note_content)
+        val dbManager = DatabaseManager(this)
         if(id != 0){
-            val dbHelper = ScheduleDbHelper(this)
-            val db = dbHelper.readableDatabase
-            val cursor = db.query(
-                    ScheduleContract.NotesEntry.TABLE_NAME,
-                    null,
-                    "${ScheduleContract.NotesEntry._ID} = $id",
-                    null,
-                    null,
-                    null,
-                    null
-            )
+            val cursor = dbManager.getNotesCursorById(id)
             cursor.moveToFirst()
             val title = cursor.getString(cursor.getColumnIndex(ScheduleContract.NotesEntry.TITLE))
             val content = cursor.getString(cursor.getColumnIndex(ScheduleContract.NotesEntry.CONTENT))
@@ -92,18 +82,13 @@ class AddNoteActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener{
 
         val saveNoteButton = findViewById<Button>(R.id.save_note_button)
         saveNoteButton.setOnClickListener {
-            val dbHelper = ScheduleDbHelper(this@AddNoteActivity)
-            val db = dbHelper.readableDatabase
-            val contentValues = ContentValues()
-            contentValues.put(ScheduleContract.NotesEntry.TITLE, noteTitleET.text.toString())
-            contentValues.put(ScheduleContract.NotesEntry.CONTENT, noteContent.text.toString())
-            contentValues.put(ScheduleContract.NotesEntry.DATE, noteDate.text as String?)
-            contentValues.put(ScheduleContract.NotesEntry.HOUR, noteHour.text as String?)
-            if(id == 0){
-                db.insert(ScheduleContract.NotesEntry.TABLE_NAME, null, contentValues)
-            }else{
-                db.update(ScheduleContract.NotesEntry.TABLE_NAME, contentValues, "${ScheduleContract.NotesEntry._ID} = $id", null)
-            }
+            dbManager.addNoteToDb(
+                    id,
+                    noteTitleET.text.toString(),
+                    noteContent.text.toString(),
+                    noteDate.text.toString(),
+                    noteHour.text.toString()
+            )
             finish()
         }
     }

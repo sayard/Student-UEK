@@ -1,22 +1,18 @@
 package pl.c0.sayard.studentUEK
 
 import android.app.Activity
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.database.Cursor
-import android.database.CursorIndexOutOfBoundsException
-import android.database.sqlite.SQLiteDatabase
 import android.net.ConnectivityManager
 import android.preference.PreferenceManager
 import android.view.View
 import android.widget.CheckBox
 import android.widget.TextView
-import pl.c0.sayard.studentUEK.data.*
-import pl.c0.sayard.studentUEK.db.ScheduleContract
-import pl.c0.sayard.studentUEK.db.ScheduleDbHelper
-import java.text.SimpleDateFormat
+import com.evernote.android.job.util.support.PersistableBundleCompat
+import pl.c0.sayard.studentUEK.data.FilteredLesson
+import pl.c0.sayard.studentUEK.data.Group
+import pl.c0.sayard.studentUEK.data.ScheduleItem
 import java.util.*
 
 /**
@@ -26,7 +22,6 @@ class Utils {
     companion object {
         val FIRST_RUN_SHARED_PREFS_KEY = "firstRun"
         val AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY = "automaticScheduleRefresh"
-        val TYPES = listOf<String>("wykład", "ćwiczenia", "lektorat")
 
         fun getGroupURL(group: Group, isLongSchedule: Boolean = false): String{
             return if(isLongSchedule){
@@ -51,189 +46,6 @@ class Utils {
                         group?.id.toString() +
                         "&okres=1"
             }
-        }
-
-        fun getScheduleList(cursor: Cursor, db: SQLiteDatabase, context: Context): MutableList<ScheduleItem> {
-            val scheduleList = mutableListOf<ScheduleItem>()
-            cursor.moveToFirst()
-            val visibleTypes = TYPES.toMutableList()
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-            if(!prefs.getBoolean(context.getString(R.string.PREFS_DISCOURSES_VISIBLE), true)){
-                visibleTypes[0] = ""
-            }
-            if(!prefs.getBoolean(context.getString(R.string.PREFS_EXERCISES_VISIBLE), true)){
-                visibleTypes[1] = ""
-            }
-            if(!prefs.getBoolean(context.getString(R.string.PREFS_LECTURES_VISIBLE), true)){
-                visibleTypes[2] = ""
-            }
-
-            if(cursor != null && cursor.count >0){
-                do{
-                    val dateStr = cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.DATE))
-                    val comments = cursor.getString(cursor.getColumnIndexOrThrow(ScheduleContract.LessonEntry.COMMENTS))
-                    var isCustom = false
-                    if(cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.IS_CUSTOM)) == 1){
-                        isCustom = true
-                    }
-                    val scheduleItem = ScheduleItem(
-                            cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.SUBJECT)),
-                            cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.TYPE)),
-                            cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.TEACHER)),
-                            cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.TEACHER_ID)),
-                            cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.CLASSROOM)),
-                            comments,
-                            dateStr,
-                            cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.START_DATE)),
-                            cursor.getString(cursor.getColumnIndex(ScheduleContract.LessonEntry.END_DATE)),
-                            isCustom = isCustom,
-                            customId = cursor.getInt(cursor.getColumnIndex(ScheduleContract.LessonEntry.CUSTOM_ID))
-                    )
-                    if(visibleTypes.contains(scheduleItem.type)){
-                        scheduleList.add(scheduleItem)
-                    }
-                }while(cursor.moveToNext())
-            }else{
-                return mutableListOf<ScheduleItem>()
-            }
-            val pe = getPe(db)
-            if(pe != null){
-                val days = HashSet<String>(scheduleList.map { it.dateStr })
-                val peDays = mutableListOf<String>()
-                val shortDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale("pl", "PL"))
-                for(day in days){
-                    val date = shortDateFormat.parse(day)
-                    val calendar = Calendar.getInstance()
-                    calendar.time = date
-                    if(calendar.get(Calendar.DAY_OF_WEEK) == pe.day+2){
-                        peDays.add(day)
-                    }
-                }
-                peDays.mapTo(scheduleList) {
-                    ScheduleItem(
-                            pe.name,
-                            "P.E.",
-                            "",
-                            0,
-                            "",
-                            "",
-                            it,
-                            "$it ${pe.startHour}",
-                            "$it ${pe.endHour}"
-                    )
-                }
-                scheduleList.sortWith(Comparator { p0, p1 -> p0?.startDate!!.compareTo(p1?.startDate) })
-            }
-
-            val filteredLessons = getFilteredLessons(context)
-            val filteredList = mutableListOf<ScheduleItem>()
-            for(i in 0 until scheduleList.size){
-                val scheduleItem = scheduleList[i]
-                if(i !=0 ){
-                    val previousScheduleItem = scheduleList[i-1]
-                    if(previousScheduleItem != scheduleItem && !isInFilteredLessons(scheduleItem, filteredLessons)){
-                        filteredList.add(scheduleItem)
-                    }
-                }else{
-                    if(!isInFilteredLessons(scheduleItem, filteredLessons)){
-                        filteredList.add(scheduleItem)
-                    }
-                }
-            }
-
-            for(i in 0 until filteredList.size){
-                val scheduleItem = filteredList[i]
-                if(i==0){
-                    scheduleItem.isFirstOnTheDay = true
-                }else{
-                    val previousScheduleItem = filteredList[i-1]
-                    if(scheduleItem.dateStr != previousScheduleItem.dateStr){
-                        scheduleItem.isFirstOnTheDay = true
-                    }
-                }
-                val lessonNoteCursor = db.query(
-                        ScheduleContract.LessonNoteEntry.TABLE_NAME,
-                        arrayOf(ScheduleContract.LessonNoteEntry._ID, ScheduleContract.LessonNoteEntry.CONTENT),
-                        "${ScheduleContract.LessonNoteEntry.LESSON_SUBJECT} = ? AND " +
-                                "${ScheduleContract.LessonNoteEntry.LESSON_TYPE} = ? AND " +
-                                "${ScheduleContract.LessonNoteEntry.LESSON_TEACHER} = ? AND " +
-                                "${ScheduleContract.LessonNoteEntry.LESSON_TEACHER_ID} = ? AND " +
-                                "${ScheduleContract.LessonNoteEntry.LESSON_CLASSROOM} = ? AND " +
-                                "${ScheduleContract.LessonNoteEntry.LESSON_DATE} = ? AND " +
-                                "${ScheduleContract.LessonNoteEntry.LESSON_START_DATE} = ? AND " +
-                                "${ScheduleContract.LessonNoteEntry.LESSON_END_DATE} = ? ",
-                        arrayOf(scheduleItem.subject,
-                                scheduleItem.type,
-                                scheduleItem.teacher,
-                                "${scheduleItem.teacherId}",
-                                scheduleItem.classroom,
-                                scheduleItem.dateStr,
-                                scheduleItem.startDateStr,
-                                scheduleItem.endDateStr
-                        ),
-                        null,
-                        null,
-                        ScheduleContract.LessonNoteEntry._ID
-                )
-                if(lessonNoteCursor != null && lessonNoteCursor.count > 0){
-                    lessonNoteCursor.moveToFirst()
-                    scheduleItem.noteId = lessonNoteCursor.getInt(lessonNoteCursor.getColumnIndex(ScheduleContract.LessonNoteEntry._ID))
-                    scheduleItem.noteContent = lessonNoteCursor.getString(lessonNoteCursor.getColumnIndex(ScheduleContract.LessonNoteEntry.CONTENT))
-                }
-                lessonNoteCursor.close()
-            }
-            return filteredList
-        }
-
-        private fun getPe(db: SQLiteDatabase): SchedulePE?{
-            val cursor = db.query(ScheduleContract.PeEntry.TABLE_NAME, null, null, null, null, null, null)
-            if(cursor.count > 0){
-                cursor.moveToLast()
-                val peName = cursor.getString(cursor.getColumnIndex(ScheduleContract.PeEntry.PE_NAME))
-                val peDay = cursor.getInt(cursor.getColumnIndex(ScheduleContract.PeEntry.PE_DAY))
-                val peStartHour = cursor.getString(cursor.getColumnIndex(ScheduleContract.PeEntry.PE_START_HOUR))
-                val peEndHour = cursor.getString(cursor.getColumnIndex(ScheduleContract.PeEntry.PE_END_HOUR))
-                cursor.close()
-                return SchedulePE(peName, peDay, peStartHour, peEndHour)
-            }
-            cursor.close()
-            return null
-        }
-
-        fun getGroups(db: SQLiteDatabase): MutableList<ScheduleGroup> {
-            val cursor = db.query(ScheduleContract.GroupEntry.TABLE_NAME, null, null, null, null, null, null)
-            val groups = mutableListOf<ScheduleGroup>()
-            while(cursor.moveToNext()){
-                val groupName = cursor.getString(cursor.getColumnIndex(ScheduleContract.GroupEntry.GROUP_NAME))
-                val groupURL = cursor.getString(cursor.getColumnIndex(ScheduleContract.GroupEntry.GROUP_URL))
-                groups.add(ScheduleGroup(groupName, groupURL))
-            }
-            cursor.close()
-            return groups
-        }
-
-        fun getLanguageGroups(db: SQLiteDatabase): MutableList<ScheduleGroup> {
-            val cursor = db.query(ScheduleContract.LanguageGroupsEntry.TABLE_NAME, null, null, null, null, null, null)
-            val languageGroups = mutableListOf<ScheduleGroup>()
-            while(cursor.moveToNext()){
-                val languageGroupName = cursor.getString(cursor.getColumnIndex(ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_NAME))
-                val languageGroupURL = cursor.getString(cursor.getColumnIndex(ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_URL))
-                languageGroups.add(ScheduleGroup(languageGroupName, languageGroupURL))
-            }
-            cursor.close()
-            return languageGroups
-        }
-
-        fun getScheduleCursor(db: SQLiteDatabase): Cursor{
-            return db.query(
-                    ScheduleContract.LessonEntry.TABLE_NAME,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    ScheduleContract.LessonEntry.START_DATE
-            )
         }
 
         fun getTime(hourTv: TextView): Calendar{
@@ -309,87 +121,7 @@ class Utils {
                     .apply()
         }
 
-        fun addLessonToFilteredLessons(context: Context, scheduleItem: ScheduleItem){
-            val dbHelper = ScheduleDbHelper(context)
-            val db = dbHelper.writableDatabase
-            val calendar = Calendar.getInstance()
-            calendar.time = scheduleItem.startDate
-
-            val values = ContentValues().apply{
-                put(ScheduleContract.FilteredLessonEntry.LESSON_SUBJECT, scheduleItem.subject)
-                put(ScheduleContract.FilteredLessonEntry.LESSON_TYPE, scheduleItem.type)
-                put(ScheduleContract.FilteredLessonEntry.LESSON_TEACHER, scheduleItem.teacher)
-                put(ScheduleContract.FilteredLessonEntry.LESSON_TEACHER_ID, scheduleItem.teacherId)
-                put(ScheduleContract.FilteredLessonEntry.LESSON_DAY_OF_WEEK, scheduleItem.dayOfTheWeekStr)
-                put(ScheduleContract.FilteredLessonEntry.LESSON_START_HOUR, "${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE)}")
-            }
-
-            db.insert(ScheduleContract.FilteredLessonEntry.TABLE_NAME, null, values)
-
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-            prefs.edit().putBoolean(context.getString(R.string.PREFS_REFRESH_SCHEDULE), true).apply()
-        }
-
-        fun getFilteredLessons(context: Context): List<FilteredLesson>{
-            val dbHelper = ScheduleDbHelper(context)
-            val db = dbHelper.readableDatabase
-
-            val cursor = db.query(
-                    ScheduleContract.FilteredLessonEntry.TABLE_NAME,
-                    arrayOf(
-                            ScheduleContract.FilteredLessonEntry._ID,
-                            ScheduleContract.FilteredLessonEntry.LESSON_SUBJECT,
-                            ScheduleContract.FilteredLessonEntry.LESSON_TYPE,
-                            ScheduleContract.FilteredLessonEntry.LESSON_TEACHER,
-                            ScheduleContract.FilteredLessonEntry.LESSON_TEACHER_ID,
-                            ScheduleContract.FilteredLessonEntry.LESSON_DAY_OF_WEEK,
-                            ScheduleContract.FilteredLessonEntry.LESSON_START_HOUR
-                    ),
-                    null,
-                    null,
-                    null,
-                    null,
-                    null
-            )
-
-            val filteredLessonsList = mutableListOf<FilteredLesson>()
-
-            try{
-                cursor.moveToFirst()
-                do{
-                    val filteredLesson = FilteredLesson(
-                            cursor.getInt(cursor.getColumnIndex(ScheduleContract.FilteredLessonEntry._ID)),
-                            cursor.getString(cursor.getColumnIndex(ScheduleContract.FilteredLessonEntry.LESSON_SUBJECT)),
-                            cursor.getString(cursor.getColumnIndex(ScheduleContract.FilteredLessonEntry.LESSON_TYPE)),
-                            cursor.getString(cursor.getColumnIndex(ScheduleContract.FilteredLessonEntry.LESSON_TEACHER)),
-                            cursor.getInt(cursor.getColumnIndex(ScheduleContract.FilteredLessonEntry.LESSON_TEACHER_ID)),
-                            cursor.getString(cursor.getColumnIndex(ScheduleContract.FilteredLessonEntry.LESSON_DAY_OF_WEEK)),
-                            cursor.getString(cursor.getColumnIndex(ScheduleContract.FilteredLessonEntry.LESSON_START_HOUR))
-                    )
-                    filteredLessonsList.add(filteredLesson)
-                }while(cursor.moveToNext())
-
-                cursor.close()
-                return filteredLessonsList
-            }catch(e: CursorIndexOutOfBoundsException){
-                return emptyList()
-            }
-
-        }
-
-        fun removeFilteredLesson(id: Int, context: Context){
-            val db = ScheduleDbHelper(context).readableDatabase
-            db.delete(
-                    ScheduleContract.FilteredLessonEntry.TABLE_NAME,
-                    "${ScheduleContract.FilteredLessonEntry._ID}=?",
-                    arrayOf("$id")
-            )
-
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-            prefs.edit().putBoolean(context.getString(R.string.PREFS_REFRESH_SCHEDULE), true).apply()
-        }
-
-        private fun isInFilteredLessons(scheduleItem: ScheduleItem, filteredLessons: List<FilteredLesson>): Boolean{
+         fun isInFilteredLessons(scheduleItem: ScheduleItem, filteredLessons: List<FilteredLesson>): Boolean{
             val calendar = Calendar.getInstance()
             calendar.time = scheduleItem.startDate
             val startHour = "${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE)}"
@@ -405,6 +137,25 @@ class Utils {
                 }
             }
             return false
+        }
+
+        fun getScheduleItemExtras(context:Context, scheduleItem: ScheduleItem, hourStr: String): PersistableBundleCompat {
+            return PersistableBundleCompat().apply {
+                putString(context.getString(R.string.EXTRA_NOTIFICATION_SUBJECT), scheduleItem.subject)
+                putString(context.getString(R.string.EXTRA_NOTIFICATION_TYPE), scheduleItem.type)
+                putString(context.getString(R.string.EXTRA_NOTIFICATION_TEACHER), scheduleItem.teacher)
+                putInt(context.getString(R.string.EXTRA_NOTIFICATION_TEACHER_ID), scheduleItem.teacherId)
+                putString(context.getString(R.string.EXTRA_NOTIFICATION_CLASSROOM), scheduleItem.classroom)
+                putString(context.getString(R.string.EXTRA_NOTIFICATION_COMMENTS), scheduleItem.comments)
+                putString(context.getString(R.string.EXTRA_NOTIFICATION_DATE), scheduleItem.dateStr)
+                putString(context.getString(R.string.EXTRA_NOTIFICATION_START_DATE), scheduleItem.startDateStr)
+                putString(context.getString(R.string.EXTRA_NOTIFICATION_END_DATE), scheduleItem.endDateStr)
+                putBoolean(context.getString(R.string.EXTRA_NOTIFICATION_IS_CUSTOM), scheduleItem.isCustom)
+                putInt(context.getString(R.string.EXTRA_NOTIFICATION_CUSTOM_ID), scheduleItem.customId)
+                putInt(context.getString(R.string.EXTRA_NOTIFICATION_NOTE_ID), scheduleItem.noteId)
+                putString(context.getString(R.string.EXTRA_NOTIFICATION_NOTE_CONTENT), scheduleItem.noteContent)
+                putString(context.getString(R.string.EXTRA_NOTIFICATION_HOUR), hourStr)
+            }
         }
     }
 }

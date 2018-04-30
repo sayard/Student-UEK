@@ -1,12 +1,11 @@
 package pl.c0.sayard.studentUEK.activities
 
 import android.app.Activity
-import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MotionEvent
@@ -16,8 +15,7 @@ import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.adapters.GroupListAdapter
 import pl.c0.sayard.studentUEK.data.Group
-import pl.c0.sayard.studentUEK.db.ScheduleContract
-import pl.c0.sayard.studentUEK.db.ScheduleDbHelper
+import pl.c0.sayard.studentUEK.db.DatabaseManager
 import pl.c0.sayard.studentUEK.parsers.GroupParser
 
 class FirstRunStepOneActivity : AppCompatActivity() {
@@ -106,21 +104,8 @@ class FirstRunStepOneActivity : AppCompatActivity() {
         val ta = theme.obtainStyledAttributes(R.styleable.Style)
         nextStepButton?.setBackgroundColor(ta.getColor(R.styleable.Style_colorPrimary, ContextCompat.getColor(this, R.color.colorPrimaryDefault)))
         nextStepButton?.setOnClickListener {
-            val dbHelper = ScheduleDbHelper(this)
-            val db = dbHelper.readableDatabase
-            val contentValues = ContentValues()
-            db.execSQL("DELETE FROM " + ScheduleContract.GroupEntry.TABLE_NAME)
-            groups.forEach({
-                contentValues.put(
-                        ScheduleContract.GroupEntry.GROUP_NAME,
-                        it.name
-                )
-                contentValues.put(
-                        ScheduleContract.GroupEntry.GROUP_URL,
-                        Utils.getGroupURL(it)
-                )
-                db.insert(ScheduleContract.GroupEntry.TABLE_NAME, null, contentValues)
-            })
+            val dbManager = DatabaseManager(this)
+            dbManager.addGroupsToDb(groups)
             val intent = Intent(this, FirstRunStepTwoActivity::class.java)
             startActivity(intent)
         }
