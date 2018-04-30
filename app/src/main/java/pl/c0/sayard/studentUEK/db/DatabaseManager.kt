@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.CursorIndexOutOfBoundsException
+import android.database.sqlite.SQLiteOpenHelper
 import android.preference.PreferenceManager
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
@@ -12,9 +13,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.HashSet
 
-class DatabaseManager(val context: Context) {
+class DatabaseManager(val context: Context, database:SQLiteOpenHelper=ScheduleDbHelper(context)) {
 
-    private val dbHelper = ScheduleDbHelper(context)
+    private val dbHelper = database
     private val readableDb = dbHelper.readableDatabase
     private val writableDb = dbHelper.writableDatabase
 
@@ -436,17 +437,19 @@ class DatabaseManager(val context: Context) {
 
     fun getNotesListFromCursor(cursor: Cursor): List<Note>{
         val notesList = mutableListOf<Note>()
-        cursor.moveToFirst()
-        while(cursor.moveToNext()){
-            notesList.add(Note(
-                    cursor.getInt(cursor.getColumnIndex(ScheduleContract.NotesEntry._ID)),
-                    cursor.getString(cursor.getColumnIndex(ScheduleContract.NotesEntry.TITLE)),
-                    cursor.getString(cursor.getColumnIndex(ScheduleContract.NotesEntry.CONTENT)),
-                    cursor.getString(cursor.getColumnIndex(ScheduleContract.NotesEntry.DATE)),
-                    cursor.getString(cursor.getColumnIndex(ScheduleContract.NotesEntry.HOUR))
-            ))
+        if(cursor.count > 0){
+            cursor.moveToFirst()
+            do{
+                notesList.add(Note(
+                        cursor.getInt(cursor.getColumnIndex(ScheduleContract.NotesEntry._ID)),
+                        cursor.getString(cursor.getColumnIndex(ScheduleContract.NotesEntry.TITLE)),
+                        cursor.getString(cursor.getColumnIndex(ScheduleContract.NotesEntry.CONTENT)),
+                        cursor.getString(cursor.getColumnIndex(ScheduleContract.NotesEntry.DATE)),
+                        cursor.getString(cursor.getColumnIndex(ScheduleContract.NotesEntry.HOUR))
+                ))
+            }while(cursor.moveToNext())
+            cursor.close()
         }
-        cursor.close()
         return notesList
     }
 
@@ -461,6 +464,12 @@ class DatabaseManager(val context: Context) {
         }else{
             writableDb.update(ScheduleContract.NotesEntry.TABLE_NAME, contentValues, "${ScheduleContract.NotesEntry._ID} = $id", null)
         }
+    }
+
+    fun getNotesDeleteCount(item: Any): Int {
+        return writableDb.delete(ScheduleContract.NotesEntry.TABLE_NAME,
+                "${ScheduleContract.NotesEntry._ID} = ${(item as Note).id}",
+                null)
     }
 
     fun deleteUnnecessaryEntries() {
@@ -552,12 +561,6 @@ class DatabaseManager(val context: Context) {
             contentValues.put(ScheduleContract.LessonEntry.CUSTOM_ID, lesson.customId)
             writableDb.insert(ScheduleContract.LessonEntry.TABLE_NAME, null, contentValues)
         }
-    }
-
-    fun getNotesDeleteCount(item: Any): Int {
-        return writableDb.delete(ScheduleContract.NotesEntry.TABLE_NAME,
-                "${ScheduleContract.NotesEntry._ID} = ${(item as Note).id}",
-                null)
     }
 
 }
