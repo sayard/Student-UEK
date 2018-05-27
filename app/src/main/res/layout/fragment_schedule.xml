@@ -46,6 +46,16 @@
                             android:textColor="?attr/colorTextSecondary"
                             android:visibility="gone"/>
 
+                        <TextView
+                            android:id="@+id/schedule_empty_message"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="@string/your_schedule_is_empty"
+                            android:padding="50dp"
+                            android:textAlignment="center"
+                            android:textColor="?attr/colorTextSecondary"
+                            android:visibility="gone"/>
+
                         <ListView
                             android:id="@+id/schedule_list_view"
                             android:layout_width="match_parent"

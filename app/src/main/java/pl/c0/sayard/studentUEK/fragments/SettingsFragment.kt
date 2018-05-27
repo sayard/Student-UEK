@@ -196,11 +196,15 @@ class SettingsFragment : Fragment() {
         val buyPremium = view.findViewById<LinearLayout>(R.id.buy_premium)
         if(!prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false)){
             buyPremium.setOnClickListener{
-                val isIabAvailable = BillingProcessor.isIabServiceAvailable(context)
-                val isOneTimePurchaseSupported = MainActivity.bp?.isOneTimePurchaseSupported
-                if(isIabAvailable && isOneTimePurchaseSupported != null && isOneTimePurchaseSupported){
-                    MainActivity.bp?.purchase(activity, getString(R.string.student_uek_premium_item_id))
-                }else{
+                try{
+                    val isIabAvailable = BillingProcessor.isIabServiceAvailable(context)
+                    val isOneTimePurchaseSupported = MainActivity.bp?.isOneTimePurchaseSupported
+                    if(isIabAvailable && isOneTimePurchaseSupported != null && isOneTimePurchaseSupported){
+                        MainActivity.bp?.purchase(activity, getString(R.string.student_uek_premium_item_id))
+                    }else{
+                        Toast.makeText(context, getString(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
+                    }
+                }catch(e: NullPointerException){
                     Toast.makeText(context, getString(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
                 }
             }

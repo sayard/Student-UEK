@@ -163,4 +163,5 @@
     <string name="PREFS_MOODLE_LOGIN" translatable="false">pl.c0.sayard.studentUEK.PREFS_MOODLE_LOGIN</string>
     <string name="PREFS_MOODLE_PASSWORD" translatable="false">pl.c0.sayard.studentUEK.PREFS_MOODLE_PASSWORD</string>
     <string name="writing_perms_required">Writing permissions required to download</string>
+    <string name="your_schedule_is_empty">Your schedule is empty</string>
 </resources>

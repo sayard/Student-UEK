@@ -106,4 +106,5 @@
     <string name="remove">Ukryj</string>
     <string name="long_click_schedule_item_to_hide_it_you_will_be_able_to_restore_it_here">Przytrzymaj zajęcia w planie aby je ukryć. Można je przywrócić z tego menu.</string>
     <string name="writing_perms_required">Uprawnienia do zapisu są wymagane</string>
+    <string name="your_schedule_is_empty">Twój plan jest pusty</string>
 </resources>
