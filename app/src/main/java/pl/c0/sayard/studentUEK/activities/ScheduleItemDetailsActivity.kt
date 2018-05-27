@@ -194,11 +194,11 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         val addOrEditLessonNoteButton = findViewById<Button>(R.id.add_or_edit_lesson_note)
 
         val dbManager = DatabaseManager(this)
-        val noteContent = noteContentField.text.toString()
         if(noteId == -1){
             dialogBuilder.setTitle(getString(R.string.add_note))
             dialogBuilder.setPositiveButton(getString(R.string.save)) { _, _ ->
                 val insertCount = dbManager.addLessonNoteToDb(scheduleItem, noteContentField.text.toString())
+                val noteContent = noteContentField.text.toString()
                 if(insertCount > 0){
                     noteContentTextView.text = noteContent
                     noteContentTextView.visibility = View.VISIBLE
@@ -212,6 +212,7 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             noteContentField.setText(dbNoteContent, TextView.BufferType.EDITABLE)
             dialogBuilder.setPositiveButton(getString(R.string.save)){_, _ ->
                 val updateCount = dbManager.updateLessonNote(scheduleItem, noteContentField.text.toString(), noteId)
+                val noteContent = noteContentField.text.toString()
                 if(updateCount > 0){
                     noteContentTextView.text = noteContent
                 }else{
