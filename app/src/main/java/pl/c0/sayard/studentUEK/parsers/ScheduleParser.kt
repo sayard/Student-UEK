@@ -24,6 +24,7 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
                      val activity: Activity?,
                      val progressBar: ProgressBar?,
                      val errorMessage: TextView?,
+                     val emptyScheduleMessage: TextView?,
                      val adapter: ScheduleAdapter?,
                      val scheduleSwipe: SwipeRefreshLayout?) : AsyncTask<List<String>, Void, List<Lesson>>() {
 
@@ -84,7 +85,7 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
             lessonList.addAll(dbManager.getUserLessonsFromCursor(userLessonsCursor))
             return lessonList
         }catch (e: Exception){
-            return emptyList()
+            return null
         }
     }
 
@@ -101,7 +102,13 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
                 adapter.notifyDataSetChanged()
                 scheduleSwipe?.isRefreshing = false
             }
-            activity?.recreate()
+            if(lessons.isNotEmpty()){
+                activity?.recreate()
+            }else{
+                scheduleSwipe?.isRefreshing = false
+                progressBar?.visibility = View.GONE
+                emptyScheduleMessage?.visibility = View.VISIBLE
+            }
         }else{
             progressBar?.visibility = View.GONE
             errorMessage?.visibility = View.VISIBLE

@@ -57,7 +57,7 @@ class RefreshScheduleJob: DailyJob() {
             groups.mapTo(urls) { it.url }
             val languageGroups = dbManager.getLanguageGroups()
             languageGroups.mapTo(urls) { it.url }
-            ScheduleParser(context, null, null, null, null, null).execute(urls).get()
+            ScheduleParser(context, null, null, null, null,null, null).execute(urls).get()
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
             val editor = prefs.edit()
             editor.putBoolean(context.getString(R.string.PREFS_REFRESH_SCHEDULE), true)

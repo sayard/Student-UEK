@@ -44,6 +44,7 @@ class ScheduleFragment : Fragment() {
         val view = inflater!!.inflate(R.layout.fragment_schedule, container, false)
         val progressBar = view.findViewById<ProgressBar>(R.id.schedule_progress_bar)
         val errorMessage = view.findViewById<TextView>(R.id.schedule_error_message)
+        val emptyScheduleMessage = view.findViewById<TextView>(R.id.schedule_empty_message)
         val dbManager = DatabaseManager(context)
 
         val urls = mutableListOf<String>()
@@ -58,7 +59,7 @@ class ScheduleFragment : Fragment() {
         }
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         if((prefs.getBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false) || cursorCount == 0)){
-            ScheduleParser(context, activity, progressBar, errorMessage, null, null).execute(urls)
+            ScheduleParser(context, activity, progressBar, errorMessage, emptyScheduleMessage, null, null).execute(urls)
             prefs.edit().putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false).apply()
         }else{
             val scheduleList = dbManager.getScheduleList()
@@ -125,7 +126,7 @@ class ScheduleFragment : Fragment() {
                 val scheduleSwipe = view.findViewById<SwipeRefreshLayout>(R.id.schedule_swipe)
                 scheduleSwipe.setOnRefreshListener{
                     if(isDeviceOnline(context)){
-                        ScheduleParser(context, null, null, errorMessage, adapter, scheduleSwipe).execute(urls)
+                        ScheduleParser(context, null, null, errorMessage, emptyScheduleMessage, adapter, scheduleSwipe).execute(urls)
                         scheduleSearch?.setText("", TextView.BufferType.EDITABLE)
                         Toast.makeText(context, getString(R.string.schedule_refreshed), Toast.LENGTH_SHORT).show()
                         Thread{
