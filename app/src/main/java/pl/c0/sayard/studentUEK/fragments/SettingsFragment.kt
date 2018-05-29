@@ -15,10 +15,7 @@ import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.Utils.Companion.getTranslatedThemeName
 import pl.c0.sayard.studentUEK.Utils.Companion.setSelectedTheme
-import pl.c0.sayard.studentUEK.activities.ActivateGoogleCalendarIntegrationActivity
-import pl.c0.sayard.studentUEK.activities.CreditsActivity
-import pl.c0.sayard.studentUEK.activities.FirstRunStepOneActivity
-import pl.c0.sayard.studentUEK.activities.MainActivity
+import pl.c0.sayard.studentUEK.activities.*
 import pl.c0.sayard.studentUEK.jobs.RefreshScheduleJob
 
 class SettingsFragment : Fragment() {
@@ -191,6 +188,12 @@ class SettingsFragment : Fragment() {
             builder.setMessage(getString(R.string.groups_rechoosing_dialog_msg))
                     .setPositiveButton(getString(R.string.yes), dialogClickListener)
                     .setNegativeButton(getString(R.string.no), dialogClickListener).show()
+        }
+
+        val editGroups = view.findViewById<LinearLayout>(R.id.edit_groups)
+        editGroups.setOnClickListener {
+            val intent = Intent(context, EditGroupsActivity::class.java)
+            startActivity(intent)
         }
 
         val buyPremium = view.findViewById<LinearLayout>(R.id.buy_premium)
