@@ -166,4 +166,6 @@
     <string name="your_schedule_is_empty">Your schedule is empty</string>
     <string name="edit_groups">Edit groups</string>
     <string name="add_or_delete_groups">Add or delete groups</string>
+    <string name="language_group">Language group</string>
+    <string name="group">Group</string>
 </resources>
