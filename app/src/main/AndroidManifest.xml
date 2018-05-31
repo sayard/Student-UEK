@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="com.android.vending.BILLING" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".App"
@@ -38,13 +38,19 @@
             android:name=".activities.FirstRunStepThreeActivity"
             android:label="@string/weekly_p_e"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.AddLessonActivity"
             android:label="@string/add_lesson" />
-        <activity android:name=".activities.AddNoteActivity" />
-        <activity android:name=".activities.ScheduleItemDetailsActivity" />
-        <activity android:name=".activities.ActivateGoogleCalendarIntegrationActivity" />
+        <activity
+            android:name=".activities.AddNoteActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ScheduleItemDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ActivateGoogleCalendarIntegrationActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.SplashActivity"
             android:theme="@style/SplashTheme">
@@ -56,8 +62,18 @@
         </activity>
         <activity
             android:name=".activities.CreditsActivity"
-            android:label="@string/credits" />
-        <activity android:name=".activities.SearchedScheduleActivity"/>
+            android:label="@string/credits"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.SearchedScheduleActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.EditGroupsActivity"
+            android:label="@string/edit_groups"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.AddGroupActivity"
+            android:label="@string/add_group"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

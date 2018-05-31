@@ -164,4 +164,12 @@
     <string name="PREFS_MOODLE_PASSWORD" translatable="false">pl.c0.sayard.studentUEK.PREFS_MOODLE_PASSWORD</string>
     <string name="writing_perms_required">Writing permissions required to download</string>
     <string name="your_schedule_is_empty">Your schedule is empty</string>
+    <string name="edit_groups">Edit groups</string>
+    <string name="add_or_delete_groups">Add or delete groups</string>
+    <string name="language_group">Language group</string>
+    <string name="group">Group</string>
+    <string name="do_you_want_to_remove_group">Do you want to remove group</string>
+    <string name="group_delete_error">There was an error deleting group. Try again later.</string>
+    <string name="add_group">Add group</string>
+    <string name="do_you_want_to_add_group">Do you want to add group</string>
 </resources>

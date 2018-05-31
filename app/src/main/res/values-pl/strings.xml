@@ -107,4 +107,11 @@
     <string name="long_click_schedule_item_to_hide_it_you_will_be_able_to_restore_it_here">Przytrzymaj zajęcia w planie aby je ukryć. Można je przywrócić z tego menu.</string>
     <string name="writing_perms_required">Uprawnienia do zapisu są wymagane</string>
     <string name="your_schedule_is_empty">Twój plan jest pusty</string>
+    <string name="add_or_delete_groups">Dodaj lub usuń grupy</string>
+    <string name="language_group">Język obcy</string>
+    <string name="group">Grupa dziekańska</string>
+    <string name="do_you_want_to_remove_group">Czy chcesz usunąć grupę</string>
+    <string name="group_delete_error">Wystąpił błąd podczas usuwania grupy. Spróbuj ponownie później.</string>
+    <string name="do_you_want_to_add_group">Czy chcesz dodać grupę</string>
+    <string name="edit_groups">Edytuj grupy</string>
 </resources>
