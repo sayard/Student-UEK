@@ -172,5 +172,4 @@
     <string name="group_delete_error">There was an error deleting group. Try again later.</string>
     <string name="add_group">Add group</string>
     <string name="do_you_want_to_add_group">Do you want to add group</string>
-    <string name="add_group">Add group</string>
 </resources>
