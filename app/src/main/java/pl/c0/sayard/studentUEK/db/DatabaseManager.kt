@@ -360,6 +360,38 @@ class DatabaseManager(val context: Context, database:SQLiteOpenHelper=ScheduleDb
         return groups
     }
 
+    fun removeGroupByName(name: String, isLanguageGroup:Boolean = false):Int{
+        var tableName = ScheduleContract.GroupEntry.TABLE_NAME
+        var idColumn = ScheduleContract.GroupEntry._ID
+        var nameColumn = ScheduleContract.GroupEntry.GROUP_NAME
+        if(isLanguageGroup){
+            tableName = ScheduleContract.LanguageGroupsEntry.TABLE_NAME
+            idColumn = ScheduleContract.LanguageGroupsEntry._ID
+            nameColumn = ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_NAME
+        }
+        val cursor = readableDb.query(
+                tableName,
+                arrayOf(idColumn),
+                "$nameColumn = ?",
+                arrayOf(name),
+                null,
+                null,
+                null
+        )
+        if(cursor == null || cursor.count <=0){
+            return 0
+        }
+        cursor.moveToFirst()
+        val deleteCount = writableDb.delete(
+                tableName,
+                "$idColumn = ?",
+                arrayOf("${cursor.getInt(cursor.getColumnIndex(idColumn))}")
+        )
+
+        cursor.close()
+        return deleteCount
+    }
+
     fun addGroupsToDb(groups: List<Group>){
         val contentValues = ContentValues()
         writableDb.execSQL("DELETE FROM " + ScheduleContract.GroupEntry.TABLE_NAME)

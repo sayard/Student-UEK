@@ -15,7 +15,7 @@ class EditGroupsActivity : AppCompatActivity() {
         val dbManager = DatabaseManager(this)
         val groups = dbManager.getGroups()
         groups.addAll(dbManager.getLanguageGroups())
-        val editGroupsAdapter = EditGroupsAdapter(this, groups)
+        val editGroupsAdapter = EditGroupsAdapter(this, this, groups)
         val editGroupsListView = findViewById<ListView>(R.id.edit_groups_groups)
         editGroupsListView.adapter = editGroupsAdapter
     }
