@@ -408,6 +408,19 @@ class DatabaseManager(val context: Context, database:SQLiteOpenHelper=ScheduleDb
         })
     }
 
+    fun addGroupToDb(group: Group, isLanguageGroup: Boolean): Long{
+        val contentValues = ContentValues()
+        return if(isLanguageGroup){
+            contentValues.put(ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_NAME, group.name)
+            contentValues.put(ScheduleContract.LanguageGroupsEntry.LANGUAGE_GROUP_URL, Utils.getGroupURL(group))
+            writableDb.insert(ScheduleContract.LanguageGroupsEntry.TABLE_NAME, null, contentValues)
+        }else{
+            contentValues.put(ScheduleContract.GroupEntry.GROUP_NAME, group.name)
+            contentValues.put(ScheduleContract.GroupEntry.GROUP_URL, Utils.getGroupURL(group))
+            writableDb.insert(ScheduleContract.GroupEntry.TABLE_NAME, null, contentValues)
+        }
+    }
+
     fun getLanguageGroups(): MutableList<ScheduleGroup> {
         val cursor = readableDb.query(
                 ScheduleContract.LanguageGroupsEntry.TABLE_NAME,

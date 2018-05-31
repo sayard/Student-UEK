@@ -44,13 +44,13 @@
             android:label="@string/add_lesson" />
         <activity
             android:name=".activities.AddNoteActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ScheduleItemDetailsActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ActivateGoogleCalendarIntegrationActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.SplashActivity"
             android:theme="@style/SplashTheme">
@@ -63,14 +63,17 @@
         <activity
             android:name=".activities.CreditsActivity"
             android:label="@string/credits"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.SearchedScheduleActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.EditGroupsActivity"
             android:label="@string/edit_groups"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.AddGroupActivity"
+            android:label="@string/add_group"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

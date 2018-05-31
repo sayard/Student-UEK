@@ -1,20 +1,22 @@
 package pl.c0.sayard.studentUEK.adapters
 
+import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
+import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.Filter
-import android.widget.Filterable
-import android.widget.TextView
+import android.widget.*
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.data.Group
+import pl.c0.sayard.studentUEK.db.DatabaseManager
 
 /**
  * Created by karol on 29.12.17.
  */
-class GroupListAdapter(context: Context, var groupListOriginal: List<Group>) : BaseAdapter(), Filterable {
+class GroupListAdapter(val context: Context, var groupListOriginal: List<Group>, private val isFirstRunConfig:Boolean = true) : BaseAdapter(), Filterable {
 
     private var groupListDisplay = groupListOriginal
     private val mInflater: LayoutInflater = LayoutInflater.from(context)
@@ -44,6 +46,32 @@ class GroupListAdapter(context: Context, var groupListOriginal: List<Group>) : B
         }
 
         vh.tv.text = groupListDisplay[position].name
+        if(!isFirstRunConfig){
+            val dialogClickListener = DialogInterface.OnClickListener { _, which ->
+                when(which){
+                    DialogInterface.BUTTON_POSITIVE -> {
+                        val isLanguageGroup = groupListDisplay[position].name.toLowerCase().startsWith("sjo")
+                        val dbManager = DatabaseManager(context)
+                        val newId = dbManager.addGroupToDb(groupListDisplay[position], isLanguageGroup)
+                        if(newId == -1L){
+                            Toast.makeText(context, context.getString(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
+                        }else{
+                            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+                            prefs.edit().putBoolean(context.getString(R.string.PREFS_REFRESH_SCHEDULE), true).apply()
+                        }
+                        (context as Activity).finish()
+                    }
+                    DialogInterface.BUTTON_NEGATIVE -> {}
+                }
+            }
+            vh.tv.setOnClickListener {
+                val builder = AlertDialog.Builder(context)
+                builder.setMessage("${context.getString(R.string.do_you_want_to_add_group)} ${groupListDisplay[position].name}?")
+                        .setPositiveButton(context.getString(R.string.yes), dialogClickListener)
+                        .setNegativeButton(context.getString(R.string.no), dialogClickListener)
+                        .show()
+            }
+        }
         return view
     }
 
