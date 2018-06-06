@@ -18,6 +18,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.webkit.*
 import android.widget.*
+import androidx.core.content.edit
 import androidx.core.net.toUri
 import pl.c0.sayard.studentUEK.BackButtonEditText
 import pl.c0.sayard.studentUEK.R
@@ -70,10 +71,10 @@ class MoodleFragment : Fragment() {
             val loginProgressBar = view.findViewById<ProgressBar>(R.id.moodle_login_progress)
             loginButton.setOnClickListener{
                 MoodleTokenParser(context, this, loginProgressBar, loginButton).execute(login.text.toString(), password.text.toString())
-                prefs.edit()
-                        .putString(getString(R.string.PREFS_MOODLE_LOGIN), login.text.toString())
-                        .putString(getString(R.string.PREFS_MOODLE_PASSWORD), password.text.toString())
-                        .apply()
+                prefs.edit {
+                    putString(getString(R.string.PREFS_MOODLE_LOGIN), login.text.toString())
+                    putString(getString(R.string.PREFS_MOODLE_PASSWORD), password.text.toString())
+                }
             }
             password.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
                 if((event?.action == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
@@ -218,7 +219,9 @@ class MoodleFragment : Fragment() {
             errorView.visibility = View.VISIBLE
         }
         logInAgainButton.setOnClickListener{
-            prefs.edit().putString(context?.getString(R.string.pl_c0_sayard_StudentUEK_PREFS_MOODLE_TOKEN), null).apply()
+            prefs.edit {
+                putString(context?.getString(R.string.pl_c0_sayard_StudentUEK_PREFS_MOODLE_TOKEN), null)
+            }
             val fragmentManager = fragmentManager
             fragmentManager?.beginTransaction()
                     ?.detach(this)

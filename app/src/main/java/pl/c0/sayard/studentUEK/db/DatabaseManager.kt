@@ -6,6 +6,7 @@ import android.database.Cursor
 import android.database.CursorIndexOutOfBoundsException
 import android.database.sqlite.SQLiteOpenHelper
 import android.preference.PreferenceManager
+import androidx.core.content.edit
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.data.*
@@ -247,7 +248,9 @@ class DatabaseManager(val context: Context, database:SQLiteOpenHelper=ScheduleDb
         )
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        prefs.edit().putBoolean(context.getString(R.string.PREFS_REFRESH_SCHEDULE), true).apply()
+        prefs.edit {
+            putBoolean(context.getString(R.string.PREFS_REFRESH_SCHEDULE), true)
+        }
     }
 
     fun addLessonToFilteredLessons(scheduleItem: ScheduleItem){
@@ -266,7 +269,9 @@ class DatabaseManager(val context: Context, database:SQLiteOpenHelper=ScheduleDb
         writableDb.insert(ScheduleContract.FilteredLessonEntry.TABLE_NAME, null, values)
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        prefs.edit().putBoolean(context.getString(R.string.PREFS_REFRESH_SCHEDULE), true).apply()
+        prefs.edit {
+            putBoolean(context.getString(R.string.PREFS_REFRESH_SCHEDULE), true)
+        }
     }
 
     private fun getLessonNoteCursor(scheduleItem: ScheduleItem): Cursor?{

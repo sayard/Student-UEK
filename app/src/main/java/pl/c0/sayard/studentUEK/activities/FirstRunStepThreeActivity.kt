@@ -8,6 +8,7 @@ import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.*
+import androidx.core.content.edit
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.Utils.Companion.AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY
@@ -104,9 +105,13 @@ class FirstRunStepThreeActivity : AppCompatActivity() {
             val prefs = PreferenceManager.getDefaultSharedPreferences(this)
             if(prefs.getBoolean(FIRST_RUN_SHARED_PREFS_KEY, true)){
                 RefreshScheduleJob.schedule()
-                prefs.edit()?.putBoolean(AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY, true)?.apply()
+                prefs.edit {
+                    putBoolean(AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY, true)
+                }
             }
-            prefs.edit()?.putBoolean(FIRST_RUN_SHARED_PREFS_KEY, false)?.apply()
+            prefs.edit {
+                putBoolean(FIRST_RUN_SHARED_PREFS_KEY, false)
+            }
             val intent = Intent(this@FirstRunStepThreeActivity, MainActivity::class.java)
             startActivity(intent)
         })

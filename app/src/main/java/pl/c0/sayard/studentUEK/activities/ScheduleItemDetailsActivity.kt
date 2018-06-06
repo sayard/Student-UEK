@@ -14,6 +14,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.edit
 import androidx.core.net.toUri
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -243,9 +244,9 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             //pass
         }
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val editor = prefs.edit()
-        editor.putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
-        editor.apply()
+        prefs.edit {
+            putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
+        }
         dialogBuilder.create().show()
     }
 }

@@ -11,6 +11,7 @@ import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.content.edit
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
@@ -103,10 +104,10 @@ class ActivateGoogleCalendarIntegrationActivity : AppCompatActivity(), EasyPermi
                 if(resultCode == Activity.RESULT_OK && data != null && data.extras != null){
                     val accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME)
                     if(accountName != null){
-                        val settings = PreferenceManager.getDefaultSharedPreferences(this)
-                        val editor = settings.edit()
-                        editor.putString(PREFS_ACCOUNT_NAME, accountName)
-                        editor.apply()
+                        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
+                        prefs.edit {
+                            putString(PREFS_ACCOUNT_NAME, accountName)
+                        }
                         credential?.selectedAccountName = accountName
                         configureApi()
                     }

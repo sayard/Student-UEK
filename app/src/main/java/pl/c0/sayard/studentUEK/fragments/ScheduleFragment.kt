@@ -12,6 +12,7 @@ import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.core.content.edit
 import pl.c0.sayard.studentUEK.BackButtonEditText
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
@@ -60,7 +61,9 @@ class ScheduleFragment : Fragment() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         if((prefs.getBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false) || cursorCount == 0)){
             ScheduleParser(context!!, activity, progressBar, errorMessage, emptyScheduleMessage, null, null).execute(urls)
-            prefs.edit().putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false).apply()
+            prefs.edit {
+                putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false)
+            }
         }else{
             val scheduleList = dbManager.getScheduleList()
             if (scheduleList.isNotEmpty()){
@@ -164,9 +167,9 @@ class ScheduleFragment : Fragment() {
                         .setTitle(getString(R.string.schedule_filters))
                         .setPositiveButton(getString(R.string.accept)) { _, _ ->
                             setFilters(dialogView, prefs, context!!)
-                            prefs.edit()
-                                    .putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
-                                    .apply()
+                            prefs.edit {
+                                putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
+                            }
                             activity?.supportFragmentManager
                                     ?.beginTransaction()
                                     ?.detach(this)

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.preference.PreferenceManager
 import android.widget.Toast
+import androidx.core.content.edit
 import com.anjlab.android.iab.v3.BillingProcessor
 import com.anjlab.android.iab.v3.TransactionDetails
 
@@ -21,7 +22,9 @@ class BillingHandler(val context: Context, val activity: Activity): BillingProce
             activity.startActivity(Intent(activity, activity.javaClass))
             Toast.makeText(context, context.getString(R.string.thanks_for_support), Toast.LENGTH_SHORT).show()
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-            prefs.edit().putBoolean(context.getString(R.string.PREFS_PREMIUM_PURCHASED), true).apply()
+            prefs.edit {
+                putBoolean(context.getString(R.string.PREFS_PREMIUM_PURCHASED), true)
+            }
         }
     }
 

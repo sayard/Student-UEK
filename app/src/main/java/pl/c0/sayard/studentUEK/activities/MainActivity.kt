@@ -15,6 +15,7 @@ import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
+import androidx.core.content.edit
 import androidx.core.net.toUri
 import com.anjlab.android.iab.v3.BillingProcessor
 import com.google.android.gms.ads.AdListener
@@ -48,11 +49,12 @@ class MainActivity : AppCompatActivity() {
         if(!prefs.contains(getString(R.string.PREFS_DISCOURSES_VISIBLE))
             || !prefs.contains(getString(R.string.PREFS_EXERCISES_VISIBLE))
             || !prefs.contains(getString(R.string.PREFS_LECTURES_VISIBLE))){
-            prefs.edit()
-                    .putBoolean(getString(R.string.PREFS_DISCOURSES_VISIBLE), true)
-                    .putBoolean(getString(R.string.PREFS_EXERCISES_VISIBLE), true)
-                    .putBoolean(getString(R.string.PREFS_LECTURES_VISIBLE), true)
-                    .apply()
+
+            prefs.edit {
+                putBoolean(getString(R.string.PREFS_DISCOURSES_VISIBLE), true)
+                putBoolean(getString(R.string.PREFS_EXERCISES_VISIBLE), true)
+                putBoolean(getString(R.string.PREFS_LECTURES_VISIBLE), true)
+            }
         }
         val firstRun = prefs.getBoolean(FIRST_RUN_SHARED_PREFS_KEY, true)
         if(firstRun){
@@ -149,17 +151,21 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             if(prefs.getBoolean(getString(R.string.PREFS_APP_NOT_RATED), true)){
-                val editor = prefs.edit()
                 val ratingCounter = prefs.getInt(getString(R.string.PREFS_APP_RATING_DIALOG_COUNTER), 20) - 1
-                editor.putInt(getString(R.string.PREFS_APP_RATING_DIALOG_COUNTER), ratingCounter).apply()
+                prefs.edit {
+                    putInt(getString(R.string.PREFS_APP_RATING_DIALOG_COUNTER), ratingCounter)
+                }
                 if(ratingCounter == 0){
                     AlertDialog.Builder(this)
                             .setTitle(getString(R.string.do_you_like_this_app))
                             .setMessage(getString(R.string.app_rating_message))
                             .setNeutralButton(getString(R.string.maybe_later), null)
-                            .setNegativeButton(getString(R.string.no_thanks)) { _, _ -> editor.putBoolean(getString(R.string.PREFS_APP_NOT_RATED), false).apply() }
+                            .setNegativeButton(getString(R.string.no_thanks)) { _, _ -> prefs.edit { putBoolean(getString(R.string.PREFS_APP_NOT_RATED), false) } }
                             .setPositiveButton(getString(R.string.sure_take_me_there)) { _, _ ->
-                                editor.putBoolean(getString(R.string.PREFS_APP_NOT_RATED), false).apply()
+
+                                prefs.edit {
+                                    putBoolean(getString(R.string.PREFS_APP_NOT_RATED), false)
+                                }
 
                                 var marketFound = false
                                 val rateIntent = Intent(Intent.ACTION_VIEW, "market://details?id=$packageName".toUri())
@@ -187,7 +193,9 @@ class MainActivity : AppCompatActivity() {
                             }
                             .create()
                             .show()
-                    editor.putInt(getString(R.string.PREFS_APP_RATING_DIALOG_COUNTER), 20).apply()
+                    prefs.edit {
+                        putInt(getString(R.string.PREFS_APP_RATING_DIALOG_COUNTER), 20)
+                    }
                 }
             }
             bp = BillingProcessor.newBillingProcessor(
@@ -198,7 +206,9 @@ class MainActivity : AppCompatActivity() {
             bp?.initialize()
             if(!prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false) &&
                     bp?.getPurchaseTransactionDetails(getString(R.string.student_uek_premium_item_id))!=null){
-                prefs.edit().putBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), true).apply()
+                prefs.edit {
+                    putBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), true)
+                }
             }
         }
     }

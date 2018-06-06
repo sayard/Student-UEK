@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.core.content.edit
 import com.google.common.io.ByteStreams
 import org.json.JSONException
 import org.json.JSONObject
@@ -69,7 +70,9 @@ class MoodleTokenParser(val context: Context?, val fragment: Fragment, val progr
         val mainObject = JSONObject(jsonString)
         try{
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-            prefs.edit().putString(context?.getString(R.string.pl_c0_sayard_StudentUEK_PREFS_MOODLE_TOKEN), mainObject.getString(TOKEN_KEY)).apply()
+            prefs.edit {
+                putString(context?.getString(R.string.pl_c0_sayard_StudentUEK_PREFS_MOODLE_TOKEN), mainObject.getString(TOKEN_KEY))
+            }
             val fragmentManager = fragment.fragmentManager
             fragmentManager?.beginTransaction()
                     ?.detach(fragment)
