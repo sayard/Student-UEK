@@ -83,46 +83,10 @@ class ScheduleFragment : Fragment() {
                         scheduleSearch?.visibility = View.GONE
                     }
                 }
+
                 val listView = view.findViewById<ListView>(R.id.schedule_list_view)
                 listView.adapter = adapter
-                listView.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
-                    val scheduleItem = parent.getItemAtPosition(position) as ScheduleItem
-                    val intent = Intent(context, ScheduleItemDetailsActivity::class.java).apply {
-                        putExtra(getString(R.string.subject_extra), scheduleItem.subject)
-                        putExtra(getString(R.string.type_extra), scheduleItem.type)
-                        putExtra(getString(R.string.teacher_extra), scheduleItem.teacher)
-                        putExtra(getString(R.string.teacher_id_extra), scheduleItem.teacherId)
-                        putExtra(getString(R.string.classroom_extra), scheduleItem.classroom)
-                        putExtra(getString(R.string.comments_extra), scheduleItem.comments)
-                        putExtra(getString(R.string.date_extra), scheduleItem.dateStr)
-                        putExtra(getString(R.string.start_date_extra), scheduleItem.startDateStr)
-                        putExtra(getString(R.string.end_date_extra), scheduleItem.endDateStr)
-                        putExtra(getString(R.string.is_custom_extra), scheduleItem.isCustom)
-                        putExtra(getString(R.string.extra_custom_id), scheduleItem.customId)
-                        putExtra(getString(R.string.extra_note_id), scheduleItem.noteId)
-                        putExtra(getString(R.string.extra_note_content), scheduleItem.noteContent)
-                    }
-                    startActivity(intent)
-                }
-                listView.isLongClickable = true
-                listView.onItemLongClickListener = AdapterView.OnItemLongClickListener { parent, _, position, _ ->
-                    val dialogBuilder = AlertDialog.Builder(context)
-                    val scheduleItem = parent.getItemAtPosition(position) as ScheduleItem
 
-                    dialogBuilder
-                            .setTitle(getString(R.string.hide_lesson_from_schedule))
-                            .setMessage(getString(R.string.hide_lesson_from_schedule_message))
-                            .setPositiveButton(getString(R.string.remove)) { _, _ ->
-                                DatabaseManager(context!!).addLessonToFilteredLessons(scheduleItem)
-                                val ft = activity?.supportFragmentManager?.beginTransaction()
-                                ft?.detach(this)
-                                ft?.attach(this)
-                                ft?.commit()
-                            }
-                            .setNegativeButton(context?.getString(R.string.cancel)) { _, _ ->}
-                            .show()
-                    true
-                }
                 val scheduleSwipe = view.findViewById<SwipeRefreshLayout>(R.id.schedule_swipe)
                 scheduleSwipe.setOnRefreshListener{
                     if(isDeviceOnline(context)){
@@ -234,7 +198,7 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun getAdapter(scheduleList: List<ScheduleItem>): ScheduleAdapter{
-        return ScheduleAdapter(context!!, scheduleList)
+        return ScheduleAdapter(context!!, activity, this, scheduleList)
     }
 
     override fun onResume() {

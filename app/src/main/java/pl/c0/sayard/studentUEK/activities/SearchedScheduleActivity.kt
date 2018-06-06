@@ -81,7 +81,7 @@ class SearchedScheduleActivity : AppCompatActivity() {
     }
 
     private fun getAdapter(scheduleList: List<ScheduleItem>): ScheduleAdapter {
-        return ScheduleAdapter(this, scheduleList)
+        return ScheduleAdapter(this, this, null, scheduleList)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
