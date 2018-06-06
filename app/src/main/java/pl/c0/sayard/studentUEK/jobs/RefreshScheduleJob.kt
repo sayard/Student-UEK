@@ -2,6 +2,7 @@ package pl.c0.sayard.studentUEK.jobs
 
 import android.content.Context
 import android.preference.PreferenceManager
+import androidx.core.content.edit
 import com.evernote.android.job.DailyJob
 import com.evernote.android.job.JobManager
 import com.evernote.android.job.JobRequest
@@ -59,9 +60,9 @@ class RefreshScheduleJob: DailyJob() {
             languageGroups.mapTo(urls) { it.url }
             ScheduleParser(context, null, null, null, null,null, null).execute(urls).get()
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-            val editor = prefs.edit()
-            editor.putBoolean(context.getString(R.string.PREFS_REFRESH_SCHEDULE), true)
-            editor.apply()
+            prefs.edit {
+                putBoolean(context.getString(R.string.PREFS_REFRESH_SCHEDULE), true)
+            }
             if(prefs.getBoolean(context.getString(R.string.PREFS_ENABLE_GC), false)){
                 exportScheduleToGC(context)
             }

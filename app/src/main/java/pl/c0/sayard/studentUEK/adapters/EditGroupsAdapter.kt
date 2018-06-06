@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.edit
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.data.ScheduleGroup
 import pl.c0.sayard.studentUEK.db.DatabaseManager
@@ -38,9 +39,11 @@ class EditGroupsAdapter(val context: Context, val activity: AppCompatActivity, p
                     val isLanguageGroup = getGroupType(groups[position].name) == context.getString(R.string.language_group)
                     val dbManager = DatabaseManager(context)
                     val deleteCount = dbManager.removeGroupByName(groups[position].name, isLanguageGroup)
-                    if (deleteCount != null && deleteCount > 0){
+                    if (deleteCount > 0){
                         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-                        prefs.edit().putBoolean(context.getString(R.string.PREFS_REFRESH_SCHEDULE), true).apply()
+                        prefs.edit {
+                            putBoolean(context.getString(R.string.PREFS_REFRESH_SCHEDULE), true)
+                        }
                         activity.finish()
                     }else{
                         Toast.makeText(context, context.getString(R.string.group_delete_error), Toast.LENGTH_LONG).show()

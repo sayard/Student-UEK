@@ -30,12 +30,12 @@ class SearchFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_search, container, false)
+        val view = inflater.inflate(R.layout.fragment_search, container, false)
         val searchSwipe = view.findViewById<SwipeRefreshLayout>(R.id.search_swipe)
         groupsAndTeacherSearch = view.findViewById<BackButtonEditText>(R.id.group_and_teacher_search)
-        val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connMgr = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connMgr.activeNetworkInfo
         if(networkInfo != null && networkInfo.isConnected){
             executeGroupAndTeacherParser(view)
@@ -60,7 +60,7 @@ class SearchFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
             R.id.search_groups_and_teachers_item -> {
-                val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 if(groupsAndTeacherSearch?.visibility == View.GONE){
                     groupsAndTeacherSearch?.visibility = View.VISIBLE
                     groupsAndTeacherSearch?.isFocusableInTouchMode = true
@@ -82,7 +82,7 @@ class SearchFragment : Fragment() {
         GroupAndTeacherParser(this, progressBar, listView,object:GroupAndTeacherParser.OnTaskCompleted{
             override fun onTaskCompleted(result: List<Group>?, fragment: SearchFragment) {
                 if(context != null){
-                    val adapter = getAdapter(context, result!!)
+                    val adapter = getAdapter(context!!, result!!)
                     if(adapter.count <= 0){
                         errorMessage.visibility = View.VISIBLE
                     }else{

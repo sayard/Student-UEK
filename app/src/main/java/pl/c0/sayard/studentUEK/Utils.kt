@@ -9,6 +9,7 @@ import android.preference.PreferenceManager
 import android.view.View
 import android.widget.CheckBox
 import android.widget.TextView
+import androidx.core.content.edit
 import com.evernote.android.job.util.support.PersistableBundleCompat
 import pl.c0.sayard.studentUEK.data.FilteredLesson
 import pl.c0.sayard.studentUEK.data.Group
@@ -68,8 +69,8 @@ class Utils {
             }
         }
 
-        fun isDeviceOnline(context: Context): Boolean{
-            val connMgr = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        fun isDeviceOnline(context: Context?): Boolean{
+            val connMgr = context?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val networkInfo = connMgr.activeNetworkInfo
             return (networkInfo != null && networkInfo.isConnected)
         }
@@ -85,8 +86,9 @@ class Utils {
 
         fun setSelectedTheme(activity: Activity, theme: Int){
             val prefs = PreferenceManager.getDefaultSharedPreferences(activity.applicationContext)
-            val editor = prefs.edit()
-            editor.putInt(activity.baseContext.getString(R.string.PREFS_SELECTED_THEME), theme).apply()
+            prefs.edit {
+                putInt(activity.baseContext.getString(R.string.PREFS_SELECTED_THEME), theme)
+            }
             activity.finish()
             activity.startActivity(Intent(activity, activity.javaClass))
         }
@@ -114,11 +116,11 @@ class Utils {
             val discoursesCheck = dialogView.findViewById<CheckBox>(R.id.filter_discourses)
             val exercisesCheck = dialogView.findViewById<CheckBox>(R.id.filter_exercises)
             val lecturesCheck = dialogView.findViewById<CheckBox>(R.id.filter_lectures)
-            prefs.edit()
-                    .putBoolean(context.getString(R.string.PREFS_DISCOURSES_VISIBLE), discoursesCheck.isChecked)
-                    .putBoolean(context.getString(R.string.PREFS_EXERCISES_VISIBLE), exercisesCheck.isChecked)
-                    .putBoolean(context.getString(R.string.PREFS_LECTURES_VISIBLE), lecturesCheck.isChecked)
-                    .apply()
+            prefs.edit {
+                putBoolean(context.getString(R.string.PREFS_DISCOURSES_VISIBLE), discoursesCheck.isChecked)
+                putBoolean(context.getString(R.string.PREFS_EXERCISES_VISIBLE), exercisesCheck.isChecked)
+                putBoolean(context.getString(R.string.PREFS_LECTURES_VISIBLE), lecturesCheck.isChecked)
+            }
         }
 
          fun isInFilteredLessons(scheduleItem: ScheduleItem, filteredLessons: List<FilteredLesson>): Boolean{

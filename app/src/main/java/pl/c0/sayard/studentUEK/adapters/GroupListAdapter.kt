@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.edit
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.data.Group
 import pl.c0.sayard.studentUEK.db.DatabaseManager
@@ -57,7 +58,9 @@ class GroupListAdapter(val context: Context, var groupListOriginal: List<Group>,
                             Toast.makeText(context, context.getString(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
                         }else{
                             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-                            prefs.edit().putBoolean(context.getString(R.string.PREFS_REFRESH_SCHEDULE), true).apply()
+                            prefs.edit {
+                                putBoolean(context.getString(R.string.PREFS_REFRESH_SCHEDULE), true)
+                            }
                         }
                         (context as Activity).finish()
                     }

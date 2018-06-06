@@ -14,6 +14,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.edit
+import androidx.core.net.toUri
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -118,7 +120,7 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             val teacherPageButton = findViewById<Button>(R.id.schedule_item_details_teacher_page_button)
             teacherPageButton.visibility = View.VISIBLE
             teacherPageButton.setOnClickListener {
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://e-uczelnia.uek.krakow.pl/course/view.php?id=${scheduleItem?.teacherId}"))
+                val browserIntent = Intent(Intent.ACTION_VIEW, "https://e-uczelnia.uek.krakow.pl/course/view.php?id=${scheduleItem?.teacherId}".toUri())
                 startActivity(browserIntent)
             }
         }
@@ -136,7 +138,7 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             marker?.showInfoWindow()
             map?.setOnMarkerClickListener { clickedMarker ->
                 if(clickedMarker == marker){
-                    val gmmIntentUri = Uri.parse("geo:0,0?q=${markerLatLng.latitude},${markerLatLng.longitude}(${scheduleItem?.classroom})")
+                    val gmmIntentUri = "geo:0,0?q=${markerLatLng.latitude},${markerLatLng.longitude}(${scheduleItem?.classroom})".toUri()
                     val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
                     mapIntent.`package` = "com.google.android.apps.maps"
                     startActivity(mapIntent)
@@ -242,9 +244,9 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
             //pass
         }
         val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        val editor = prefs.edit()
-        editor.putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
-        editor.apply()
+        prefs.edit {
+            putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
+        }
         dialogBuilder.create().show()
     }
 }

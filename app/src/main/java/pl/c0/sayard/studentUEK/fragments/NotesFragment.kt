@@ -30,10 +30,10 @@ class NotesFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        val view = inflater!!.inflate(R.layout.fragment_notes, container, false)
+        val view = inflater.inflate(R.layout.fragment_notes, container, false)
         val notesMessage = view.findViewById<TextView>(R.id.notes_message)
         val listView = view.findViewById<ListView>(R.id.notes_list_view)
         notesSearch = view.findViewById<BackButtonEditText>(R.id.notes_search)
@@ -60,7 +60,7 @@ class NotesFragment : Fragment() {
                 startActivity(newNoteIntent)
             }
             R.id.search_notes_item -> {
-                val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 if(notesSearch?.visibility == View.GONE){
                     notesSearch?.visibility = View.VISIBLE
                     notesSearch?.isFocusableInTouchMode = true
@@ -96,7 +96,7 @@ class NotesFragment : Fragment() {
                     if(result == null){
                         notesMessage.visibility = View.VISIBLE
                     }else{
-                        val adapter = NotesAdapter(context, result.toMutableList())
+                        val adapter = NotesAdapter(context!!, result.toMutableList())
                         notesSearch.addTextChangedListener(object: TextWatcher{
                             override fun afterTextChanged(p0: Editable?) {}
 

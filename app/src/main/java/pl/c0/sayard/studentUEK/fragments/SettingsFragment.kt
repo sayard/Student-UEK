@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.edit
 import com.anjlab.android.iab.v3.BillingProcessor
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
@@ -25,12 +26,12 @@ class SettingsFragment : Fragment() {
         when(buttonClicked){
             DialogInterface.BUTTON_POSITIVE -> {
                 val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-                val editor = prefs.edit()
-                editor.putBoolean(Utils.FIRST_RUN_SHARED_PREFS_KEY, true)
-                editor.putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
-                editor.apply()
+                prefs.edit {
+                    putBoolean(Utils.FIRST_RUN_SHARED_PREFS_KEY, true)
+                    putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
+                }
                 val intent = Intent(context, FirstRunStepOneActivity::class.java)
-                activity.finish()
+                activity?.finish()
                 startActivity(intent)
             }
             DialogInterface.BUTTON_NEGATIVE -> {}
@@ -47,12 +48,11 @@ class SettingsFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_settings, container, false)
+        val view = inflater.inflate(R.layout.fragment_settings, container, false)
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val editor = prefs.edit()
 
         if(prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false)){
             val googleCalendarIntegrationSwitch = view.findViewById<Switch>(R.id.settings_calendar_switch)
@@ -61,20 +61,22 @@ class SettingsFragment : Fragment() {
                 if(isChecked){
                     val intent = Intent(context, ActivateGoogleCalendarIntegrationActivity::class.java)
                     startActivity(intent)
-                    editor.putBoolean(getString(R.string.PREFS_ENABLE_GC), true)
-                    editor.apply()
+                    prefs.edit {
+                        putBoolean(getString(R.string.PREFS_ENABLE_GC), true)
+                    }
                     Thread{
                         kotlin.run {
-                            RefreshScheduleJob.refreshSchedule(context)
+                            RefreshScheduleJob.refreshSchedule(context!!)
                         }
                     }.start()
                 }else{
-                    editor.putString(getString(R.string.PREFS_ACCOUNT_NAME), null)
-                    editor.putBoolean(getString(R.string.PREFS_ENABLE_GC), false)
-                    editor.apply()
+                    prefs.edit {
+                        putString(getString(R.string.PREFS_ACCOUNT_NAME), null)
+                        putBoolean(getString(R.string.PREFS_ENABLE_GC), false)
+                    }
                     Thread{
                         kotlin.run {
-                            RefreshScheduleJob.refreshSchedule(context)
+                            RefreshScheduleJob.refreshSchedule(context!!)
                         }
                     }.start()
                 }
@@ -98,25 +100,27 @@ class SettingsFragment : Fragment() {
             if(isChecked){
                 notificationsSeekBar.visibility = View.VISIBLE
                 notificationsDetailsView.visibility = View.VISIBLE
-                editor.putBoolean(getString(R.string.PREFS_ENABLE_NOTIFICATIONS), true)
-                editor.putInt(getString(R.string.PREFS_NOTIFICATION_TIME_THRESHOLD), notificationsSeekBar.progress)
-                editor.putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
-                editor.apply()
+                prefs.edit {
+                    putBoolean(getString(R.string.PREFS_ENABLE_NOTIFICATIONS), true)
+                    putInt(getString(R.string.PREFS_NOTIFICATION_TIME_THRESHOLD), notificationsSeekBar.progress)
+                    putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
+                }
                 notificationsSeekBar.progress = prefs.getInt(getString(R.string.PREFS_NOTIFICATION_TIME_THRESHOLD), 15)
                 Thread{
                     kotlin.run {
-                        RefreshScheduleJob.refreshSchedule(context)
+                        RefreshScheduleJob.refreshSchedule(context!!)
                     }
                 }.start()
             }else{
                 notificationsSeekBar.visibility = View.GONE
                 notificationsDetailsView.visibility = View.GONE
-                editor.putBoolean(getString(R.string.PREFS_ENABLE_NOTIFICATIONS), false)
-                editor.putInt(getString(R.string.PREFS_NOTIFICATION_TIME_THRESHOLD), -1)
-                editor.apply()
+                prefs.edit {
+                    putBoolean(getString(R.string.PREFS_ENABLE_NOTIFICATIONS), false)
+                    putInt(getString(R.string.PREFS_NOTIFICATION_TIME_THRESHOLD), -1)
+                }
                 Thread{
                     kotlin.run {
-                        RefreshScheduleJob.refreshSchedule(context)
+                        RefreshScheduleJob.refreshSchedule(context!!)
                     }
                 }.start()
             }
@@ -133,16 +137,19 @@ class SettingsFragment : Fragment() {
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 if(seekBar != null){
-                    editor.putInt(getString(R.string.PREFS_NOTIFICATION_TIME_THRESHOLD), seekBar.progress)
-                    editor.putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
+                    prefs.edit {
+                        putInt(getString(R.string.PREFS_NOTIFICATION_TIME_THRESHOLD), seekBar.progress)
+                        putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
+                    }
                 }else{
-                    editor.putInt(getString(R.string.PREFS_NOTIFICATION_TIME_THRESHOLD), -1)
+                    prefs.edit {
+                        putInt(getString(R.string.PREFS_NOTIFICATION_TIME_THRESHOLD), -1)
+                    }
                 }
-                editor.apply()
                 RefreshScheduleJob.cancelScheduleNotifications()
                 Thread{
                     kotlin.run {
-                        RefreshScheduleJob.refreshSchedule(context)
+                        RefreshScheduleJob.refreshSchedule(context!!)
                     }
                 }.start()
             }
@@ -150,21 +157,21 @@ class SettingsFragment : Fragment() {
         })
 
         val currentTheme = view.findViewById<TextView>(R.id.currentTheme)
-        val selectedThemeId = prefs.getInt(context.getString(R.string.PREFS_SELECTED_THEME), 0)
-        currentTheme.append(" ${getTranslatedThemeName(selectedThemeId, context)}")
+        val selectedThemeId = prefs.getInt(context?.getString(R.string.PREFS_SELECTED_THEME), 0)
+        currentTheme.append(" ${getTranslatedThemeName(selectedThemeId, context!!)}")
 
         val changeTheme = view.findViewById<LinearLayout>(R.id.change_theme)
         changeTheme.setOnClickListener {
             val themes = if(prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false)){
                 arrayOf<CharSequence>(
-                        context.getString(R.string.defaultTheme),
-                        context.getString(R.string.darkTheme),
-                        context.getString(R.string.premiumTheme)
+                        context!!.getString(R.string.defaultTheme),
+                        context!!.getString(R.string.darkTheme),
+                        context!!.getString(R.string.premiumTheme)
                 )
             }else{
                 arrayOf<CharSequence>(
-                        context.getString(R.string.defaultTheme),
-                        context.getString(R.string.darkTheme)
+                        context!!.getString(R.string.defaultTheme),
+                        context!!.getString(R.string.darkTheme)
                 )
             }
             AlertDialog.Builder(context)
@@ -173,7 +180,7 @@ class SettingsFragment : Fragment() {
                     .setPositiveButton(getString(R.string.apply)) { dialog, _ ->
                         dialog?.dismiss()
                         val selectedPosition = (dialog as AlertDialog).listView.checkedItemPosition
-                        setSelectedTheme(activity, selectedPosition)
+                        setSelectedTheme(activity!!, selectedPosition)
                     }
                     .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
                         dialog?.dismiss()

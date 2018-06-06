@@ -18,6 +18,8 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.webkit.*
 import android.widget.*
+import androidx.core.content.edit
+import androidx.core.net.toUri
 import pl.c0.sayard.studentUEK.BackButtonEditText
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
@@ -39,8 +41,8 @@ class MoodleFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_moodle, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val view = inflater.inflate(R.layout.fragment_moodle, container, false)
 
         val coursesView = view.findViewById<LinearLayout>(R.id.moodle_courses_view)
         val loginView = view.findViewById<ScrollView>(R.id.moodle_login_view)
@@ -69,10 +71,10 @@ class MoodleFragment : Fragment() {
             val loginProgressBar = view.findViewById<ProgressBar>(R.id.moodle_login_progress)
             loginButton.setOnClickListener{
                 MoodleTokenParser(context, this, loginProgressBar, loginButton).execute(login.text.toString(), password.text.toString())
-                prefs.edit()
-                        .putString(getString(R.string.PREFS_MOODLE_LOGIN), login.text.toString())
-                        .putString(getString(R.string.PREFS_MOODLE_PASSWORD), password.text.toString())
-                        .apply()
+                prefs.edit {
+                    putString(getString(R.string.PREFS_MOODLE_LOGIN), login.text.toString())
+                    putString(getString(R.string.PREFS_MOODLE_PASSWORD), password.text.toString())
+                }
             }
             password.setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
                 if((event?.action == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)){
@@ -94,7 +96,7 @@ class MoodleFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
             R.id.search_courses->{
-                val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 if(searchBox?.visibility == View.GONE){
                     searchBox?.visibility = View.VISIBLE
                     searchBox?.isFocusableInTouchMode = true
@@ -121,8 +123,8 @@ class MoodleFragment : Fragment() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
 
         if(isDeviceOnline(context)
-                && prefs.getString(context.getString(R.string.PREFS_MOODLE_LOGIN), null) != null
-                && prefs.getString(context.getString(R.string.PREFS_MOODLE_PASSWORD), null) != null){
+                && prefs.getString(context?.getString(R.string.PREFS_MOODLE_LOGIN), null) != null
+                && prefs.getString(context?.getString(R.string.PREFS_MOODLE_PASSWORD), null) != null){
             errorView.visibility = View.GONE
             CourseParser(progressBar, object: CourseParser.OnTaskCompleted{
                 override fun onTaskCompleted(result: List<Course>?) {
@@ -159,8 +161,8 @@ class MoodleFragment : Fragment() {
                                 override fun onPageFinished(view: WebView?, url: String?) {
                                     view?.visibility = View.VISIBLE
                                     progressBar.visibility = View.GONE
-                                    val login = prefs.getString(context.getString(R.string.PREFS_MOODLE_LOGIN), "")
-                                    val password = prefs.getString(context.getString(R.string.PREFS_MOODLE_PASSWORD), "")
+                                    val login = prefs.getString(context?.getString(R.string.PREFS_MOODLE_LOGIN), "")
+                                    val password = prefs.getString(context?.getString(R.string.PREFS_MOODLE_PASSWORD), "")
                                     val js = "$('#inputName').val('$login'); $('#inputPassword').val('$password'); $('#submit').click();"
                                     webView.evaluateJavascript(
                                             js,
@@ -176,7 +178,7 @@ class MoodleFragment : Fragment() {
                                         return@DownloadListener
                                     }
                                 }
-                                val request = DownloadManager.Request(Uri.parse(url))
+                                val request = DownloadManager.Request(url.toUri())
                                 request.setMimeType(mimetype)
                                 val cookies = CookieManager.getInstance().getCookie(url)
                                 request.addRequestHeader("cookie", cookies)
@@ -186,7 +188,7 @@ class MoodleFragment : Fragment() {
                                         DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                                 val fileName = URLUtil.guessFileName(url, contentDescription, mimetype)
                                 request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
-                                val dManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                                val dManager = context?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
                                 dManager.enqueue(request)
                             })
                             webView.loadUrl(courseUrl)
@@ -217,22 +219,24 @@ class MoodleFragment : Fragment() {
             errorView.visibility = View.VISIBLE
         }
         logInAgainButton.setOnClickListener{
-            prefs.edit().putString(context.getString(R.string.pl_c0_sayard_StudentUEK_PREFS_MOODLE_TOKEN), null).apply()
+            prefs.edit {
+                putString(context?.getString(R.string.pl_c0_sayard_StudentUEK_PREFS_MOODLE_TOKEN), null)
+            }
             val fragmentManager = fragmentManager
-            fragmentManager.beginTransaction()
-                    .detach(this)
-                    .attach(this)
-                    .commit()
+            fragmentManager?.beginTransaction()
+                    ?.detach(this)
+                    ?.attach(this)
+                    ?.commit()
         }
     }
 
-    private fun getAdapter(context: Context, coursesList: List<Course>): CoursesAdapter {
+    private fun getAdapter(context: Context?, coursesList: List<Course>): CoursesAdapter {
         return CoursesAdapter(context, coursesList)
     }
 
     private fun isWriteStoragePermissionGranted(): Boolean{
         return if(Build.VERSION.SDK_INT >= 23){
-            context.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+            context?.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
         }else{
             true
         }

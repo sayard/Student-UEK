@@ -1,20 +1,26 @@
 package pl.c0.sayard.studentUEK.adapters
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
+import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import pl.c0.sayard.studentUEK.R
+import pl.c0.sayard.studentUEK.activities.ScheduleItemDetailsActivity
 import pl.c0.sayard.studentUEK.data.ScheduleItem
+import pl.c0.sayard.studentUEK.db.DatabaseManager
 import java.text.SimpleDateFormat
 import java.util.*
 
 /**
  * Created by karol on 11.01.18.
  */
-class ScheduleAdapter(var context: Context, var scheduleListOriginal:List<ScheduleItem>) : BaseAdapter(), Filterable {
+class ScheduleAdapter(var context: Context, var activity: FragmentActivity?, var fragment: Fragment?, var scheduleListOriginal:List<ScheduleItem>) : BaseAdapter(), Filterable {
 
     private var scheduleListDisplay = scheduleListOriginal
     private val mInflater: LayoutInflater = LayoutInflater.from(context)
@@ -74,6 +80,49 @@ class ScheduleAdapter(var context: Context, var scheduleListOriginal:List<Schedu
         if(scheduleItemObj.noteId != -1 && scheduleItemObj.noteContent != ""){
             vh.noteIconTextView?.visibility = View.VISIBLE
         }
+
+        view.isClickable = true
+        view.setOnClickListener {
+            val intent = Intent(context, ScheduleItemDetailsActivity::class.java).apply {
+                putExtra(context.getString(R.string.subject_extra), scheduleItemObj.subject)
+                putExtra(context.getString(R.string.type_extra), scheduleItemObj.type)
+                putExtra(context.getString(R.string.teacher_extra), scheduleItemObj.teacher)
+                putExtra(context.getString(R.string.teacher_id_extra), scheduleItemObj.teacherId)
+                putExtra(context.getString(R.string.classroom_extra), scheduleItemObj.classroom)
+                putExtra(context.getString(R.string.comments_extra), scheduleItemObj.comments)
+                putExtra(context.getString(R.string.date_extra), scheduleItemObj.dateStr)
+                putExtra(context.getString(R.string.start_date_extra), scheduleItemObj.startDateStr)
+                putExtra(context.getString(R.string.end_date_extra), scheduleItemObj.endDateStr)
+                putExtra(context.getString(R.string.is_custom_extra), scheduleItemObj.isCustom)
+                putExtra(context.getString(R.string.extra_custom_id), scheduleItemObj.customId)
+                putExtra(context.getString(R.string.extra_note_id), scheduleItemObj.noteId)
+                putExtra(context.getString(R.string.extra_note_content), scheduleItemObj.noteContent)
+            }
+            context.startActivity(intent)
+        }
+
+        if(activity != null &&fragment != null){
+            view.isLongClickable = true
+            view.setOnLongClickListener {
+                val dialogBuilder = AlertDialog.Builder(context)
+
+                dialogBuilder
+                        .setTitle(context.getString(R.string.hide_lesson_from_schedule))
+                        .setMessage(context.getString(R.string.hide_lesson_from_schedule_message))
+                        .setPositiveButton(context.getString(R.string.remove)) { _, _ ->
+                            DatabaseManager(context).addLessonToFilteredLessons(scheduleItemObj)
+                            val ft = activity!!.supportFragmentManager.beginTransaction()
+                            ft?.detach(fragment)
+                            ft?.attach(fragment)
+                            ft?.commit()
+                        }
+                        .setNegativeButton(context.getString(R.string.cancel)) { _, _ ->}
+                        .show()
+                true
+            }
+        }
+
+
         return view
     }
 

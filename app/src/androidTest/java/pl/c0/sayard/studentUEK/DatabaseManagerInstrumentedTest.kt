@@ -4,6 +4,7 @@ import android.preference.PreferenceManager
 import android.support.test.InstrumentationRegistry
 import android.support.test.filters.LargeTest
 import android.support.test.runner.AndroidJUnit4
+import androidx.core.content.edit
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -74,11 +75,15 @@ class DatabaseManagerInstrumentedTest {
                 customScheduleItem
         )
 
-        prefs.edit().putBoolean(context.getString(R.string.PREFS_DISCOURSES_VISIBLE), false).apply()
+        prefs.edit {
+            putBoolean(context.getString(R.string.PREFS_DISCOURSES_VISIBLE), false)
+        }
         instantiateNewDatabase()
         val scheduleList = dbManager!!.getScheduleList()
         assertEquals(expectedScheduleList, scheduleList)
-        prefs.edit().putBoolean(context.getString(R.string.PREFS_DISCOURSES_VISIBLE), originalDiscoursesPref).apply()
+        prefs.edit {
+            putBoolean(context.getString(R.string.PREFS_DISCOURSES_VISIBLE), originalDiscoursesPref)
+        }
 
     }
 
@@ -94,11 +99,15 @@ class DatabaseManagerInstrumentedTest {
                 customScheduleItem
         )
 
-        prefs.edit().putBoolean(context.getString(R.string.PREFS_EXERCISES_VISIBLE), false).apply()
+        prefs.edit {
+            putBoolean(context.getString(R.string.PREFS_EXERCISES_VISIBLE), false)
+        }
         instantiateNewDatabase()
         val scheduleList = dbManager!!.getScheduleList()
         assertEquals(expectedScheduleList, scheduleList)
-        prefs.edit().putBoolean(context.getString(R.string.PREFS_EXERCISES_VISIBLE), originalExercisesPref).apply()
+        prefs.edit {
+            putBoolean(context.getString(R.string.PREFS_EXERCISES_VISIBLE), originalExercisesPref)
+        }
 
     }
 
@@ -114,11 +123,15 @@ class DatabaseManagerInstrumentedTest {
                 calculusReschedule
         )
 
-        prefs.edit().putBoolean(context.getString(R.string.PREFS_LECTURES_VISIBLE), false).apply()
+        prefs.edit {
+            putBoolean(context.getString(R.string.PREFS_LECTURES_VISIBLE), false)
+        }
         instantiateNewDatabase()
         val scheduleList = dbManager!!.getScheduleList()
         assertEquals(expectedScheduleList, scheduleList) // test lectures filter
-        prefs.edit().putBoolean(context.getString(R.string.PREFS_LECTURES_VISIBLE), originalLecturesPref).apply()
+        prefs.edit {
+            putBoolean(context.getString(R.string.PREFS_LECTURES_VISIBLE), originalLecturesPref)
+        }
     }
 
     @Test
