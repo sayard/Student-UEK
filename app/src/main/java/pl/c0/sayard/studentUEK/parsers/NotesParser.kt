@@ -17,7 +17,7 @@ class NotesParser(private val fragment: NotesFragment, private val onTaskComplet
     override fun doInBackground(vararg p0: Void?): List<Note> {
         val notesList = mutableListOf<Note>()
         if(fragment.context != null){
-            val dbManager = DatabaseManager(fragment.context)
+            val dbManager = DatabaseManager(fragment.context!!)
             val notesCursor = dbManager.getNotesCursor()
             notesList.addAll(dbManager.getNotesListFromCursor(notesCursor))
         }

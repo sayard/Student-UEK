@@ -18,7 +18,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.net.UnknownHostException
 
-class MoodleTokenParser(val context: Context, val fragment: Fragment, val progressBar: ProgressBar, val loginButton: Button): AsyncTask<String, Void, Pair<Int, String>>(){
+class MoodleTokenParser(val context: Context?, val fragment: Fragment, val progressBar: ProgressBar, val loginButton: Button): AsyncTask<String, Void, Pair<Int, String?>>(){
 
     private val PARSE_RETURN_CODE_OK = 0
     private val PARSE_RETURN_CODE_CANT_CONNECT = 1
@@ -34,7 +34,7 @@ class MoodleTokenParser(val context: Context, val fragment: Fragment, val progre
         super.onPreExecute()
     }
 
-    override fun doInBackground(vararg params: String?): Pair<Int, String>{
+    override fun doInBackground(vararg params: String?): Pair<Int, String?>{
         val login = params[0]
         val password = params[1]
         val tokenJsonUrl = "https://e-uczelnia.uek.krakow.pl/login/token.php?username=$login&password=$password&service=moodle_mobile_app"
@@ -47,18 +47,18 @@ class MoodleTokenParser(val context: Context, val fragment: Fragment, val progre
             urlConnection.disconnect()
             Pair(PARSE_RETURN_CODE_OK, result)
         }catch(e: UnknownHostException){
-            Pair(PARSE_RETURN_CODE_CANT_CONNECT, context.getString(R.string.moodle_connection_error))
+            Pair(PARSE_RETURN_CODE_CANT_CONNECT, context?.getString(R.string.moodle_connection_error))
         }catch(e: Exception){
             Log.v("MOODLE_TOKEN_EXCEPTION", e.printStackTrace().toString())
-            Pair(PARSE_RETURN_CODE_OTHER_ERROR, context.getString(R.string.error_try_again_later))
+            Pair(PARSE_RETURN_CODE_OTHER_ERROR, context?.getString(R.string.error_try_again_later))
         }
     }
 
-    override fun onPostExecute(result: Pair<Int, String>?) {
+    override fun onPostExecute(result: Pair<Int, String?>?) {
         when(result?.first){
-            0->parseJSON(result.second)
-            1->displayError(result.second)
-            2->displayError(result.second)
+            0-> result.second?.let { parseJSON(it) }
+            1-> result.second?.let { displayError(it) }
+            2-> result.second?.let { displayError(it) }
         }
         progressBar.visibility = View.GONE
         loginButton.visibility = View.VISIBLE
@@ -69,18 +69,18 @@ class MoodleTokenParser(val context: Context, val fragment: Fragment, val progre
         val mainObject = JSONObject(jsonString)
         try{
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-            prefs.edit().putString(context.getString(R.string.pl_c0_sayard_StudentUEK_PREFS_MOODLE_TOKEN), mainObject.getString(TOKEN_KEY)).apply()
+            prefs.edit().putString(context?.getString(R.string.pl_c0_sayard_StudentUEK_PREFS_MOODLE_TOKEN), mainObject.getString(TOKEN_KEY)).apply()
             val fragmentManager = fragment.fragmentManager
-            fragmentManager.beginTransaction()
-                    .detach(fragment)
-                    .attach(fragment)
-                    .commit()
+            fragmentManager?.beginTransaction()
+                    ?.detach(fragment)
+                    ?.attach(fragment)
+                    ?.commit()
         }catch(e: JSONException){
             val errorCode = mainObject.getString(ERROR_CODE_KEY)
             if(errorCode == INVALID_LOGIN_KEY){
-                Toast.makeText(context, context.getString(R.string.invalid_login_or_password), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context?.getString(R.string.invalid_login_or_password), Toast.LENGTH_SHORT).show()
             }else{
-                Toast.makeText(context, context.getString(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context?.getString(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
             }
         }
     }

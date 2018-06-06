@@ -11,7 +11,7 @@ import android.widget.TextView
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.data.Course
 
-class CoursesAdapter(private val context: Context, private var courseListOriginal: List<Course>): BaseAdapter(), Filterable{
+class CoursesAdapter(context: Context?, private var courseListOriginal: List<Course>): BaseAdapter(), Filterable{
 
     private var courseListDisplay = courseListOriginal
     private val mInflater: LayoutInflater = LayoutInflater.from(context)

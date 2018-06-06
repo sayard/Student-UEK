@@ -38,14 +38,14 @@ class ScheduleFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        val view = inflater!!.inflate(R.layout.fragment_schedule, container, false)
+        val view = inflater.inflate(R.layout.fragment_schedule, container, false)
         val progressBar = view.findViewById<ProgressBar>(R.id.schedule_progress_bar)
         val errorMessage = view.findViewById<TextView>(R.id.schedule_error_message)
         val emptyScheduleMessage = view.findViewById<TextView>(R.id.schedule_empty_message)
-        val dbManager = DatabaseManager(context)
+        val dbManager = DatabaseManager(context!!)
 
         val urls = mutableListOf<String>()
         val groups = dbManager.getGroups()
@@ -59,7 +59,7 @@ class ScheduleFragment : Fragment() {
         }
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         if((prefs.getBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false) || cursorCount == 0)){
-            ScheduleParser(context, activity, progressBar, errorMessage, emptyScheduleMessage, null, null).execute(urls)
+            ScheduleParser(context!!, activity, progressBar, errorMessage, emptyScheduleMessage, null, null).execute(urls)
             prefs.edit().putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false).apply()
         }else{
             val scheduleList = dbManager.getScheduleList()
@@ -113,25 +113,25 @@ class ScheduleFragment : Fragment() {
                             .setTitle(getString(R.string.hide_lesson_from_schedule))
                             .setMessage(getString(R.string.hide_lesson_from_schedule_message))
                             .setPositiveButton(getString(R.string.remove)) { _, _ ->
-                                DatabaseManager(context).addLessonToFilteredLessons(scheduleItem)
-                                val ft = activity.supportFragmentManager.beginTransaction()
-                                ft.detach(this)
-                                ft.attach(this)
-                                ft.commit()
+                                DatabaseManager(context!!).addLessonToFilteredLessons(scheduleItem)
+                                val ft = activity?.supportFragmentManager?.beginTransaction()
+                                ft?.detach(this)
+                                ft?.attach(this)
+                                ft?.commit()
                             }
-                            .setNegativeButton(context.getString(R.string.cancel)) { _, _ ->}
+                            .setNegativeButton(context?.getString(R.string.cancel)) { _, _ ->}
                             .show()
                     true
                 }
                 val scheduleSwipe = view.findViewById<SwipeRefreshLayout>(R.id.schedule_swipe)
                 scheduleSwipe.setOnRefreshListener{
                     if(isDeviceOnline(context)){
-                        ScheduleParser(context, null, null, errorMessage, emptyScheduleMessage, adapter, scheduleSwipe).execute(urls)
+                        ScheduleParser(context!!, null, null, errorMessage, emptyScheduleMessage, adapter, scheduleSwipe).execute(urls)
                         scheduleSearch?.setText("", TextView.BufferType.EDITABLE)
                         Toast.makeText(context, getString(R.string.schedule_refreshed), Toast.LENGTH_SHORT).show()
                         Thread{
                             kotlin.run {
-                                RefreshScheduleJob.refreshSchedule(context)
+                                RefreshScheduleJob.refreshSchedule(context!!)
                             }
                         }.start()
                     }else{
@@ -156,10 +156,10 @@ class ScheduleFragment : Fragment() {
                 errorMessage.visibility = View.VISIBLE
                 val scheduleSwipe = view.findViewById<SwipeRefreshLayout>(R.id.schedule_swipe)
                 scheduleSwipe.setOnRefreshListener{
-                    val ft = activity.supportFragmentManager.beginTransaction()
-                    ft.detach(this)
-                    ft.attach(this)
-                    ft.commit()
+                    val ft = activity?.supportFragmentManager?.beginTransaction()
+                    ft?.detach(this)
+                    ft?.attach(this)
+                    ft?.commit()
                     scheduleSwipe.isRefreshing = false
                 }
             }
@@ -178,16 +178,16 @@ class ScheduleFragment : Fragment() {
         when(item?.itemId){
             R.id.schedule_filter_item->{
                 val dialogBuilder = AlertDialog.Builder(context)
-                val inflater = activity.layoutInflater
-                val dialogView = inflater.inflate(R.layout.schedule_filter, null)
+                val inflater = activity?.layoutInflater
+                val dialogView = inflater?.inflate(R.layout.schedule_filter, null)
                 val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-                setFiltersUiState(dialogView, prefs, context)
-                val dbManager = DatabaseManager(context)
+                setFiltersUiState(dialogView!!, prefs, context!!)
+                val dbManager = DatabaseManager(context!!)
                 val filteredLessonsList = dbManager.getFilteredLessons()
                 val message = dialogView.findViewById<TextView>(R.id.filtered_lessons_empty_message)
 
                 if(filteredLessonsList.isNotEmpty()){
-                    val filteredLessonAdapter = FilteredLessonsAdapter(context, filteredLessonsList as MutableList<FilteredLesson>)
+                    val filteredLessonAdapter = FilteredLessonsAdapter(context!!, filteredLessonsList as MutableList<FilteredLesson>)
                     val filteredLessonsListView = dialogView.findViewById<ListView>(R.id.filtered_lessons_lv)
                     filteredLessonsListView.adapter = filteredLessonAdapter
                     message.visibility = View.GONE
@@ -199,15 +199,15 @@ class ScheduleFragment : Fragment() {
                         .setView(dialogView)
                         .setTitle(getString(R.string.schedule_filters))
                         .setPositiveButton(getString(R.string.accept)) { _, _ ->
-                            setFilters(dialogView, prefs, context)
+                            setFilters(dialogView, prefs, context!!)
                             prefs.edit()
                                     .putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
                                     .apply()
-                            activity.supportFragmentManager
-                                    .beginTransaction()
-                                    .detach(this)
-                                    .attach(this)
-                                    .commit()
+                            activity?.supportFragmentManager
+                                    ?.beginTransaction()
+                                    ?.detach(this)
+                                    ?.attach(this)
+                                    ?.commit()
                         }
                         .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
                         .create()
@@ -218,7 +218,7 @@ class ScheduleFragment : Fragment() {
                 startActivity(newLessonIntent)
             }
             R.id.search_schedule_item -> {
-                val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 if(scheduleSearch?.visibility == View.GONE){
                     scheduleSearch?.visibility = View.VISIBLE
                     scheduleSearch?.isFocusableInTouchMode = true
@@ -234,14 +234,14 @@ class ScheduleFragment : Fragment() {
     }
 
     private fun getAdapter(scheduleList: List<ScheduleItem>): ScheduleAdapter{
-        return ScheduleAdapter(context, scheduleList)
+        return ScheduleAdapter(context!!, scheduleList)
     }
 
     override fun onResume() {
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         if(prefs.getBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), false)){
-            val ft = activity.supportFragmentManager.beginTransaction()
-            ft.detach(this).attach(this).commit()
+            val ft = activity?.supportFragmentManager?.beginTransaction()
+            ft?.detach(this)?.attach(this)?.commit()
         }
         super.onResume()
     }

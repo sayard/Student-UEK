@@ -30,7 +30,7 @@ class SettingsFragment : Fragment() {
                 editor.putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
                 editor.apply()
                 val intent = Intent(context, FirstRunStepOneActivity::class.java)
-                activity.finish()
+                activity?.finish()
                 startActivity(intent)
             }
             DialogInterface.BUTTON_NEGATIVE -> {}
@@ -47,9 +47,9 @@ class SettingsFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_settings, container, false)
+        val view = inflater.inflate(R.layout.fragment_settings, container, false)
 
         val prefs = PreferenceManager.getDefaultSharedPreferences(context)
         val editor = prefs.edit()
@@ -65,7 +65,7 @@ class SettingsFragment : Fragment() {
                     editor.apply()
                     Thread{
                         kotlin.run {
-                            RefreshScheduleJob.refreshSchedule(context)
+                            RefreshScheduleJob.refreshSchedule(context!!)
                         }
                     }.start()
                 }else{
@@ -74,7 +74,7 @@ class SettingsFragment : Fragment() {
                     editor.apply()
                     Thread{
                         kotlin.run {
-                            RefreshScheduleJob.refreshSchedule(context)
+                            RefreshScheduleJob.refreshSchedule(context!!)
                         }
                     }.start()
                 }
@@ -105,7 +105,7 @@ class SettingsFragment : Fragment() {
                 notificationsSeekBar.progress = prefs.getInt(getString(R.string.PREFS_NOTIFICATION_TIME_THRESHOLD), 15)
                 Thread{
                     kotlin.run {
-                        RefreshScheduleJob.refreshSchedule(context)
+                        RefreshScheduleJob.refreshSchedule(context!!)
                     }
                 }.start()
             }else{
@@ -116,7 +116,7 @@ class SettingsFragment : Fragment() {
                 editor.apply()
                 Thread{
                     kotlin.run {
-                        RefreshScheduleJob.refreshSchedule(context)
+                        RefreshScheduleJob.refreshSchedule(context!!)
                     }
                 }.start()
             }
@@ -142,7 +142,7 @@ class SettingsFragment : Fragment() {
                 RefreshScheduleJob.cancelScheduleNotifications()
                 Thread{
                     kotlin.run {
-                        RefreshScheduleJob.refreshSchedule(context)
+                        RefreshScheduleJob.refreshSchedule(context!!)
                     }
                 }.start()
             }
@@ -150,21 +150,21 @@ class SettingsFragment : Fragment() {
         })
 
         val currentTheme = view.findViewById<TextView>(R.id.currentTheme)
-        val selectedThemeId = prefs.getInt(context.getString(R.string.PREFS_SELECTED_THEME), 0)
-        currentTheme.append(" ${getTranslatedThemeName(selectedThemeId, context)}")
+        val selectedThemeId = prefs.getInt(context?.getString(R.string.PREFS_SELECTED_THEME), 0)
+        currentTheme.append(" ${getTranslatedThemeName(selectedThemeId, context!!)}")
 
         val changeTheme = view.findViewById<LinearLayout>(R.id.change_theme)
         changeTheme.setOnClickListener {
             val themes = if(prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false)){
                 arrayOf<CharSequence>(
-                        context.getString(R.string.defaultTheme),
-                        context.getString(R.string.darkTheme),
-                        context.getString(R.string.premiumTheme)
+                        context!!.getString(R.string.defaultTheme),
+                        context!!.getString(R.string.darkTheme),
+                        context!!.getString(R.string.premiumTheme)
                 )
             }else{
                 arrayOf<CharSequence>(
-                        context.getString(R.string.defaultTheme),
-                        context.getString(R.string.darkTheme)
+                        context!!.getString(R.string.defaultTheme),
+                        context!!.getString(R.string.darkTheme)
                 )
             }
             AlertDialog.Builder(context)
@@ -173,7 +173,7 @@ class SettingsFragment : Fragment() {
                     .setPositiveButton(getString(R.string.apply)) { dialog, _ ->
                         dialog?.dismiss()
                         val selectedPosition = (dialog as AlertDialog).listView.checkedItemPosition
-                        setSelectedTheme(activity, selectedPosition)
+                        setSelectedTheme(activity!!, selectedPosition)
                     }
                     .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
                         dialog?.dismiss()
