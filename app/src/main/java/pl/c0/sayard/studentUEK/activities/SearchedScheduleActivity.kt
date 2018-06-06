@@ -12,6 +12,7 @@ import android.widget.ListView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.net.toUri
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.adapters.ScheduleAdapter
@@ -95,7 +96,7 @@ class SearchedScheduleActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
             R.id.teacher_page -> {
-                val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://e-uczelnia.uek.krakow.pl/course/view.php?id=$teacherId"))
+                val browserIntent = Intent(Intent.ACTION_VIEW, "https://e-uczelnia.uek.krakow.pl/course/view.php?id=$teacherId".toUri())
                 startActivity(browserIntent)
             }
             R.id.schedule_length -> {

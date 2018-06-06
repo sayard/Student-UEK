@@ -15,6 +15,7 @@ import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
+import androidx.core.net.toUri
 import com.anjlab.android.iab.v3.BillingProcessor
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
@@ -161,7 +162,7 @@ class MainActivity : AppCompatActivity() {
                                 editor.putBoolean(getString(R.string.PREFS_APP_NOT_RATED), false).apply()
 
                                 var marketFound = false
-                                val rateIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName"))
+                                val rateIntent = Intent(Intent.ACTION_VIEW, "market://details?id=$packageName".toUri())
                                 val otherApps = packageManager.queryIntentActivities(rateIntent, 0)
 
                                 for(otherApp in otherApps){
@@ -181,7 +182,7 @@ class MainActivity : AppCompatActivity() {
                                     }
                                 }
                                 if(!marketFound){
-                                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
+                                    startActivity(Intent(Intent.ACTION_VIEW, "https://play.google.com/store/apps/details?id=$packageName".toUri()))
                                 }
                             }
                             .create()

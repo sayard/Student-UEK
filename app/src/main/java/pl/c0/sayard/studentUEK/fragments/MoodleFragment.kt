@@ -18,6 +18,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.webkit.*
 import android.widget.*
+import androidx.core.net.toUri
 import pl.c0.sayard.studentUEK.BackButtonEditText
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
@@ -176,7 +177,7 @@ class MoodleFragment : Fragment() {
                                         return@DownloadListener
                                     }
                                 }
-                                val request = DownloadManager.Request(Uri.parse(url))
+                                val request = DownloadManager.Request(url.toUri())
                                 request.setMimeType(mimetype)
                                 val cookies = CookieManager.getInstance().getCookie(url)
                                 request.addRequestHeader("cookie", cookies)
