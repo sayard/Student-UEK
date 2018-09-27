@@ -23,7 +23,7 @@ class GroupParser(@SuppressLint("StaticFieldLeak") private val activity: Activit
     private val RESOURCE_TAG = "zasob"
     private val NAME_ATTRIBUTE = "nazwa"
     private val ID_ATTRIBUTE = "id"
-    private val SJO_PREFIX = "SJO"
+    private val SJO_PREFIX = "CJ-"
     @SuppressLint("StaticFieldLeak")
     private var progressBar: ProgressBar? = null
     @SuppressLint("StaticFieldLeak")
