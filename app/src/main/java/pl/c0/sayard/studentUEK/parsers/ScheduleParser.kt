@@ -38,7 +38,7 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
     private val MOODLE_TAG = "moodle"
     private val CLASSROOM_TAG = "sala"
     private val COMMENTS_TAG = "uwagi"
-    private val LECTURESHIP = "lektorat"
+    private val LECTURESHIP = "Język obcy"
 
     private val dbManager = DatabaseManager(context)
 
@@ -62,13 +62,13 @@ class ScheduleParser(@SuppressLint("StaticFieldLeak") val context: Context,
                     for(j in 0 until nodeList.length){
                         val node = nodeList.item(j)
                         val element = node as Element
-                        val type = element.getElementsByTagName(TYPE_TAG).item(0).textContent
+                        val subject = element.getElementsByTagName(SUBJECT_TAG).item(0).textContent
                         val classroom = element.getElementsByTagName(CLASSROOM_TAG).item(0).textContent
-                        if(!(type == LECTURESHIP && classroom.isEmpty())){
+                        if(!(subject.startsWith(LECTURESHIP) && classroom.isEmpty())){
                             val date = element.getElementsByTagName(DATE_TAG).item(0).textContent
                             val startHour = element.getElementsByTagName(START_HOUR_TAG).item(0).textContent
                             val endHour = element.getElementsByTagName(END_HOUR_TAG).item(0).textContent
-                            val subject = element.getElementsByTagName(SUBJECT_TAG).item(0).textContent
+                            val type = element.getElementsByTagName(TYPE_TAG).item(0).textContent
                             val teacher = element.getElementsByTagName(TEACHER_TAG).item(0).textContent
                             val teacherId = (element.getElementsByTagName(TEACHER_TAG).item(0) as Element).getAttribute(MOODLE_TAG)
                             var comments = ""

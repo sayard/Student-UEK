@@ -114,4 +114,6 @@
     <string name="group_delete_error">Wystąpił błąd podczas usuwania grupy. Spróbuj ponownie później.</string>
     <string name="do_you_want_to_add_group">Czy chcesz dodać grupę</string>
     <string name="edit_groups">Edytuj grupy</string>
+    <string name="usos_soon_msg">W związku z wprowadzeniem na naszej uczelni systemu USOS plan dla studentów pierwszego roku będzi dostępny wkrótce. Dziękujemy za cierpliwość.</string>
+    <string name="add_group">Dodaj grupę</string>
 </resources>

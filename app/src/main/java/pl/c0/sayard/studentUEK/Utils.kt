@@ -1,7 +1,9 @@
 package pl.c0.sayard.studentUEK
 
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.ConnectivityManager
@@ -28,7 +30,7 @@ class Utils {
             return if(isLongSchedule){
                 "http://planzajec.uek.krakow.pl/index.php?xml&typ=G&id=" +
                         group.id.toString() +
-                        "&okres=2"
+                        "&okres=4"
             }else{
                 "http://planzajec.uek.krakow.pl/index.php?xml&typ=G&id=" +
                         group.id.toString() +
@@ -41,7 +43,7 @@ class Utils {
             return if(isLongSchedule){
                 "http://planzajec.uek.krakow.pl/index.php?xml&typ=N&id=" +
                         group?.id.toString() +
-                        "&okres=2"
+                        "&okres=4"
             }else{
                 "http://planzajec.uek.krakow.pl/index.php?xml&typ=N&id=" +
                         group?.id.toString() +
@@ -158,6 +160,14 @@ class Utils {
                 putString(context.getString(R.string.EXTRA_NOTIFICATION_NOTE_CONTENT), scheduleItem.noteContent)
                 putString(context.getString(R.string.EXTRA_NOTIFICATION_HOUR), hourStr)
             }
+        }
+
+        fun displayUSOSDialog(context: Context){
+            val builder = AlertDialog.Builder(context)
+            builder.setMessage(context.getString(R.string.usos_soon_msg))
+                    .setCancelable(false)
+                    .setPositiveButton("OK", DialogInterface.OnClickListener { _, _ ->  })
+            builder.create().show()
         }
     }
 }

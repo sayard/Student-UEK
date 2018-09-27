@@ -16,7 +16,7 @@ class UtilsUnitTest {
     @Test
     fun getGroupUrlTest(){
         val testGroup = Group(123, "testName")
-        assertEquals("http://planzajec.uek.krakow.pl/index.php?xml&typ=G&id=123&okres=2",
+        assertEquals("http://planzajec.uek.krakow.pl/index.php?xml&typ=G&id=123&okres=4",
                 getGroupURL(testGroup, true))
         assertEquals("http://planzajec.uek.krakow.pl/index.php?xml&typ=G&id=123&okres=1",
                 getGroupURL(testGroup, false))
@@ -25,12 +25,12 @@ class UtilsUnitTest {
     @Test
     fun getTeacherUrlTest(){
         var testGroup: Group? = Group(123, "testName")
-        assertEquals("http://planzajec.uek.krakow.pl/index.php?xml&typ=N&id=123&okres=2",
+        assertEquals("http://planzajec.uek.krakow.pl/index.php?xml&typ=N&id=123&okres=4",
                 getTeacherURL(testGroup, true))
         assertEquals("http://planzajec.uek.krakow.pl/index.php?xml&typ=N&id=123&okres=1",
                 getTeacherURL(testGroup, false))
         testGroup = null
-        assertEquals("http://planzajec.uek.krakow.pl/index.php?xml&typ=N&id=null&okres=2",
+        assertEquals("http://planzajec.uek.krakow.pl/index.php?xml&typ=N&id=null&okres=4",
                 getTeacherURL(testGroup, true))
         assertEquals("http://planzajec.uek.krakow.pl/index.php?xml&typ=N&id=null&okres=1",
                 getTeacherURL(testGroup, false))
