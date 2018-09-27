@@ -172,6 +172,4 @@
     <string name="group_delete_error">There was an error deleting group. Try again later.</string>
     <string name="add_group">Add group</string>
     <string name="do_you_want_to_add_group">Do you want to add group</string>
-    <string name="usos_soon_msg">Due to sudden implementation of USOS system schedule for first year students will be available soon. Thank you for your patience.</string>
-    <string name="PREFS_USOS_MSG_SEEN" translatable="false">pl.c0.sayard.studentUEK.PREFS_USOS_MSG_SEEN</string>
 </resources>

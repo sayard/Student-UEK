@@ -161,13 +161,5 @@ class Utils {
                 putString(context.getString(R.string.EXTRA_NOTIFICATION_HOUR), hourStr)
             }
         }
-
-        fun displayUSOSDialog(context: Context){
-            val builder = AlertDialog.Builder(context)
-            builder.setMessage(context.getString(R.string.usos_soon_msg))
-                    .setCancelable(false)
-                    .setPositiveButton("OK", DialogInterface.OnClickListener { _, _ ->  })
-            builder.create().show()
-        }
     }
 }

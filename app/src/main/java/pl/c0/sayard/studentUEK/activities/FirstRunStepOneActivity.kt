@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
@@ -12,10 +11,8 @@ import android.text.TextWatcher
 import android.view.MotionEvent
 import android.view.View
 import android.widget.*
-import androidx.core.content.edit
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
-import pl.c0.sayard.studentUEK.Utils.Companion.displayUSOSDialog
 import pl.c0.sayard.studentUEK.adapters.GroupListAdapter
 import pl.c0.sayard.studentUEK.data.Group
 import pl.c0.sayard.studentUEK.db.DatabaseManager
@@ -31,13 +28,6 @@ class FirstRunStepOneActivity : AppCompatActivity() {
         setContentView(R.layout.activity_first_run_step_one)
         val retryButton = findViewById<Button>(R.id.group_retry_button)
         nextStepButton = findViewById(R.id.next_step_button)
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        if(!prefs.getBoolean(getString(R.string.PREFS_USOS_MSG_SEEN), false)){
-            displayUSOSDialog(this)
-            prefs.edit {
-                putBoolean(getString(R.string.PREFS_USOS_MSG_SEEN), true)
-            }
-        }
         GroupParser(this, false, object: GroupParser.OnTaskCompleted{
             override fun onTaskCompleted(result: List<Group>?, activity: Activity) {
                 val adapter = getAdapter(activity, result!!)
