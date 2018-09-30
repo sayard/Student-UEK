@@ -51,7 +51,7 @@ class GroupListAdapter(val context: Context, var groupListOriginal: List<Group>,
             val dialogClickListener = DialogInterface.OnClickListener { _, which ->
                 when(which){
                     DialogInterface.BUTTON_POSITIVE -> {
-                        val isLanguageGroup = groupListDisplay[position].name.toLowerCase().startsWith("sjo")
+                        val isLanguageGroup = groupListDisplay[position].name.toLowerCase().startsWith("cj-")
                         val dbManager = DatabaseManager(context)
                         val newId = dbManager.addGroupToDb(groupListDisplay[position], isLanguageGroup)
                         if(newId == -1L){

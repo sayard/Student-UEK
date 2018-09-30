@@ -63,7 +63,7 @@ class EditGroupsAdapter(val context: Context, val activity: AppCompatActivity, p
     }
 
     private fun getGroupType(name: String): String{
-        if(name.toLowerCase().startsWith("sjo")){
+        if(name.toLowerCase().startsWith("cj-")){
             return context.getString(R.string.language_group)
         }
         return context.getString(R.string.group)
