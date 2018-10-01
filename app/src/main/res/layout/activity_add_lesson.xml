@@ -87,7 +87,7 @@
     <LinearLayout
         android:id="@+id/custom_lesson_hour_headers"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         app:layout_constraintTop_toBottomOf="@id/custom_lesson_date_tv"
         app:layout_constraintStart_toStartOf="parent"
@@ -118,7 +118,7 @@
     <LinearLayout
         android:id="@+id/pe_hours"
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/custom_lesson_hour_headers"
         app:layout_constraintStart_toStartOf="parent"
