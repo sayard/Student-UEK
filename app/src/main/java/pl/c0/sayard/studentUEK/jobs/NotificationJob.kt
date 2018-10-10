@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.media.RingtoneManager
 import android.support.v4.app.NotificationCompat
 import com.evernote.android.job.Job
 import com.evernote.android.job.JobRequest
@@ -56,6 +57,7 @@ class NotificationJob: Job() {
         }
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+        val alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         val notification = NotificationCompat.Builder(context, context.getString(R.string.SCHEDULE_ITEM_NOTIFICATION_CHANNEL))
                 .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setContentTitle("${scheduleItem.subject} - ${scheduleItem.type}")
@@ -64,6 +66,7 @@ class NotificationJob: Job() {
                 .setAutoCancel(true)
                 .setVibrate(arrayOf<Long>(0, 200, 200, 200).toLongArray())
                 .setLights(Color.RED, 500, 500)
+                .setSound(alarmSound)
                 .build()
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(SCHEDULE_ITEM_NOFITICATION_ID, notification)
