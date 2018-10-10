@@ -648,13 +648,22 @@ class DatabaseManager(val context: Context, database:SQLiteOpenHelper=ScheduleDb
                                 cursor.getString(cursor.getColumnIndex(ScheduleContract.MessageEntry.MESSAGE_BODY)),
                                 cursor.getString(cursor.getColumnIndex(ScheduleContract.MessageEntry.MESSAGE_AUTHOR)),
                                 cursor.getString(cursor.getColumnIndex(ScheduleContract.MessageEntry.MESSAGE_DATE)),
-                                cursor.getString(cursor.getColumnIndex(ScheduleContract.MessageEntry.MESSAGE_GROUPS))
+                                cursor.getString(cursor.getColumnIndex(ScheduleContract.MessageEntry.MESSAGE_GROUPS)),
+                                cursor.getInt(cursor.getColumnIndex(ScheduleContract.MessageEntry._ID))
                         )
                 )
             }while (cursor.moveToNext())
         }
 
         return messages
+    }
+
+    fun removeMessageFromDb(id: Int): Int{
+        return writableDb.delete(
+                ScheduleContract.MessageEntry.TABLE_NAME,
+                "${ScheduleContract.MessageEntry._ID} = $id",
+                null
+        )
     }
 
 }

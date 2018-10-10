@@ -172,5 +172,9 @@
     <string name="group_delete_error">There was an error deleting group. Try again later.</string>
     <string name="add_group">Add group</string>
     <string name="do_you_want_to_add_group">Do you want to add group</string>
-    <string name="PREFS_PIGEON_TOPICS_SET">pl.c0.sayard.studentUEK.PREFS_PIGEON_TOPICS_SET</string>
+    <string name="messages">Messages</string>
+    <string name="PREFS_PIGEON_TOPICS_SET" translatable="false">pl.c0.sayard.studentUEK.PREFS_PIGEON_TOPICS_SET</string>
+    <string name="messages_message">Message received from teachers will be displayed here</string>
+    <string name="msg_delete_error">Failed to delete message. Try again later</string>
+    <string name="msg_delete_question">Do you want to delete this message?</string>
 </resources>

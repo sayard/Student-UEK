@@ -4,4 +4,5 @@ class Message(val title: String,
               val body: String,
               val author: String,
               val date: String,
-              val groups: String)
+              val groups: String,
+              val id:Int=0)

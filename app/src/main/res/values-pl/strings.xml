@@ -115,4 +115,8 @@
     <string name="do_you_want_to_add_group">Czy chcesz dodać grupę</string>
     <string name="edit_groups">Edytuj grupy</string>
     <string name="add_group">Dodaj grupę</string>
+    <string name="messages">Wiadomości</string>
+    <string name="messages_message">Wiadomości otrzymane od prowadzączych będą wyświetlane tutaj</string>
+    <string name="msg_delete_error">Nie udało się usunąć wiadomości. Spróbuj ponownie później</string>
+    <string name="msg_delete_question">Czy chcesz usunąć tą wiadomość?</string>
 </resources>
