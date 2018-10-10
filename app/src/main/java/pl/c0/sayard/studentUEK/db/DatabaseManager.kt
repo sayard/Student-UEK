@@ -613,4 +613,48 @@ class DatabaseManager(val context: Context, database:SQLiteOpenHelper=ScheduleDb
         }
     }
 
+    fun addMessageToDb(message: Message){
+        val contentValues = ContentValues()
+        contentValues.put(ScheduleContract.MessageEntry.MESSAGE_TITLE, message.title)
+        contentValues.put(ScheduleContract.MessageEntry.MESSAGE_BODY, message.body)
+        contentValues.put(ScheduleContract.MessageEntry.MESSAGE_AUTHOR, message.author)
+        contentValues.put(ScheduleContract.MessageEntry.MESSAGE_DATE, message.date)
+        contentValues.put(ScheduleContract.MessageEntry.MESSAGE_GROUPS, message.groups)
+        writableDb.insert(ScheduleContract.MessageEntry.TABLE_NAME, null, contentValues)
+    }
+
+    private fun getMessagesCursor(): Cursor{
+        return readableDb.query(
+                ScheduleContract.MessageEntry.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                "${ScheduleContract.MessageEntry._ID} DESC"
+        )
+    }
+
+    fun getMessagesFromDb(): List<Message>{
+        val messages = mutableListOf<Message>()
+        val cursor = getMessagesCursor()
+
+        if(cursor.count > 0){
+            cursor.moveToFirst()
+            do{
+                messages.add(
+                        Message(
+                                cursor.getString(cursor.getColumnIndex(ScheduleContract.MessageEntry.MESSAGE_TITLE)),
+                                cursor.getString(cursor.getColumnIndex(ScheduleContract.MessageEntry.MESSAGE_BODY)),
+                                cursor.getString(cursor.getColumnIndex(ScheduleContract.MessageEntry.MESSAGE_AUTHOR)),
+                                cursor.getString(cursor.getColumnIndex(ScheduleContract.MessageEntry.MESSAGE_DATE)),
+                                cursor.getString(cursor.getColumnIndex(ScheduleContract.MessageEntry.MESSAGE_GROUPS))
+                        )
+                )
+            }while (cursor.moveToNext())
+        }
+
+        return messages
+    }
+
 }

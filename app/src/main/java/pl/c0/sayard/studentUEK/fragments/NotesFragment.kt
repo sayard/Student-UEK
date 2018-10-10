@@ -93,7 +93,7 @@ class NotesFragment : Fragment() {
             override fun onTaskCompleted(result: List<Note>?) {
                 if(context != null){
                     progressBar.visibility = View.GONE
-                    if(result == null){
+                    if(result == null || result.isEmpty()){
                         notesMessage.visibility = View.VISIBLE
                     }else{
                         val adapter = NotesAdapter(context!!, result.toMutableList())

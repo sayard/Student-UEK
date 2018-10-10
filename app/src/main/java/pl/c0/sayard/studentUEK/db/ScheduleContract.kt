@@ -115,4 +115,16 @@ class ScheduleContract private constructor(){
             val LESSON_START_HOUR: String = "lesson_start_hour"
         }
     }
+
+    class MessageEntry: BaseColumns{
+        companion object {
+            val TABLE_NAME: String = "message"
+            val _ID: String = BaseColumns._ID
+            val MESSAGE_TITLE: String = "message_title"
+            val MESSAGE_BODY: String = "message_body"
+            val MESSAGE_AUTHOR: String = "message_author"
+            val MESSAGE_DATE: String = "message_date"
+            val MESSAGE_GROUPS: String = "message_groups"
+        }
+    }
 }

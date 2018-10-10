@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper
 /**
  * Created by Karol on 1/1/2018.
  */
-class ScheduleDbHelper(context: Context, name:String="ScheduleUEK.db", version:Int=12): SQLiteOpenHelper(context, name, null, version) {
+class ScheduleDbHelper(context: Context, name:String="ScheduleUEK.db", version:Int=13): SQLiteOpenHelper(context, name, null, version) {
 
     private val SQL_CREATE_GROUP = "CREATE TABLE IF NOT EXISTS " +
             ScheduleContract.GroupEntry.TABLE_NAME + "( " +
@@ -104,6 +104,17 @@ class ScheduleDbHelper(context: Context, name:String="ScheduleUEK.db", version:I
 
     private val SQL_DELETE_FILTERED_LESSONS = "DROP TABLE IF EXISTS " + ScheduleContract.FilteredLessonEntry.TABLE_NAME
 
+    private val SQL_CREATE_MESSAGES = "CREATE TABLE IF NOT EXISTS " +
+            ScheduleContract.MessageEntry.TABLE_NAME + "( " +
+            ScheduleContract.MessageEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            ScheduleContract.MessageEntry.MESSAGE_TITLE + " TEXT, " +
+            ScheduleContract.MessageEntry.MESSAGE_BODY + " TEXT, " +
+            ScheduleContract.MessageEntry.MESSAGE_AUTHOR + " TEXT, " +
+            ScheduleContract.MessageEntry.MESSAGE_DATE + " TEXT, " +
+            ScheduleContract.MessageEntry.MESSAGE_GROUPS + " TEXT)"
+
+    private val SQL_DELETE_MESSAGES = "DROP TABLE IF EXISTS " + ScheduleContract.MessageEntry.TABLE_NAME
+
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SQL_CREATE_GROUP)
         db.execSQL(SQL_CREATE_LANGUAGE_GROUP)
@@ -113,6 +124,7 @@ class ScheduleDbHelper(context: Context, name:String="ScheduleUEK.db", version:I
         db.execSQL(SQL_CREATE_NOTES)
         db.execSQL(SQL_CREATE_LESSON_NOTES)
         db.execSQL(SQL_CREATE_FILTERED_LESSONS)
+        db.execSQL(SQL_CREATE_MESSAGES)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

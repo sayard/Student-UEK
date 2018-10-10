@@ -24,7 +24,7 @@
 
         <meta-data
             android:name="com.google.android.gms.ads.AD_MANAGER_APP"
-            android:value="true"/>
+            android:value="true" />
 
         <activity
             android:name=".activities.MainActivity"
@@ -75,9 +75,17 @@
             android:name=".activities.EditGroupsActivity"
             android:label="@string/edit_groups"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.AddGroupActivity"
+        <activity
+            android:name=".activities.AddGroupActivity"
             android:label="@string/add_group"
             android:screenOrientation="portrait" />
+
+        <service
+            android:name=".services.PigeonMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
