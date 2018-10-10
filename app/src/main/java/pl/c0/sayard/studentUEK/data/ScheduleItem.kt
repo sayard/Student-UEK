@@ -31,7 +31,7 @@ class ScheduleItem(
     var endDate: Date? = null
     private var date: Date? = null
     private val dayOfTheWeekFormat = SimpleDateFormat("EEEE")
-    val calendar = Calendar.getInstance()!!
+    val calendar:Calendar = Calendar.getInstance()
     var dayOfTheWeekStr: String? = null
     var dayOfTheWeek: Int? = null
 

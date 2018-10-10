@@ -16,6 +16,7 @@ import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.Utils.Companion.getTranslatedThemeName
 import pl.c0.sayard.studentUEK.Utils.Companion.setSelectedTheme
+import pl.c0.sayard.studentUEK.Utils.Companion.unsubscribeFromTopics
 import pl.c0.sayard.studentUEK.activities.*
 import pl.c0.sayard.studentUEK.jobs.RefreshScheduleJob
 
@@ -30,6 +31,7 @@ class SettingsFragment : Fragment() {
                     putBoolean(Utils.FIRST_RUN_SHARED_PREFS_KEY, true)
                     putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
                 }
+                unsubscribeFromTopics(context!!)
                 val intent = Intent(context, FirstRunStepOneActivity::class.java)
                 activity?.finish()
                 startActivity(intent)

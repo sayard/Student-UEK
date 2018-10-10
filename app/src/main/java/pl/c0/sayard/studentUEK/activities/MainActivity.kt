@@ -3,7 +3,6 @@ package pl.c0.sayard.studentUEK.activities
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.design.widget.BottomNavigationView
@@ -30,6 +29,7 @@ import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
 import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
 import pl.c0.sayard.studentUEK.Utils.Companion.onActivityCreateSetTheme
+import pl.c0.sayard.studentUEK.Utils.Companion.subscribeToTopics
 import pl.c0.sayard.studentUEK.adapters.ViewPagerAdapter
 import pl.c0.sayard.studentUEK.fragments.*
 
@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
                             showSearchBox(searchBox)
                         }
                         viewPager.currentItem = 0
-                        setTitle(getString(R.string.courses))
+                        title = getString(R.string.courses)
                     }
                     R.id.navigation_search ->{
                         if(viewPager.currentItem == 1){
@@ -209,6 +209,9 @@ class MainActivity : AppCompatActivity() {
                 prefs.edit {
                     putBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), true)
                 }
+            }
+            if(prefs.getBoolean(getString(R.string.PREFS_PIGEON_TOPICS_SET), false)){
+                subscribeToTopics(this)
             }
         }
     }

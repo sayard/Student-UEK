@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.content.edit
 import pl.c0.sayard.studentUEK.R
+import pl.c0.sayard.studentUEK.Utils.Companion.subscibeToTopic
 import pl.c0.sayard.studentUEK.data.Group
 import pl.c0.sayard.studentUEK.db.DatabaseManager
 
@@ -57,6 +58,7 @@ class GroupListAdapter(val context: Context, var groupListOriginal: List<Group>,
                         if(newId == -1L){
                             Toast.makeText(context, context.getString(R.string.error_try_again_later), Toast.LENGTH_SHORT).show()
                         }else{
+                            subscibeToTopic(groupListDisplay[position].name)
                             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
                             prefs.edit {
                                 putBoolean(context.getString(R.string.PREFS_REFRESH_SCHEDULE), true)

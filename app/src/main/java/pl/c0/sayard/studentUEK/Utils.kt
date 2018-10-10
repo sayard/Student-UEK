@@ -13,9 +13,13 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.core.content.edit
 import com.evernote.android.job.util.support.PersistableBundleCompat
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import pl.c0.sayard.studentUEK.data.FilteredLesson
 import pl.c0.sayard.studentUEK.data.Group
+import pl.c0.sayard.studentUEK.data.ScheduleGroup
 import pl.c0.sayard.studentUEK.data.ScheduleItem
+import pl.c0.sayard.studentUEK.db.DatabaseManager
 import java.util.*
 
 /**
@@ -160,6 +164,42 @@ class Utils {
                 putString(context.getString(R.string.EXTRA_NOTIFICATION_NOTE_CONTENT), scheduleItem.noteContent)
                 putString(context.getString(R.string.EXTRA_NOTIFICATION_HOUR), hourStr)
             }
+        }
+
+        fun subscribeToTopics(context:Context){
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            val dbManager = DatabaseManager(context)
+            val topics = listOf(dbManager.getGroups(), dbManager.getLanguageGroups()).flatten()
+            topics.map {
+                val formattedTopic = it.name.replace('/','_').replace(" ", "").toLowerCase()
+                FirebaseMessaging.getInstance().subscribeToTopic(formattedTopic)
+            }
+            prefs.edit{
+                putBoolean(context.getString(R.string.PREFS_PIGEON_TOPICS_SET), true)
+            }
+        }
+
+        fun unsubscribeFromTopics(context: Context){
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            val dbManager = DatabaseManager(context)
+            val topics = listOf(dbManager.getGroups(), dbManager.getLanguageGroups()).flatten()
+            topics.map {
+                val formattedTopic = it.name.replace('/','_').replace(" ", "").toLowerCase()
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(formattedTopic)
+            }
+            prefs.edit{
+                putBoolean(context.getString(R.string.PREFS_PIGEON_TOPICS_SET), false)
+            }
+        }
+
+        fun subscibeToTopic(topic: String){
+            val formattedTopic = topic.replace('/','_').replace(" ", "").toLowerCase()
+            FirebaseMessaging.getInstance().subscribeToTopic(formattedTopic)
+        }
+
+        fun unsubscribeFromTopic(topic: String){
+            val formattedTopic = topic.replace('/','_').replace(" ", "").toLowerCase()
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(formattedTopic)
         }
     }
 }

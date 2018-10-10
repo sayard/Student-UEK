@@ -14,6 +14,7 @@ import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.Utils.Companion.AUTOMATIC_SCHEDULE_REFRESH_PREFS_KEY
 import pl.c0.sayard.studentUEK.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
 import pl.c0.sayard.studentUEK.Utils.Companion.getTime
+import pl.c0.sayard.studentUEK.Utils.Companion.subscribeToTopics
 import pl.c0.sayard.studentUEK.db.DatabaseManager
 import pl.c0.sayard.studentUEK.jobs.RefreshScheduleJob
 import java.util.*
@@ -112,6 +113,10 @@ class FirstRunStepThreeActivity : AppCompatActivity() {
             prefs.edit {
                 putBoolean(FIRST_RUN_SHARED_PREFS_KEY, false)
             }
+
+            val groups = listOf(dbManager.getGroups(), dbManager.getLanguageGroups())
+            subscribeToTopics(this)
+
             val intent = Intent(this@FirstRunStepThreeActivity, MainActivity::class.java)
             startActivity(intent)
         })
