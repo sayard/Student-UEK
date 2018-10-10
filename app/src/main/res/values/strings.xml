@@ -95,6 +95,7 @@
     <string name="EXTRA_NOTIFICATION_CLASSROOM" translatable="false">pl.c0.sayard.studentUEK.EXTRA_NOTIFICATION_CLASSROOM</string>
     <string name="EXTRA_NOTIFICATION_HOUR" translatable="false">pl.c0.sayard.studentUEK.EXTRA_NOTIFICATION_HOUR</string>
     <string name="SCHEDULE_ITEM_NOTIFICATION_CHANNEL" translatable="false">pl.c0.sayard.studentUEK.SCHEDULE_ITEM_NOTIFICATION_CHANNEL</string>
+    <string name="PIGEON_NOTIFICATION_CHANNEL" translatable="false">pl.c0.sayard.studentUEK.PIGEON_NOTIFICATION_CHANNEL</string>
     <string name="reconfiguring">Reconfiguring</string>
     <string name="choose_your_groups_one_more_time">Choose your groups one more time</string>
     <string name="groups_rechoosing_dialog_msg">Are you sure yo want to choose your groups one more time?</string>
