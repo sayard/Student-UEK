@@ -1,18 +1,17 @@
 package pl.c0.sayard.studentUEK.activities
 
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.NavigationView
+import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPager
+import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import android.view.View
-import android.view.WindowManager
-import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
 import androidx.core.content.edit
 import androidx.core.net.toUri
@@ -21,11 +20,8 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
-import kotlinx.android.synthetic.main.activity_main.*
-import pl.c0.sayard.studentUEK.BackButtonEditText
 import pl.c0.sayard.studentUEK.BillingHandler
 import pl.c0.sayard.studentUEK.R
-import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
 import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
 import pl.c0.sayard.studentUEK.Utils.Companion.onActivityCreateSetTheme
@@ -35,7 +31,7 @@ import pl.c0.sayard.studentUEK.fragments.*
 
 class MainActivity : AppCompatActivity() {
 
-    private var prevMenuItem: MenuItem? = null
+    private lateinit var mDrawerLayout: DrawerLayout
 
     companion object {
         var bp: BillingProcessor? = null
@@ -63,76 +59,73 @@ class MainActivity : AppCompatActivity() {
         }else{
             setContentView(R.layout.activity_main)
 
-            val viewPager = findViewById<ViewPager>(R.id.main_frame)
+            mDrawerLayout = findViewById(R.id.drawer_layout)
+            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 
-            navigation.selectedItemId = R.id.navigation_schedule
-            navigation.setOnNavigationItemSelectedListener(BottomNavigationView.OnNavigationItemSelectedListener { item ->
-                val view = this.currentFocus
-                when(item.itemId){
-                    R.id.navigation_moodle ->{
-                        if(viewPager.currentItem == 0){
-                            val searchBox = findViewById<BackButtonEditText>(R.id.courses_search)
-                            showSearchBox(searchBox)
-                        }
+            val viewPager = findViewById<ViewPager>(R.id.main_frame)
+            setUpViewPager(viewPager)
+
+            val navigationView = findViewById<NavigationView>(R.id.nav_view)
+            navigationView.setNavigationItemSelectedListener { menuItem ->
+                menuItem.isChecked = true
+
+                when(menuItem.itemId){
+
+                    R.id.navigation_schedule -> {
                         viewPager.currentItem = 0
-                        title = getString(R.string.courses)
+                        setTitle(R.string.schedule)
                     }
-                    R.id.navigation_search ->{
-                        if(viewPager.currentItem == 1){
-                            val searchBox = findViewById<BackButtonEditText>(R.id.group_and_teacher_search)
-                            showSearchBox(searchBox)
-                        }
+                    R.id.navigation_search -> {
                         viewPager.currentItem = 1
                         setTitle(R.string.search)
                     }
-                    R.id.navigation_schedule -> {
-                        if(viewPager.currentItem == 2){
-                            val searchBox = findViewById<BackButtonEditText>(R.id.schedule_search)
-                            showSearchBox(searchBox)
-                        }
-                        viewPager.currentItem = 2
-                        setTitle(R.string.schedule)
-                    }
                     R.id.navigation_notes -> {
-                        if(viewPager.currentItem == 3){
-                            val searchBox = findViewById<BackButtonEditText>(R.id.notes_search)
-                            showSearchBox(searchBox)
-                        }
-                        viewPager.currentItem = 3
+                        viewPager.currentItem = 2
                         setTitle(R.string.notes)
                     }
-                    R.id.navigation_settings -> {
+                    R.id.navigation_moodle -> {
+                        viewPager.currentItem = 3
+                        title = getString(R.string.courses)
+                    }
+                    R.id.navigation_messages -> {
                         viewPager.currentItem = 4
+                        setTitle(R.string.messages)
+                    }
+                    R.id.navigation_settings -> {
+                        viewPager.currentItem = 5
                         setTitle(R.string.settings)
                     }
-                    else -> return@OnNavigationItemSelectedListener false
+
                 }
-                val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(view?.windowToken, 0)
+                mDrawerLayout.closeDrawers()
+
                 true
-            })
-
+            }
+            navigationView.menu.getItem(0).isChecked = true
             viewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener{
-                override fun onPageScrollStateChanged(state: Int) {
-                }
+                override fun onPageScrollStateChanged(state: Int) {}
 
-                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                }
+                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
 
                 override fun onPageSelected(position: Int) {
-                    if(prevMenuItem != null){
-                        prevMenuItem!!.isChecked = false
-                    }else{
-                        navigation.menu.getItem(2).isChecked = false
+                    when(position){
+                        0 -> setTitle(R.string.schedule)
+                        1 -> setTitle(R.string.search)
+                        2 -> setTitle(R.string.notes)
+                        3 -> setTitle(R.string.courses)
+                        4 -> setTitle(R.string.messages)
+                        5 -> setTitle(R.string.settings)
                     }
-                    val menuItem = navigation.menu.getItem(position)
-                    menuItem.isChecked = true
-                    prevMenuItem = menuItem
-                    title = getString(Utils.getTitleBasedOnPosition(position))
+                    navigationView.menu.getItem(position).isChecked = true
                 }
 
             })
-            setUpViewPager(viewPager)
+
+            supportActionBar?.apply {
+                setDisplayHomeAsUpEnabled(true)
+                setHomeAsUpIndicator(R.drawable.ic_menu)
+            }
+
             if(isDeviceOnline(this) && !prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false)){
                 MobileAds.initialize(this, "") //TODO: supply admob app id
                 val adView = findViewById<AdView>(R.id.banner_ad)
@@ -218,32 +211,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun setUpViewPager(viewPager: ViewPager) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
-        val moodleFragment = MoodleFragment.newInstance()
-        val searchFragment = SearchFragment.newInstance()
         val scheduleFragment = ScheduleFragment.newInstance()
+        val searchFragment = SearchFragment.newInstance()
         val notesFragment = NotesFragment.newInstance()
+        val moodleFragment = MoodleFragment.newInstance()
+        val messagesFragment = MessagesFragment.newInstance()
         val settingsFragment = SettingsFragment.newInstance()
-        adapter.addFragment(moodleFragment)
-        adapter.addFragment(searchFragment)
         adapter.addFragment(scheduleFragment)
+        adapter.addFragment(searchFragment)
         adapter.addFragment(notesFragment)
+        adapter.addFragment(moodleFragment)
+        adapter.addFragment(messagesFragment)
         adapter.addFragment(settingsFragment)
         viewPager.adapter = adapter
-        viewPager.currentItem = 2
-    }
-
-    private fun showSearchBox(searchBox: BackButtonEditText){
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        if(searchBox.visibility == View.GONE){
-            searchBox.visibility = View.VISIBLE
-            searchBox.isFocusableInTouchMode = true
-            searchBox.requestFocus()
-            searchBox.postDelayed({ imm.showSoftInput(searchBox, InputMethodManager.SHOW_IMPLICIT) }, 50)
-        }else{
-            searchBox.visibility = View.GONE
-            imm.hideSoftInputFromWindow(searchBox.windowToken, 0)
-        }
+        viewPager.currentItem = 0
+        setTitle(R.string.schedule)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -265,6 +247,21 @@ class MainActivity : AppCompatActivity() {
             webView.visibility = View.GONE
         }else{
             super.onBackPressed()
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            android.R.id.home -> {
+                if (!mDrawerLayout.isDrawerOpen(R.id.drawer_layout)){
+                    mDrawerLayout.openDrawer(GravityCompat.START)
+                }else{
+                    mDrawerLayout.closeDrawers()
+                }
+
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

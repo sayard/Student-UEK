@@ -8,32 +8,51 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:background="?attr/colorBackground">
 
-<android.support.v4.view.ViewPager
-    android:id="@+id/main_frame"
-    android:background="?attr/colorBackground"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_above="@id/banner_ad"/>
+    <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
 
-<com.google.android.gms.ads.AdView
-    android:id="@+id/banner_ad"
-    xmlns:ads="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_above="@+id/navigation"
-    ads:adSize="BANNER"
-    ads:adUnitId=""
-    android:visibility="gone"/>
-    <!--TODO: supply banner unit id-->
+        <RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/inner_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/colorBackground">
 
-<android.support.design.widget.BottomNavigationView
-    android:id="@+id/navigation"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?attr/colorBackground"
-    android:layout_alignParentBottom="true"
-    app:menu="@menu/navigation"
-    app:itemTextColor="@color/bnv_color_state"
-    app:itemIconTint="@color/bnv_color_state"/>
+            <android.support.v4.view.ViewPager
+                android:id="@+id/main_frame"
+                android:background="?attr/colorBackground"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/banner_ad"/>
+
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/banner_ad"
+                xmlns:ads="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                ads:adSize="BANNER"
+                ads:adUnitId=""
+                android:visibility="gone"/>
+            <!--TODO: supply banner unit id-->
+
+
+        </RelativeLayout>
+
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:menu="@menu/navigation"/>
+
+    </android.support.v4.widget.DrawerLayout>
+
 
 </RelativeLayout>
