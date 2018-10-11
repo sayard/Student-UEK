@@ -10,14 +10,13 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ListView
-import android.widget.ProgressBar
 import android.widget.TextView
 import pl.c0.sayard.studentUEK.BackButtonEditText
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.activities.AddNoteActivity
 import pl.c0.sayard.studentUEK.adapters.NotesAdapter
 import pl.c0.sayard.studentUEK.data.Note
-import pl.c0.sayard.studentUEK.parsers.NotesParser
+import pl.c0.sayard.studentUEK.db.DatabaseManager
 
 
 class NotesFragment : Fragment() {
@@ -36,12 +35,10 @@ class NotesFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_notes, container, false)
         val notesMessage = view.findViewById<TextView>(R.id.notes_message)
         val listView = view.findViewById<ListView>(R.id.notes_list_view)
-        notesSearch = view.findViewById<BackButtonEditText>(R.id.notes_search)
-        val progressBar = view.findViewById<ProgressBar>(R.id.notes_progress_bar)
-        progressBar.visibility = View.VISIBLE
+        notesSearch = view.findViewById(R.id.notes_search)
 
         if(notesSearch != null){
-            executeNotesParser(progressBar, notesMessage, listView, notesSearch!!)
+            executeNotesParser(notesMessage, listView, notesSearch!!)
         }
 
         setHasOptionsMenu(true)
@@ -78,52 +75,49 @@ class NotesFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         if(view != null){
-            val progressBar = view!!.findViewById<ProgressBar>(R.id.notes_progress_bar)
             val listView = view!!.findViewById<ListView>(R.id.notes_list_view)
             val notesMessage = view!!.findViewById<TextView>(R.id.notes_message)
             val notesSearch = view!!.findViewById<BackButtonEditText>(R.id.notes_search)
             notesSearch.setText("", TextView.BufferType.EDITABLE)
-            executeNotesParser(progressBar, notesMessage, listView, notesSearch)
+            executeNotesParser(notesMessage, listView, notesSearch)
         }
     }
 
-    private fun executeNotesParser(progressBar: ProgressBar, notesMessage: TextView, listView: ListView, notesSearch:BackButtonEditText){
-        NotesParser(this, object: NotesParser.OnTaskCompleted{
+    private fun executeNotesParser(notesMessage: TextView, listView: ListView, notesSearch:BackButtonEditText){
+        val notesList = mutableListOf<Note>()
+        if(context != null){
+            val dbManager = DatabaseManager(context!!)
+            val notesCursor = dbManager.getNotesCursor()
+            notesList.addAll(dbManager.getNotesListFromCursor(notesCursor))
+        }
+        if(notesList.isEmpty()){
+            notesMessage.visibility = View.VISIBLE
+        }else{
+            val adapter = NotesAdapter(context!!, notesList)
+            notesSearch.addTextChangedListener(object: TextWatcher{
+                override fun afterTextChanged(p0: Editable?) {}
 
-            override fun onTaskCompleted(result: List<Note>?) {
-                if(context != null){
-                    progressBar.visibility = View.GONE
-                    if(result == null || result.isEmpty()){
-                        notesMessage.visibility = View.VISIBLE
-                    }else{
-                        val adapter = NotesAdapter(context!!, result.toMutableList())
-                        notesSearch.addTextChangedListener(object: TextWatcher{
-                            override fun afterTextChanged(p0: Editable?) {}
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
-                            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    adapter.filter.filter(p0.toString())
+                }
 
-                            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                                adapter.filter.filter(p0.toString())
-                            }
-
-                        })
-                        notesSearch.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
-                            if(!hasFocus && notesSearch.text.toString() == ""){
-                                notesSearch.visibility=View.GONE
-                            }
-                        }
-                        listView.adapter = adapter
-                        listView.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
-                            val note = parent.getItemAtPosition(position) as Note
-                            val intent = Intent(context, AddNoteActivity::class.java)
-                            intent.putExtra(getString(R.string.note_id_extra), note.id)
-                            startActivity(intent)
-                        }
-                    }
+            })
+            notesSearch.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+                if(!hasFocus && notesSearch.text.toString() == ""){
+                    notesSearch.visibility=View.GONE
                 }
             }
-
-        }).execute()
+            listView.adapter = adapter
+            listView.onItemClickListener = AdapterView.OnItemClickListener { parent, _, position, _ ->
+                val note = parent.getItemAtPosition(position) as Note
+                val intent = Intent(context, AddNoteActivity::class.java)
+                intent.putExtra(getString(R.string.note_id_extra), note.id)
+                startActivity(intent)
+            }
+            notesMessage.visibility = View.GONE
+        }
     }
 
 }
