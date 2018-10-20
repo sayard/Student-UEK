@@ -20,7 +20,7 @@ import android.webkit.*
 import android.widget.*
 import androidx.core.content.edit
 import androidx.core.net.toUri
-import pl.c0.sayard.studentUEK.BackButtonEditText
+import pl.c0.sayard.studentUEK.uiElements.BackButtonEditText
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
 import pl.c0.sayard.studentUEK.adapters.CoursesAdapter
@@ -31,7 +31,7 @@ import pl.c0.sayard.studentUEK.parsers.MoodleTokenParser
 
 class MoodleFragment : Fragment() {
 
-    private var searchBox:BackButtonEditText? = null
+    private var searchBox: BackButtonEditText? = null
     private val WRITE_PERMISSIONS_REQUEST_CODE = 222
     private var requestPermissionsState = false
 

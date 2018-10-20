@@ -1,4 +1,4 @@
-package pl.c0.sayard.studentUEK
+package pl.c0.sayard.studentUEK.uiElements
 
 import android.content.Context
 import android.util.AttributeSet

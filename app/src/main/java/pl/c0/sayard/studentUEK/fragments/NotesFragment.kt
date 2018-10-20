@@ -11,7 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.TextView
-import pl.c0.sayard.studentUEK.BackButtonEditText
+import pl.c0.sayard.studentUEK.uiElements.BackButtonEditText
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.activities.AddNoteActivity
 import pl.c0.sayard.studentUEK.adapters.NotesAdapter
@@ -21,7 +21,7 @@ import pl.c0.sayard.studentUEK.db.DatabaseManager
 
 class NotesFragment : Fragment() {
 
-    private var notesSearch:BackButtonEditText? = null
+    private var notesSearch: BackButtonEditText? = null
 
     companion object {
         fun newInstance(): NotesFragment{
@@ -83,7 +83,7 @@ class NotesFragment : Fragment() {
         }
     }
 
-    private fun executeNotesParser(notesMessage: TextView, listView: ListView, notesSearch:BackButtonEditText){
+    private fun executeNotesParser(notesMessage: TextView, listView: ListView, notesSearch: BackButtonEditText){
         val notesList = mutableListOf<Note>()
         if(context != null){
             val dbManager = DatabaseManager(context!!)

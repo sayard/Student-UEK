@@ -11,7 +11,7 @@ import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import pl.c0.sayard.studentUEK.BackButtonEditText
+import pl.c0.sayard.studentUEK.uiElements.BackButtonEditText
 
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.activities.SearchedScheduleActivity
@@ -22,7 +22,7 @@ import pl.c0.sayard.studentUEK.parsers.GroupAndTeacherParser
 
 class SearchFragment : Fragment() {
 
-    private var groupsAndTeacherSearch:BackButtonEditText? = null
+    private var groupsAndTeacherSearch: BackButtonEditText? = null
 
     companion object {
         fun newInstance(): SearchFragment{

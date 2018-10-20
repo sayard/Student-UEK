@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:visibility="gone"/>
 
-        <pl.c0.sayard.studentUEK.BackButtonEditText
+        <pl.c0.sayard.studentUEK.uiElements.BackButtonEditText
             android:id="@+id/group_and_teacher_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

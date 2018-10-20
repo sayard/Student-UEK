@@ -12,7 +12,7 @@ import android.widget.AbsListView
 import android.widget.ListView
 import android.widget.ProgressBar
 import android.widget.TextView
-import pl.c0.sayard.studentUEK.BackButtonEditText
+import pl.c0.sayard.studentUEK.uiElements.BackButtonEditText
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.adapters.MessagesAdapter
 import pl.c0.sayard.studentUEK.data.Message
@@ -21,7 +21,7 @@ import pl.c0.sayard.studentUEK.db.DatabaseManager
 
 class MessagesFragment : Fragment() {
 
-    private var messagesSearch:BackButtonEditText? = null
+    private var messagesSearch: BackButtonEditText? = null
 
     companion object {
         fun newInstance(): MessagesFragment{

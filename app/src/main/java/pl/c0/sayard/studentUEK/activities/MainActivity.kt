@@ -60,7 +60,6 @@ class MainActivity : AppCompatActivity() {
             setContentView(R.layout.activity_main)
 
             mDrawerLayout = findViewById(R.id.drawer_layout)
-            mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
 
             val viewPager = findViewById<ViewPager>(R.id.main_frame)
             setUpViewPager(viewPager)
@@ -127,7 +126,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             if(isDeviceOnline(this) && !prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false)){
-                MobileAds.initialize(this, "") //TODO: supply admob app id
+                MobileAds.initialize(this, "ca-app-pub-4145044771989791~4410520862") //TODO: supply admob app id
                 val adView = findViewById<AdView>(R.id.banner_ad)
                 val adRequest = AdRequest.Builder().build()
                 adView.loadAd(adRequest)
@@ -193,7 +192,7 @@ class MainActivity : AppCompatActivity() {
             }
             bp = BillingProcessor.newBillingProcessor(
                     this,
-                    "",//TODO supply license key from google play
+                    "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjyNvdClTMta0hgUT87Om+9EYx6N2xSgwwAMLZ1RiER3L71wrlwNAjQbCxrKDPl2VgQuw+NOk9+pAtSBGXhKp8ST1bNt9owP9A4UOQAScwRNTux8Hckwsi06NQE1Z9uiXd7LCI1OTUpuSK98YPHxnpfOFyEhpOOzihYB+ljLnBbLom69CQabryWjqGnxVjn4/qeihjMq+onMpZsHArLhyBe+kMoTDFKpuhho74ut6SaVcHGUwiHjVkX75t1ZAY6qu3zoIaGWyspJVNaSwUWIXwg7uOLl6wAiiWLwRpsYY6mHV8tHgquYllthRwjH+csZVpQQUcljdJG9jxOa/ddSRkQIDAQAB",//TODO supply license key from google play
                     BillingHandler(this, this)
             )
             bp?.initialize()

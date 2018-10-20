@@ -13,13 +13,12 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.core.content.edit
-import pl.c0.sayard.studentUEK.BackButtonEditText
+import pl.c0.sayard.studentUEK.uiElements.BackButtonEditText
 import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
 import pl.c0.sayard.studentUEK.Utils.Companion.setFilters
 import pl.c0.sayard.studentUEK.Utils.Companion.setFiltersUiState
 import pl.c0.sayard.studentUEK.activities.AddLessonActivity
-import pl.c0.sayard.studentUEK.activities.ScheduleItemDetailsActivity
 import pl.c0.sayard.studentUEK.adapters.FilteredLessonsAdapter
 import pl.c0.sayard.studentUEK.adapters.ScheduleAdapter
 import pl.c0.sayard.studentUEK.data.FilteredLesson
