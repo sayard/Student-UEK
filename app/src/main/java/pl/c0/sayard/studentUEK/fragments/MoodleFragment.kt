@@ -4,7 +4,6 @@ import android.app.DownloadManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -34,6 +33,8 @@ class MoodleFragment : Fragment() {
     private var searchBox: BackButtonEditText? = null
     private val WRITE_PERMISSIONS_REQUEST_CODE = 222
     private var requestPermissionsState = false
+    private var USOS_LOGIN_PAGE_URL = "https://logowanie.uek.krakow.pl/cas/login?service=https%3A%2F%2Fe-uczelnia.uek.krakow.pl%2Flogin%2Findex.php%3FauthCAS%3DCAS"
+    private val MOODLE_HOME_PAGE_URL = "https://e-uczelnia.uek.krakow.pl/"
 
     companion object {
         fun newInstance(): MoodleFragment{
@@ -69,8 +70,19 @@ class MoodleFragment : Fragment() {
             val password = view.findViewById<EditText>(R.id.moodle_password)
             val loginButton = view.findViewById<Button>(R.id.mooodle_login_button)
             val loginProgressBar = view.findViewById<ProgressBar>(R.id.moodle_login_progress)
+            val usosLoginCheck = view.findViewById<CheckBox>(R.id.usos_login_check)
             loginButton.setOnClickListener{
-                MoodleTokenParser(context, this, loginProgressBar, loginButton).execute(login.text.toString(), password.text.toString())
+                if(usosLoginCheck.isChecked){
+                    prefs.edit{
+                        putBoolean(getString(R.string.PREFS_MOODLE_USOS_LOGIN), true)
+                    }
+                }else{
+                    prefs.edit{
+                        putBoolean(getString(R.string.PREFS_MOODLE_USOS_LOGIN), false)
+                    }
+                }
+                MoodleTokenParser(context, this, loginProgressBar, loginButton)
+                        .execute(login.text.toString(), password.text.toString())
                 prefs.edit {
                     putString(getString(R.string.PREFS_MOODLE_LOGIN), login.text.toString())
                     putString(getString(R.string.PREFS_MOODLE_PASSWORD), password.text.toString())
@@ -145,12 +157,18 @@ class MoodleFragment : Fragment() {
                         })
 
                         listView.adapter = adapter
+                        var courseUrlUsos = ""
                         listView.onItemClickListener = AdapterView.OnItemClickListener {_, _, position, _ ->
                             val courseId = result[position].id
                             val courseUrl = "https://e-uczelnia.uek.krakow.pl/course/view.php?id=$courseId"
                             webView.visibility = View.VISIBLE
                             webView.settings.javaScriptEnabled = true
                             webView.webViewClient = object: WebViewClient(){
+
+                                override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                                    view?.loadUrl(request?.url.toString())
+                                    return false
+                                }
 
                                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                                     super.onPageStarted(view, url, favicon)
@@ -163,10 +181,17 @@ class MoodleFragment : Fragment() {
                                     progressBar.visibility = View.GONE
                                     val login = prefs.getString(context?.getString(R.string.PREFS_MOODLE_LOGIN), "")
                                     val password = prefs.getString(context?.getString(R.string.PREFS_MOODLE_PASSWORD), "")
-                                    val js = "$('#inputName').val('$login'); $('#inputPassword').val('$password'); $('#submit').click();"
+                                    val js = if(prefs.getBoolean(getString(R.string.PREFS_MOODLE_USOS_LOGIN), false)){
+                                        "$('#username').val('$login'); $('#password').val('$password'); $('#fm1').submit();"
+                                    }else{
+                                        "$('#inputName').val('$login'); $('#inputPassword').val('$password'); $('#submit').click();"
+                                    }
                                     webView.evaluateJavascript(
                                             js,
                                             null)
+                                    if(url == MOODLE_HOME_PAGE_URL){
+                                        webView.loadUrl(courseUrlUsos)
+                                    }
                                 }
                             }
                             swipeRefreshLayout.isEnabled = false
@@ -191,7 +216,13 @@ class MoodleFragment : Fragment() {
                                 val dManager = context?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
                                 dManager.enqueue(request)
                             })
-                            webView.loadUrl(courseUrl)
+                            if(prefs.getBoolean(getString(R.string.PREFS_MOODLE_USOS_LOGIN), false)){
+                                webView.loadUrl(USOS_LOGIN_PAGE_URL)
+                                courseUrlUsos = courseUrl
+//                                webView.loadUrl(courseUrl)
+                            }else{
+                                webView.loadUrl(courseUrl)
+                            }
                         }
                         listView.setOnScrollListener(object: AbsListView.OnScrollListener{
                             override fun onScroll(view: AbsListView?, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
@@ -214,7 +245,7 @@ class MoodleFragment : Fragment() {
                         errorView.visibility = View.VISIBLE
                     }
                 }
-            }).execute(token)
+            }, prefs.getBoolean(getString(R.string.PREFS_MOODLE_USOS_LOGIN), false), prefs, context).execute(token)
         }else{
             errorView.visibility = View.VISIBLE
         }

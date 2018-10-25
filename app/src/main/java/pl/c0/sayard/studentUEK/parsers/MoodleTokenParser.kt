@@ -38,8 +38,12 @@ class MoodleTokenParser(val context: Context?, val fragment: Fragment, val progr
     override fun doInBackground(vararg params: String?): Pair<Int, String?>{
         val login = params[0]
         val password = params[1]
-        val tokenJsonUrl = "https://e-uczelnia.uek.krakow.pl/login/token.php?username=$login&password=$password&service=moodle_mobile_app"
-
+        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+        val tokenJsonUrl = if(prefs.getBoolean(context?.getString(R.string.PREFS_MOODLE_USOS_LOGIN), false)){
+            "http://pigeon.dev.uek.krakow.pl:8000/moodleCoursesParser/$login/$password"
+        }else{
+            "https://e-uczelnia.uek.krakow.pl/login/token.php?username=$login&password=$password&service=moodle_mobile_app"
+        }
         val url = URL(tokenJsonUrl)
         val urlConnection = url.openConnection() as HttpURLConnection
         return try{
@@ -57,9 +61,9 @@ class MoodleTokenParser(val context: Context?, val fragment: Fragment, val progr
 
     override fun onPostExecute(result: Pair<Int, String?>?) {
         when(result?.first){
-            0-> result.second?.let { parseJSON(it) }
-            1-> result.second?.let { displayError(it) }
-            2-> result.second?.let { displayError(it) }
+            PARSE_RETURN_CODE_OK-> result.second?.let { parseJSON(it) }
+            PARSE_RETURN_CODE_CANT_CONNECT-> result.second?.let { displayError(it) }
+            PARSE_RETURN_CODE_OTHER_ERROR-> result.second?.let { displayError(it) }
         }
         progressBar.visibility = View.GONE
         loginButton.visibility = View.VISIBLE
