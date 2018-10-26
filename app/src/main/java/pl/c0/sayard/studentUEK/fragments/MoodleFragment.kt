@@ -182,7 +182,7 @@ class MoodleFragment : Fragment() {
                                     val login = prefs.getString(context?.getString(R.string.PREFS_MOODLE_LOGIN), "")
                                     val password = prefs.getString(context?.getString(R.string.PREFS_MOODLE_PASSWORD), "")
                                     val js = if(prefs.getBoolean(getString(R.string.PREFS_MOODLE_USOS_LOGIN), false)){
-                                        "$('#username').val('$login'); $('#password').val('$password'); $('#fm1').submit();"
+                                        "$('#username').val('$login'); $('#password').val('$password'); $(\"input[name='submit']\").click();"
                                     }else{
                                         "$('#inputName').val('$login'); $('#inputPassword').val('$password'); $('#submit').click();"
                                     }
@@ -219,7 +219,6 @@ class MoodleFragment : Fragment() {
                             if(prefs.getBoolean(getString(R.string.PREFS_MOODLE_USOS_LOGIN), false)){
                                 webView.loadUrl(USOS_LOGIN_PAGE_URL)
                                 courseUrlUsos = courseUrl
-//                                webView.loadUrl(courseUrl)
                             }else{
                                 webView.loadUrl(courseUrl)
                             }

@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper
 /**
  * Created by Karol on 1/1/2018.
  */
-class ScheduleDbHelper(context: Context, name:String="ScheduleUEK.db", version:Int=13): SQLiteOpenHelper(context, name, null, version) {
+class ScheduleDbHelper(context: Context, name:String="ScheduleUEK.db", version:Int=14): SQLiteOpenHelper(context, name, null, version) {
 
     private val SQL_CREATE_GROUP = "CREATE TABLE IF NOT EXISTS " +
             ScheduleContract.GroupEntry.TABLE_NAME + "( " +
