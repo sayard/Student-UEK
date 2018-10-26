@@ -205,6 +205,11 @@ class MainActivity : AppCompatActivity() {
             if(prefs.getBoolean(getString(R.string.PREFS_PIGEON_TOPICS_SET), false)){
                 subscribeToTopics(this)
             }
+            if(intent.getBooleanExtra(getString(R.string.EXTRA_OPEN_MESSAGES), false)){
+                viewPager.currentItem = 4
+                setTitle(R.string.messages)
+                navigationView.menu.getItem(4).isChecked = true
+            }
         }
     }
 

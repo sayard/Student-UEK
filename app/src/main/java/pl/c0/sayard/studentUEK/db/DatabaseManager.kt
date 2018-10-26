@@ -642,16 +642,21 @@ class DatabaseManager(val context: Context, database:SQLiteOpenHelper=ScheduleDb
         if(cursor.count > 0){
             cursor.moveToFirst()
             do{
-                messages.add(
-                        Message(
-                                cursor.getString(cursor.getColumnIndex(ScheduleContract.MessageEntry.MESSAGE_TITLE)),
-                                cursor.getString(cursor.getColumnIndex(ScheduleContract.MessageEntry.MESSAGE_BODY)),
-                                cursor.getString(cursor.getColumnIndex(ScheduleContract.MessageEntry.MESSAGE_AUTHOR)),
-                                cursor.getString(cursor.getColumnIndex(ScheduleContract.MessageEntry.MESSAGE_DATE)),
-                                cursor.getString(cursor.getColumnIndex(ScheduleContract.MessageEntry.MESSAGE_GROUPS)),
-                                cursor.getInt(cursor.getColumnIndex(ScheduleContract.MessageEntry._ID))
-                        )
+                val message = Message(
+                        cursor.getString(cursor.getColumnIndex(ScheduleContract.MessageEntry.MESSAGE_TITLE)),
+                        cursor.getString(cursor.getColumnIndex(ScheduleContract.MessageEntry.MESSAGE_BODY)),
+                        cursor.getString(cursor.getColumnIndex(ScheduleContract.MessageEntry.MESSAGE_AUTHOR)),
+                        cursor.getString(cursor.getColumnIndex(ScheduleContract.MessageEntry.MESSAGE_DATE)),
+                        cursor.getString(cursor.getColumnIndex(ScheduleContract.MessageEntry.MESSAGE_GROUPS)),
+                        cursor.getInt(cursor.getColumnIndex(ScheduleContract.MessageEntry._ID))
                 )
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale("pl", "PL"))
+                val parsedDate = dateFormat.parse(message.date)
+                val calendar = Calendar.getInstance()
+                calendar.time = parsedDate
+                calendar.add(Calendar.HOUR, 2)
+                message.date = dateFormat.format(calendar.time)
+                messages.add(message)
             }while (cursor.moveToNext())
         }
 

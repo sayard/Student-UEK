@@ -40,7 +40,7 @@ class PigeonMessagingService : FirebaseMessagingService() {
                     .setContentText(message.body)
                     .setContentIntent(pendingIntent)
                     .setAutoCancel(true)
-                    .setVibrate(arrayOf<Long>(0, 200, 60, 200, 60, 200, 200, 60, 200).toLongArray())
+                    .setVibrate(arrayOf<Long>(200, 150, 200, 150, 400, 200, 150, 200).toLongArray())
                     .setLights(Color.BLUE, 500, 500)
                     .setSound(alarmSound)
                     .build()
