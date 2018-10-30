@@ -181,4 +181,6 @@
     <string name="log_in_with_usos">Log in with USOS</string>
     <string name="PREFS_MOODLE_USOS_LOGIN" translatable="false">pl.c0.sayard.studentUEK.PREFS_MOODLE_USOS_LOGIN</string>
     <string name="EXTRA_OPEN_MESSAGES" translatable="false">EXTRA_OPEN_MESSAGES</string>
+    <string name="events">Events</string>
+    <string name="toogle_calendar">Toogle calendar</string>
 </resources>

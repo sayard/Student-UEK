@@ -120,4 +120,6 @@
     <string name="msg_delete_error">Nie udało się usunąć wiadomości. Spróbuj ponownie później</string>
     <string name="msg_delete_question">Czy chcesz usunąć tą wiadomość?</string>
     <string name="log_in_with_usos">Zaloguj przez USOS</string>
+    <string name="events">Wydarzenia</string>
+    <string name="toogle_calendar">Pokaż/ukryj kalendarz</string>
 </resources>

@@ -28,6 +28,11 @@
             android:title="@string/messages"/>
 
         <item
+            android:id="@+id/navigation_events"
+            android:icon="@drawable/ic_events_24dp"
+            android:title="@string/events"/>
+
+        <item
             android:id="@+id/navigation_settings"
             android:icon="@drawable/ic_settings_24dp"
             android:title="@string/settings"/>

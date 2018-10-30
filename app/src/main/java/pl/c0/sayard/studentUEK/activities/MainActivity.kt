@@ -84,14 +84,18 @@ class MainActivity : AppCompatActivity() {
                     }
                     R.id.navigation_moodle -> {
                         viewPager.currentItem = 3
-                        title = getString(R.string.courses)
+                        setTitle(R.string.courses)
                     }
                     R.id.navigation_messages -> {
                         viewPager.currentItem = 4
                         setTitle(R.string.messages)
                     }
-                    R.id.navigation_settings -> {
+                    R.id.navigation_events -> {
                         viewPager.currentItem = 5
+                        setTitle(R.string.events)
+                    }
+                    R.id.navigation_settings -> {
+                        viewPager.currentItem = 6
                         setTitle(R.string.settings)
                     }
 
@@ -113,7 +117,8 @@ class MainActivity : AppCompatActivity() {
                         2 -> setTitle(R.string.notes)
                         3 -> setTitle(R.string.courses)
                         4 -> setTitle(R.string.messages)
-                        5 -> setTitle(R.string.settings)
+                        5 -> setTitle(R.string.events)
+                        6 -> setTitle(R.string.settings)
                     }
                     navigationView.menu.getItem(position).isChecked = true
                 }
@@ -220,12 +225,14 @@ class MainActivity : AppCompatActivity() {
         val notesFragment = NotesFragment.newInstance()
         val moodleFragment = MoodleFragment.newInstance()
         val messagesFragment = MessagesFragment.newInstance()
+        val eventsFragment = EventsFragment.newInstance()
         val settingsFragment = SettingsFragment.newInstance()
         adapter.addFragment(scheduleFragment)
         adapter.addFragment(searchFragment)
         adapter.addFragment(notesFragment)
         adapter.addFragment(moodleFragment)
         adapter.addFragment(messagesFragment)
+        adapter.addFragment(eventsFragment)
         adapter.addFragment(settingsFragment)
         viewPager.adapter = adapter
         viewPager.currentItem = 0
