@@ -88,6 +88,12 @@ class EventsFragment : Fragment() {
                     item.icon = ContextCompat.getDrawable(context!!, R.drawable.ic_drop_up_24dp)
                 }
             }
+            R.id.refresh_events -> {
+                val ft = activity?.supportFragmentManager?.beginTransaction()
+                ft?.detach(this)
+                ft?.attach(this)
+                ft?.commit()
+            }
         }
         return super.onOptionsItemSelected(item)
     }

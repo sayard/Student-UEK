@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/refresh_events"
+        android:title="@string/refresh_events"
+        android:icon="@drawable/ic_refresh_24dp"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/toggle_events_calendar"
         android:icon="@drawable/ic_drop_down_24dp"
         android:title="@string/toogle_calendar"

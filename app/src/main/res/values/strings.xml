@@ -186,4 +186,5 @@
     <string name="events_loading_error">There was an error loading events. Try again later.</string>
     <string name="no_events_at_this_date">No events at this date</string>
     <string name="could_not_load_events">Could not load events. Try again later.</string>
+    <string name="refresh_events">Refresh events</string>
 </resources>

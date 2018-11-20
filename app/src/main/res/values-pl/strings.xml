@@ -125,4 +125,5 @@
     <string name="events_loading_error">Wystąpił błąd podczas ładowania wydarzeń. Spróbuj ponownie później</string>
     <string name="no_events_at_this_date">Brak wydarzeń tego dnia</string>
     <string name="could_not_load_events">Nie udało się załadować wydarzeń. Spróbuj ponownie później.</string>
+    <string name="refresh_events">Odśwież wydarzenia</string>
 </resources>
