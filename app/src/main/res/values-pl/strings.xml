@@ -122,4 +122,7 @@
     <string name="log_in_with_usos">Zaloguj przez USOS</string>
     <string name="events">Wydarzenia</string>
     <string name="toogle_calendar">Pokaż/ukryj kalendarz</string>
+    <string name="events_loading_error">Wystąpił błąd podczas ładowania wydarzeń. Spróbuj ponownie później</string>
+    <string name="no_events_at_this_date">Brak wydarzeń tego dnia</string>
+    <string name="could_not_load_events">Nie udało się załadować wydarzeń. Spróbuj ponownie później.</string>
 </resources>

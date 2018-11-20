@@ -5,30 +5,47 @@
     tools:context="pl.c0.sayard.studentUEK.fragments.SearchFragment"
     android:background="?attr/colorBackground">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <LinearLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
+
+        <CalendarView
+            android:id="@+id/events_calendar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ProgressBar
+            android:id="@+id/events_progress_bar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            tools:ignore="UselessParent">
+            android:visibility="gone"/>
 
-            <CalendarView
-                android:id="@+id/events_calendar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/no_events_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/no_events_at_this_date"
+            android:textAlignment="center"
+            android:paddingTop="20dp"
+            android:visibility="gone"/>
 
-            <ListView
-                android:id="@+id/events_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/could_not_load_events_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/could_not_load_events"
+            android:textAlignment="center"
+            android:paddingTop="20dp"
+            android:visibility="gone"/>
 
-        </LinearLayout>
+        <ListView
+            android:id="@+id/events_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-
+    </LinearLayout>
 
 </FrameLayout>

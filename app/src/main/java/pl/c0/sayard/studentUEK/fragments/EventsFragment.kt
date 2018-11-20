@@ -7,6 +7,13 @@ import android.view.*
 import android.widget.CalendarView
 import pl.c0.sayard.studentUEK.R
 import android.view.animation.TranslateAnimation
+import android.widget.ListView
+import android.widget.ProgressBar
+import android.widget.TextView
+import pl.c0.sayard.studentUEK.adapters.EventsAdapter
+import pl.c0.sayard.studentUEK.data.Event
+import pl.c0.sayard.studentUEK.parsers.EventsParser
+import java.util.*
 
 
 class EventsFragment : Fragment() {
@@ -31,6 +38,36 @@ class EventsFragment : Fragment() {
         calendarView?.post {
             animateCalendarUp(0)
         }
+        val calendar = Calendar.getInstance()
+        calendarView?.minDate = calendar.time.time
+
+        val progressBar = view?.findViewById<ProgressBar>(R.id.events_progress_bar)
+        val couldNotLoadTextView = view?.findViewById<TextView>(R.id.could_not_load_events_text_view)
+        EventsParser(progressBar, object: EventsParser.OnTaskCompleted{
+            override fun onTaskCompleted(result: List<Event>?) {
+                couldNotLoadTextView?.visibility = View.GONE
+                if(result != null){
+                    val noEventsTextView = view?.findViewById<TextView>(R.id.no_events_text_view)
+                    val adapter = EventsAdapter(context, result, noEventsTextView)
+
+                    calendarView?.setOnDateChangeListener { _, year, month, dayOfMonth ->
+                        val constraint = if(dayOfMonth<10){
+                            "0$dayOfMonth-${month+1}-$year"
+                        }else{
+                            "$dayOfMonth-${month+1}-$year"
+                        }
+                        adapter.filter.filter(constraint)
+                    }
+                    val eventsListView = view?.findViewById<ListView>(R.id.events_list_view)
+                    eventsListView?.adapter = adapter
+                    adapter.filter.filter("")
+                }else{
+                    couldNotLoadTextView?.visibility = View.VISIBLE
+                }
+            }
+
+        }).execute()
+
         super.onResume()
     }
 
