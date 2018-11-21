@@ -187,4 +187,7 @@
     <string name="no_events_at_this_date">No events at this date</string>
     <string name="could_not_load_events">Could not load events. Try again later.</string>
     <string name="refresh_events">Refresh events</string>
+    <string name="clear_filters">Clear filters</string>
+    <string name="clear_event_filters">Clear event filters</string>
+    <string name="events_for_day">Events for day:</string>
 </resources>

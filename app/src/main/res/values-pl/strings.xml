@@ -126,4 +126,7 @@
     <string name="no_events_at_this_date">Brak wydarzeń tego dnia</string>
     <string name="could_not_load_events">Nie udało się załadować wydarzeń. Spróbuj ponownie później.</string>
     <string name="refresh_events">Odśwież wydarzenia</string>
+    <string name="clear_filters">Wyczyść filtry</string>
+    <string name="clear_event_filters">Wyczyść filtry</string>
+    <string name="events_for_day">Wydarzenia z dnia:</string>
 </resources>

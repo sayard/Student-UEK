@@ -14,7 +14,9 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
-class EventsAdapter(private val context: Context?, private var eventsListOriginal: List<Event>, private val noEventsTextView: TextView?):BaseAdapter(), Filterable {
+class EventsAdapter(private val context: Context?,
+                    private var eventsListOriginal: List<Event>,
+                    private val noEventsTextView: TextView?):BaseAdapter(), Filterable {
 
     private var eventsListDisplay = eventsListOriginal
     private val mInflater: LayoutInflater = LayoutInflater.from(context)

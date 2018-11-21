@@ -1,15 +1,13 @@
 package pl.c0.sayard.studentUEK.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.view.*
-import android.widget.CalendarView
 import pl.c0.sayard.studentUEK.R
 import android.view.animation.TranslateAnimation
-import android.widget.ListView
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import pl.c0.sayard.studentUEK.adapters.EventsAdapter
 import pl.c0.sayard.studentUEK.data.Event
 import pl.c0.sayard.studentUEK.parsers.EventsParser
@@ -44,11 +42,19 @@ class EventsFragment : Fragment() {
         val progressBar = view?.findViewById<ProgressBar>(R.id.events_progress_bar)
         val couldNotLoadTextView = view?.findViewById<TextView>(R.id.could_not_load_events_text_view)
         EventsParser(progressBar, object: EventsParser.OnTaskCompleted{
+            @SuppressLint("SetTextI18n")
             override fun onTaskCompleted(result: List<Event>?) {
                 couldNotLoadTextView?.visibility = View.GONE
                 if(result != null){
                     val noEventsTextView = view?.findViewById<TextView>(R.id.no_events_text_view)
                     val adapter = EventsAdapter(context, result, noEventsTextView)
+                    val eventsFilterWrapper = view?.findViewById<LinearLayout>(R.id.events_filter_wrapper)
+                    val eventsFilterTextView = view?.findViewById<TextView>(R.id.events_filter_text_view)
+                    val eventsFilterClear = view?.findViewById<ImageButton>(R.id.events_filter_clear)
+                    eventsFilterClear?.setOnClickListener {
+                        adapter.filter.filter("")
+                        eventsFilterWrapper?.visibility = View.GONE
+                    }
 
                     calendarView?.setOnDateChangeListener { _, year, month, dayOfMonth ->
                         val constraint = if(dayOfMonth<10){
@@ -57,6 +63,8 @@ class EventsFragment : Fragment() {
                             "$dayOfMonth-${month+1}-$year"
                         }
                         adapter.filter.filter(constraint)
+                        eventsFilterTextView?.text = getString(R.string.events_for_day) + constraint
+                        eventsFilterWrapper?.visibility = View.VISIBLE
                     }
                     val eventsListView = view?.findViewById<ListView>(R.id.events_list_view)
                     eventsListView?.adapter = adapter
