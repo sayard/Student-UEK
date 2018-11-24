@@ -45,6 +45,7 @@ class EventsFragment : Fragment() {
             @SuppressLint("SetTextI18n")
             override fun onTaskCompleted(result: List<Event>?) {
                 couldNotLoadTextView?.visibility = View.GONE
+                calendarView?.date = System.currentTimeMillis()
                 if(result != null){
                     val noEventsTextView = view?.findViewById<TextView>(R.id.no_events_text_view)
                     val adapter = EventsAdapter(context, result, noEventsTextView)
@@ -54,8 +55,8 @@ class EventsFragment : Fragment() {
                     eventsFilterClear?.setOnClickListener {
                         adapter.filter.filter("")
                         eventsFilterWrapper?.visibility = View.GONE
+                        calendarView?.date = System.currentTimeMillis()
                     }
-
                     calendarView?.setOnDateChangeListener { _, year, month, dayOfMonth ->
                         val constraint = if(dayOfMonth<10){
                             "0$dayOfMonth-${month+1}-$year"
