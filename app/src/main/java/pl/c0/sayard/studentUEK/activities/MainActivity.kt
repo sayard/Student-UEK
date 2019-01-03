@@ -20,8 +20,11 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.reward.RewardedVideoAd
 import pl.c0.sayard.studentUEK.BillingHandler
+import pl.c0.sayard.studentUEK.HideAdsListener
 import pl.c0.sayard.studentUEK.R
+import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
 import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
 import pl.c0.sayard.studentUEK.Utils.Companion.onActivityCreateSetTheme
@@ -32,6 +35,7 @@ import pl.c0.sayard.studentUEK.fragments.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mDrawerLayout: DrawerLayout
+    private lateinit var mRewardedVideoAd:RewardedVideoAd
 
     companion object {
         var bp: BillingProcessor? = null
@@ -98,6 +102,9 @@ class MainActivity : AppCompatActivity() {
                         viewPager.currentItem = 6
                         setTitle(R.string.settings)
                     }
+                    R.id.navigation_hide_ads -> {
+                        loadRewardAd()
+                    }
 
                 }
                 mDrawerLayout.closeDrawers()
@@ -130,8 +137,9 @@ class MainActivity : AppCompatActivity() {
                 setHomeAsUpIndicator(R.drawable.ic_menu)
             }
 
-            if(isDeviceOnline(this) && !prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false)){
-                MobileAds.initialize(this, "") //TODO: supply admob app id
+            if(isDeviceOnline(this) &&
+                    !prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false) &&
+                    !Utils.isHideAdsEnabled(this)){
                 val adView = findViewById<AdView>(R.id.banner_ad)
                 val adRequest = AdRequest.Builder().build()
                 adView.loadAd(adRequest)
@@ -146,6 +154,8 @@ class MainActivity : AppCompatActivity() {
                         adView.visibility = View.GONE
                     }
                 }
+                mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this)
+                mRewardedVideoAd.rewardedVideoAdListener = HideAdsListener(this, mRewardedVideoAd)
             }
             if(prefs.getBoolean(getString(R.string.PREFS_APP_NOT_RATED), true)){
                 val ratingCounter = prefs.getInt(getString(R.string.PREFS_APP_RATING_DIALOG_COUNTER), 20) - 1
@@ -274,6 +284,11 @@ class MainActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun loadRewardAd(){
+        mRewardedVideoAd.loadAd("ca-app-pub-4145044771989791/5285223374",//TODO supply video ad id
+                AdRequest.Builder().build())
     }
 
 }

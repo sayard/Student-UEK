@@ -190,4 +190,6 @@
     <string name="clear_filters">Clear filters</string>
     <string name="clear_event_filters">Clear event filters</string>
     <string name="events_for_day">Events for day:</string>
+    <string name="PREFS_ADS_DISABLED_DATE">pl.c0.sayard.studentUEK.PREFS_ADS_DISABLED_DATE</string>
+    <string name="video_ad_failed_to_load">Failed to load ad. Try again later.</string>
 </resources>

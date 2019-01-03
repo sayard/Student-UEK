@@ -201,5 +201,18 @@ class Utils {
             val formattedTopic = topic.replace('/','_').replace(" ", "").toLowerCase()
             FirebaseMessaging.getInstance().unsubscribeFromTopic(formattedTopic)
         }
+
+        fun setHideAdsDatePrefs(context: Context){
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            prefs.edit{
+                putLong(context.getString(R.string.PREFS_ADS_DISABLED_DATE), (System.currentTimeMillis()+259200000L))//3 days in milliseconds
+            }
+        }
+
+        fun isHideAdsEnabled(context: Context):Boolean{
+            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
+            val adsDisabledDate = Date(prefs.getLong(context.getString(R.string.PREFS_ADS_DISABLED_DATE), 0))
+            return adsDisabledDate.after(Date(System.currentTimeMillis()))
+        }
     }
 }
