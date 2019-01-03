@@ -50,6 +50,9 @@ android:background="?attr/colorBackground">
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:fitsSystemWindows="true"
+            android:backgroundTint="?attr/colorBackgroundRow"
+            app:itemIconTint="@drawable/drawer_item_color"
+            app:itemTextColor="@drawable/drawer_item_color"
             app:menu="@menu/navigation"/>
 
     </android.support.v4.widget.DrawerLayout>
