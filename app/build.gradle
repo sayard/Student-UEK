@@ -13,8 +13,8 @@ android {
         applicationId "pl.c0.sayard.studentUEK"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 41
-        versionName "1.5.5"
+        versionCode 42
+        versionName "1.6.0-beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
