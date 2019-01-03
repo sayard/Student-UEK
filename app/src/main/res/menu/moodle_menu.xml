@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item android:id="@+id/search_courses"
         android:icon="@drawable/ic_search_button_24dp"
         android:title="@string/search"
         app:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/moodle_logout"
+        android:icon="@drawable/ic_exit_24dp"
+        android:title="@string/log_out"
+        app:showAsAction="ifRoom" />
+
 </menu>

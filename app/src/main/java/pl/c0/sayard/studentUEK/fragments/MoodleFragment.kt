@@ -1,7 +1,9 @@
 package pl.c0.sayard.studentUEK.fragments
 
+import android.app.AlertDialog
 import android.app.DownloadManager
 import android.content.Context
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Build
@@ -35,6 +37,21 @@ class MoodleFragment : Fragment() {
     private var requestPermissionsState = false
     private var USOS_LOGIN_PAGE_URL = "https://logowanie.uek.krakow.pl/cas/login?service=https%3A%2F%2Fe-uczelnia.uek.krakow.pl%2Flogin%2Findex.php%3FauthCAS%3DCAS"
     private val MOODLE_HOME_PAGE_URL = "https://e-uczelnia.uek.krakow.pl/"
+
+    private val logoutDialogListener = DialogInterface.OnClickListener { dialog, which ->
+        when(which){
+            DialogInterface.BUTTON_POSITIVE->{
+                PreferenceManager.getDefaultSharedPreferences(context).edit{
+                    putString(getString(R.string.pl_c0_sayard_StudentUEK_PREFS_MOODLE_TOKEN), null)
+                }
+                fragmentManager?.beginTransaction()
+                        ?.detach(this)
+                        ?.attach(this)
+                        ?.commit()
+            }
+            DialogInterface.BUTTON_NEGATIVE->{}
+        }
+    }
 
     companion object {
         fun newInstance(): MoodleFragment{
@@ -70,17 +87,7 @@ class MoodleFragment : Fragment() {
             val password = view.findViewById<EditText>(R.id.moodle_password)
             val loginButton = view.findViewById<Button>(R.id.mooodle_login_button)
             val loginProgressBar = view.findViewById<ProgressBar>(R.id.moodle_login_progress)
-            val usosLoginCheck = view.findViewById<CheckBox>(R.id.usos_login_check)
             loginButton.setOnClickListener{
-                if(usosLoginCheck.isChecked){
-                    prefs.edit{
-                        putBoolean(getString(R.string.PREFS_MOODLE_USOS_LOGIN), true)
-                    }
-                }else{
-                    prefs.edit{
-                        putBoolean(getString(R.string.PREFS_MOODLE_USOS_LOGIN), false)
-                    }
-                }
                 MoodleTokenParser(context, this, loginProgressBar, loginButton)
                         .execute(login.text.toString(), password.text.toString())
                 prefs.edit {
@@ -101,7 +108,11 @@ class MoodleFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        inflater?.inflate(R.menu.moodle_menu, menu)
+        if(PreferenceManager
+                        .getDefaultSharedPreferences(context)
+                        .getString(getString(R.string.pl_c0_sayard_StudentUEK_PREFS_MOODLE_TOKEN), null) != null){
+            inflater?.inflate(R.menu.moodle_menu, menu)
+        }
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -118,6 +129,14 @@ class MoodleFragment : Fragment() {
                     searchBox?.visibility = View.GONE
                     imm.hideSoftInputFromWindow(searchBox?.windowToken, 0)
                 }
+            }
+            R.id.moodle_logout->{
+                val logoutDialogBuilder = AlertDialog.Builder(context)
+                logoutDialogBuilder
+                        .setMessage(getString(R.string.do_you_want_to_log_out))
+                        .setPositiveButton(getString(R.string.yes), logoutDialogListener)
+                        .setNegativeButton(getString(R.string.no), logoutDialogListener)
+                        .show()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -244,7 +263,7 @@ class MoodleFragment : Fragment() {
                         errorView.visibility = View.VISIBLE
                     }
                 }
-            }, prefs.getBoolean(getString(R.string.PREFS_MOODLE_USOS_LOGIN), false), prefs, context).execute(token)
+            }, prefs, context).execute(token)
         }else{
             errorView.visibility = View.VISIBLE
         }

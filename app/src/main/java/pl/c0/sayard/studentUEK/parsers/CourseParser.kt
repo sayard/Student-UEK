@@ -18,13 +18,8 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.net.UnknownHostException
 
-class CourseParser(private val progressBar: ProgressBar, private val onTaskCompleted: OnTaskCompleted, private val parseFromUsos: Boolean, val prefs: SharedPreferences, val context: Context?): AsyncTask<String, Void, List<Course>>(){
+class CourseParser(private val progressBar: ProgressBar, private val onTaskCompleted: OnTaskCompleted, val prefs: SharedPreferences, val context: Context?): AsyncTask<String, Void, List<Course>>(){
 
-    private val KEY_TAG = "KEY"
-    private val NAME_ATTRIBUTE = "name"
-    private val ID_NAME_ATTRIBUTE_VALUE = "id"
-    private val FULLNAME_NAME_ATTRIBUTE_VALUE = "fullname"
-    private val SHORTNAME_NAME_ATTRIBUTE_VALUE = "shortname"
 
     interface OnTaskCompleted{
         fun onTaskCompleted(result: List<Course>?)
@@ -36,82 +31,28 @@ class CourseParser(private val progressBar: ProgressBar, private val onTaskCompl
     }
 
     override fun doInBackground(vararg params: String?): List<Course> {
-        if(parseFromUsos) {
-            val username = prefs.getString(context?.getString(R.string.PREFS_MOODLE_LOGIN), "")
-            val password = prefs.getString(context?.getString(R.string.PREFS_MOODLE_PASSWORD), "")
-            val urlString = "http://pigeon.dev.uek.krakow.pl:8000/moodleCoursesParser/$username/$password"
-            val url = URL(urlString)
-            val urlConnection = url.openConnection() as HttpURLConnection
-            return try{
-                val inputStream = BufferedInputStream(urlConnection.inputStream)
-                val result = String(ByteStreams.toByteArray(inputStream), Charsets.UTF_8)
-                urlConnection.disconnect()
-                val mainObject = JSONObject(result)
-                val coursesArray = mainObject.getJSONArray("courses")
-                val courseList = mutableListOf<Course>()
-                for (i in 0..(coursesArray.length() - 1)) {
-                    val course = coursesArray.getJSONObject(i)
-                    courseList.add(Course(course.getInt("id"), course.getString("name"), ""))
-                }
-                courseList
-            }catch(e: UnknownHostException){
-                emptyList()
-            }catch(e: Exception){
-                Log.v("USOS_COURSES_EXCEPTION", e.printStackTrace().toString())
-                emptyList()
-            }
-        }else{
-            val token = params[0]
-            val urlString = "https://e-uczelnia.uek.krakow.pl/webservice/rest/server.php?wstoken=$token&wsfunction=mod_assign_get_assignments"
+        val username = prefs.getString(context?.getString(R.string.PREFS_MOODLE_LOGIN), "")
+        val password = prefs.getString(context?.getString(R.string.PREFS_MOODLE_PASSWORD), "")
+        val urlString = "http://35.246.253.130:8000/moodleCoursesParser/$username/$password"
+        val url = URL(urlString)
+        val urlConnection = url.openConnection() as HttpURLConnection
+        return try{
+            val inputStream = BufferedInputStream(urlConnection.inputStream)
+            val result = String(ByteStreams.toByteArray(inputStream), Charsets.UTF_8)
+            urlConnection.disconnect()
+            val mainObject = JSONObject(result)
+            val coursesArray = mainObject.getJSONArray("courses")
             val courseList = mutableListOf<Course>()
-            return try {
-                val url = URL(urlString)
-                val factory = XmlPullParserFactory.newInstance()
-                factory.isNamespaceAware = false
-                val xpp = factory.newPullParser()
-                xpp.setInput(getInputStream(url), "UTF_8")
-                var eventType = xpp.eventType
-                var idTemp: String? = null
-                var fullNameTemp: String? = null
-                var shortNameTemp: String? = null
-                while (eventType != XmlPullParser.END_DOCUMENT) {
-                    if (eventType == XmlPullParser.START_TAG) {
-                        if (xpp.name.equals(KEY_TAG, true)) {
-                            when {
-                                xpp.getAttributeValue(null, NAME_ATTRIBUTE) == ID_NAME_ATTRIBUTE_VALUE -> {
-                                    repeat(2) {
-                                        xpp.next()
-                                    }
-                                    idTemp = xpp.text
-                                }
-                                xpp.getAttributeValue(null, NAME_ATTRIBUTE) == FULLNAME_NAME_ATTRIBUTE_VALUE -> {
-                                    repeat(2) {
-                                        xpp.next()
-                                    }
-                                    fullNameTemp = xpp.text
-                                }
-                                xpp.getAttributeValue(null, NAME_ATTRIBUTE) == SHORTNAME_NAME_ATTRIBUTE_VALUE -> {
-                                    repeat(2) {
-                                        xpp.next()
-                                    }
-                                    shortNameTemp = xpp.text
-                                }
-                            }
-                            if (idTemp != null && fullNameTemp != null && shortNameTemp != null) {
-                                courseList.add(Course(idTemp.toInt(), fullNameTemp, shortNameTemp))
-                                idTemp = null
-                                fullNameTemp = null
-                                shortNameTemp = null
-                            }
-                        }
-                    }
-                    eventType = xpp.next()
-                }
-
-                return courseList
-            } catch (e: Exception) {
-                emptyList()
+            for (i in 0..(coursesArray.length() - 1)) {
+                val course = coursesArray.getJSONObject(i)
+                courseList.add(Course(course.getInt("id"), course.getString("name"), ""))
             }
+            courseList
+        }catch(e: UnknownHostException){
+            emptyList()
+        }catch(e: Exception){
+            Log.v("USOS_COURSES_EXCEPTION", e.printStackTrace().toString())
+            emptyList()
         }
     }
 
@@ -121,7 +62,4 @@ class CourseParser(private val progressBar: ProgressBar, private val onTaskCompl
         onTaskCompleted.onTaskCompleted(result)
     }
 
-    private fun getInputStream(url: URL): InputStream {
-        return url.openConnection().getInputStream()
-    }
 }

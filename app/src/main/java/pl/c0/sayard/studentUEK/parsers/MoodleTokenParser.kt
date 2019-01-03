@@ -38,12 +38,7 @@ class MoodleTokenParser(val context: Context?, val fragment: Fragment, val progr
     override fun doInBackground(vararg params: String?): Pair<Int, String?>{
         val login = params[0]
         val password = params[1]
-        val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-        val tokenJsonUrl = if(prefs.getBoolean(context?.getString(R.string.PREFS_MOODLE_USOS_LOGIN), false)){
-            "http://pigeon.dev.uek.krakow.pl:8000/moodleCoursesParser/$login/$password"
-        }else{
-            "https://e-uczelnia.uek.krakow.pl/login/token.php?username=$login&password=$password&service=moodle_mobile_app"
-        }
+        val tokenJsonUrl = "http://35.246.253.130:8000/moodleCoursesParser/$login/$password" //TODO change to uek domain when available
         val url = URL(tokenJsonUrl)
         val urlConnection = url.openConnection() as HttpURLConnection
         return try{

@@ -140,6 +140,7 @@ class MainActivity : AppCompatActivity() {
             if(isDeviceOnline(this) &&
                     !prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false) &&
                     !Utils.isHideAdsEnabled(this)){
+                MobileAds.initialize(this, "") //TODO supply adMob app id
                 val adView = findViewById<AdView>(R.id.banner_ad)
                 val adRequest = AdRequest.Builder().build()
                 adView.loadAd(adRequest)

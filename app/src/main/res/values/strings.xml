@@ -192,4 +192,7 @@
     <string name="events_for_day">Events for day:</string>
     <string name="PREFS_ADS_DISABLED_DATE">pl.c0.sayard.studentUEK.PREFS_ADS_DISABLED_DATE</string>
     <string name="video_ad_failed_to_load">Failed to load ad. Try again later.</string>
+    <string name="log_out">Log out</string>
+    <string name="log_in">Log in</string>
+    <string name="do_you_want_to_log_out">Do you want to log out?</string>
 </resources>
