@@ -22,15 +22,15 @@
             android:icon="@drawable/ic_moodle_24dp"
             android:title="@string/courses"/>
 
-        <item
-            android:id="@+id/navigation_messages"
-            android:icon="@drawable/ic_messages_24dp"
-            android:title="@string/messages"/>
+        <!--<item-->
+            <!--android:id="@+id/navigation_messages"-->
+            <!--android:icon="@drawable/ic_messages_24dp"-->
+            <!--android:title="@string/messages"/>-->
 
-        <item
-            android:id="@+id/navigation_events"
-            android:icon="@drawable/ic_events_24dp"
-            android:title="@string/events"/>
+        <!--<item-->
+            <!--android:id="@+id/navigation_events"-->
+            <!--android:icon="@drawable/ic_events_24dp"-->
+            <!--android:title="@string/events"/>-->
 
         <item
             android:id="@+id/navigation_settings"

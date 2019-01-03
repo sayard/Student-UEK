@@ -90,14 +90,14 @@ class MainActivity : AppCompatActivity() {
                         viewPager.currentItem = 3
                         setTitle(R.string.courses)
                     }
-                    R.id.navigation_messages -> {
-                        viewPager.currentItem = 4
-                        setTitle(R.string.messages)
-                    }
-                    R.id.navigation_events -> {
-                        viewPager.currentItem = 5
-                        setTitle(R.string.events)
-                    }
+//                    R.id.navigation_messages -> {
+//                        viewPager.currentItem = 4
+//                        setTitle(R.string.messages)
+//                    }
+//                    R.id.navigation_events -> {
+//                        viewPager.currentItem = 5
+//                        setTitle(R.string.events)
+//                    }
                     R.id.navigation_settings -> {
                         viewPager.currentItem = 6
                         setTitle(R.string.settings)
@@ -112,6 +112,9 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             navigationView.menu.getItem(0).isChecked = true
+
+            navigationView.menu.findItem(R.id.navigation_hide_ads).isVisible = !prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false)
+
             viewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener{
                 override fun onPageScrollStateChanged(state: Int) {}
 
@@ -288,7 +291,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadRewardAd(){
-        mRewardedVideoAd.loadAd("ca-app-pub-4145044771989791/5285223374",//TODO supply video ad id
+        mRewardedVideoAd.loadAd("",//TODO supply video ad id
                 AdRequest.Builder().build())
     }
 

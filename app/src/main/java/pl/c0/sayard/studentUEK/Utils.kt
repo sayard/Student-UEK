@@ -205,7 +205,7 @@ class Utils {
         fun setHideAdsDatePrefs(context: Context){
             val prefs = PreferenceManager.getDefaultSharedPreferences(context)
             prefs.edit{
-                putLong(context.getString(R.string.PREFS_ADS_DISABLED_DATE), (System.currentTimeMillis()+259200000L))//3 days in milliseconds
+                putLong(context.getString(R.string.PREFS_ADS_DISABLED_DATE), (System.currentTimeMillis() + 3600000L))//3 days in milliseconds TODO change to 259200000
             }
         }
 
