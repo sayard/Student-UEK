@@ -162,7 +162,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this)
-                mRewardedVideoAd.rewardedVideoAdListener = HideAdsListener(this, mRewardedVideoAd)
+                mRewardedVideoAd.rewardedVideoAdListener = HideAdsListener(this, mRewardedVideoAd, navigationView, adView)
             }
             if(prefs.getBoolean(getString(R.string.PREFS_APP_NOT_RATED), true)){
                 val ratingCounter = prefs.getInt(getString(R.string.PREFS_APP_RATING_DIALOG_COUNTER), 20) - 1

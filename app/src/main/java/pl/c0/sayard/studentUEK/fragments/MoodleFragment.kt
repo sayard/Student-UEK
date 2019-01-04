@@ -205,7 +205,7 @@ class MoodleFragment : Fragment() {
                                     val js = "$('#username').val('$login');" +
                                             "$('#password').val('$password');" +
                                             "$(\"input[name='submit']\").attr('disabled', false);" +
-                                            "$(\"input[name='submit']\").click(); $('');"
+                                            "$(\"input[name='submit']\").click();"
                                     webView.evaluateJavascript(
                                             js,
                                             null)
