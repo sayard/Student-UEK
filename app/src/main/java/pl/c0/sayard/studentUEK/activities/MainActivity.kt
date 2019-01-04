@@ -27,6 +27,7 @@ import pl.c0.sayard.studentUEK.R
 import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
 import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
+import pl.c0.sayard.studentUEK.Utils.Companion.isHideAdsEnabled
 import pl.c0.sayard.studentUEK.Utils.Companion.onActivityCreateSetTheme
 import pl.c0.sayard.studentUEK.Utils.Companion.subscribeToTopics
 import pl.c0.sayard.studentUEK.adapters.ViewPagerAdapter
@@ -114,7 +115,7 @@ class MainActivity : AppCompatActivity() {
             }
             navigationView.menu.getItem(0).isChecked = true
 
-            navigationView.menu.findItem(R.id.navigation_hide_ads).isVisible = !prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false)
+            navigationView.menu.findItem(R.id.navigation_hide_ads).isVisible = !(prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false) || isHideAdsEnabled(this))
 
             viewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener{
                 override fun onPageScrollStateChanged(state: Int) {}
