@@ -176,12 +176,16 @@ class MoodleFragment : Fragment() {
                         })
 
                         listView.adapter = adapter
-                        var courseUrlUsos = ""
                         listView.onItemClickListener = AdapterView.OnItemClickListener {_, _, position, _ ->
                             val courseId = result[position].id
                             val courseUrl = "https://e-uczelnia.uek.krakow.pl/course/view.php?id=$courseId"
-                            webView.visibility = View.VISIBLE
-                            webView.settings.javaScriptEnabled = true
+                            webView.apply {
+                                visibility = View.VISIBLE
+                                settings.javaScriptEnabled = true
+                                settings.domStorageEnabled = true
+                                settings.databaseEnabled = true
+                            }
+
                             webView.webViewClient = object: WebViewClient(){
 
                                 override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
@@ -196,20 +200,21 @@ class MoodleFragment : Fragment() {
                                 }
 
                                 override fun onPageFinished(view: WebView?, url: String?) {
-                                    view?.visibility = View.VISIBLE
-                                    progressBar.visibility = View.GONE
                                     val login = prefs.getString(context?.getString(R.string.PREFS_MOODLE_LOGIN), "")
                                     val password = prefs.getString(context?.getString(R.string.PREFS_MOODLE_PASSWORD), "")
-                                    val js = if(prefs.getBoolean(getString(R.string.PREFS_MOODLE_USOS_LOGIN), false)){
-                                        "$('#username').val('$login'); $('#password').val('$password'); $(\"input[name='submit']\").click();"
-                                    }else{
-                                        "$('#inputName').val('$login'); $('#inputPassword').val('$password'); $('#submit').click();"
-                                    }
+                                    val js = "$('#username').val('$login');" +
+                                            "$('#password').val('$password');" +
+                                            "$(\"input[name='submit']\").attr('disabled', false);" +
+                                            "$(\"input[name='submit']\").click(); $('');"
                                     webView.evaluateJavascript(
                                             js,
                                             null)
                                     if(url == MOODLE_HOME_PAGE_URL){
-                                        webView.loadUrl(courseUrlUsos)
+                                        webView.loadUrl(courseUrl)
+                                    }
+                                    if(url == courseUrl){
+                                        view?.visibility = View.VISIBLE
+                                        progressBar.visibility = View.GONE
                                     }
                                 }
                             }
@@ -235,12 +240,7 @@ class MoodleFragment : Fragment() {
                                 val dManager = context?.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
                                 dManager.enqueue(request)
                             })
-                            if(prefs.getBoolean(getString(R.string.PREFS_MOODLE_USOS_LOGIN), false)){
-                                webView.loadUrl(USOS_LOGIN_PAGE_URL)
-                                courseUrlUsos = courseUrl
-                            }else{
-                                webView.loadUrl(courseUrl)
-                            }
+                            webView.loadUrl(USOS_LOGIN_PAGE_URL)
                         }
                         listView.setOnScrollListener(object: AbsListView.OnScrollListener{
                             override fun onScroll(view: AbsListView?, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
