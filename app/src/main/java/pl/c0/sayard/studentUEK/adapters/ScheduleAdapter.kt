@@ -112,9 +112,11 @@ class ScheduleAdapter(var context: Context, var activity: FragmentActivity?, var
                         .setPositiveButton(context.getString(R.string.remove)) { _, _ ->
                             DatabaseManager(context).addLessonToFilteredLessons(scheduleItemObj)
                             val ft = activity!!.supportFragmentManager.beginTransaction()
-                            ft?.detach(fragment)
-                            ft?.attach(fragment)
-                            ft?.commit()
+                            if(fragment != null){
+                                ft.detach(fragment!!)
+                                ft.attach(fragment!!)
+                                ft.commit()
+                            }
                         }
                         .setNegativeButton(context.getString(R.string.cancel)) { _, _ ->}
                         .show()
