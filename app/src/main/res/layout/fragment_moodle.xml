@@ -28,7 +28,8 @@
             android:hint="@string/search"
             android:textColorHint="?attr/colorTextSecondary"
             android:textColor="?attr/colorTextPrimary"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:singleLine="true"/>
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/courses_swipe"
