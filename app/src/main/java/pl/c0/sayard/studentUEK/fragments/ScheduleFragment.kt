@@ -85,6 +85,18 @@ class ScheduleFragment : Fragment() {
                         scheduleSearch?.visibility = View.GONE
                     }
                 }
+                scheduleSearch?.setOnTouchListener { v, event ->
+                    if(event.action == MotionEvent.ACTION_UP){
+                        if(event.rawX >= scheduleSearch!!.right - scheduleSearch!!.compoundDrawables[2].bounds.width()){
+                            val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                            scheduleSearch?.setText("")
+                            scheduleSearch?.visibility = View.GONE
+                            imm.hideSoftInputFromWindow(scheduleSearch?.windowToken, 0)
+                            true
+                        }
+                    }
+                    false
+                }
 
                 val listView = view.findViewById<ListView>(R.id.schedule_list_view)
                 listView.adapter = adapter

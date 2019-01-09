@@ -39,6 +39,18 @@ class NotesFragment : Fragment() {
 
         if(notesSearch != null){
             executeNotesParser(notesMessage, listView, notesSearch!!)
+            notesSearch?.setOnTouchListener { v, event ->
+                if(event.action == MotionEvent.ACTION_UP){
+                    if(event.rawX >= notesSearch!!.right - notesSearch!!.compoundDrawables[2].bounds.width()){
+                        val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                        notesSearch?.setText("")
+                        notesSearch?.visibility = View.GONE
+                        imm.hideSoftInputFromWindow(notesSearch?.windowToken, 0)
+                        true
+                    }
+                }
+                false
+            }
         }
 
         setHasOptionsMenu(true)

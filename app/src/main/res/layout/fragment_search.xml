@@ -21,6 +21,7 @@
             android:id="@+id/group_and_teacher_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_cancel_font_24dp"
             android:hint="@string/search"
             android:textColorHint="?attr/colorTextSecondary"
             android:textColor="?attr/colorTextPrimary"

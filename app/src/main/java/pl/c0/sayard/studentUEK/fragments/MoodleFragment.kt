@@ -174,6 +174,18 @@ class MoodleFragment : Fragment() {
                             }
 
                         })
+                        searchBox?.setOnTouchListener { v, event ->
+                            if(event.action == MotionEvent.ACTION_UP){
+                                if(event.rawX >= searchBox!!.right - searchBox!!.compoundDrawables[2].bounds.width()){
+                                    val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                                    searchBox?.setText("")
+                                    searchBox?.visibility = View.GONE
+                                    imm.hideSoftInputFromWindow(searchBox?.windowToken, 0)
+                                    true
+                                }
+                            }
+                            false
+                        }
 
                         listView.adapter = adapter
                         listView.onItemClickListener = AdapterView.OnItemClickListener {_, _, position, _ ->

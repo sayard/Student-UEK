@@ -63,6 +63,18 @@ class MessagesFragment : Fragment() {
                     messagesSearch?.visibility = View.GONE
                 }
             }
+            messagesSearch?.setOnTouchListener { v, event ->
+                if(event.action == MotionEvent.ACTION_UP){
+                    if(event.rawX >= messagesSearch!!.right - messagesSearch!!.compoundDrawables[2].bounds.width()){
+                        val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                        messagesSearch?.setText("")
+                        messagesSearch?.visibility = View.GONE
+                        imm.hideSoftInputFromWindow(messagesSearch?.windowToken, 0)
+                        true
+                    }
+                }
+                false
+            }
 
             val listView = view.findViewById<ListView>(R.id.messages_list_view)
             listView.adapter = adapter

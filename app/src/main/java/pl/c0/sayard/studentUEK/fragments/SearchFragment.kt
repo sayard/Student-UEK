@@ -128,6 +128,18 @@ class SearchFragment : Fragment() {
         super.onResume()
         val searchBox = view?.findViewById<EditText>(R.id.group_and_teacher_search)
         searchBox?.setText("", TextView.BufferType.EDITABLE)
+        searchBox?.setOnTouchListener { v, event ->
+            if(event.action == MotionEvent.ACTION_UP){
+                if(event.rawX >= searchBox!!.right - searchBox!!.compoundDrawables[2].bounds.width()){
+                    val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    searchBox?.setText("")
+                    searchBox?.visibility = View.GONE
+                    imm.hideSoftInputFromWindow(searchBox?.windowToken, 0)
+                    true
+                }
+            }
+            false
+        }
     }
 
     private fun getAdapter(context: Context, groupList: List<Group>): GroupAndTeacherListAdapter{
