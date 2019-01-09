@@ -40,6 +40,6 @@
         <item
             android:id="@+id/navigation_hide_ads"
             android:icon="@drawable/ic_card_giftcard_24dp"
-            android:title="Hide Ads"/>
+            android:title="@string/hide_ads"/>
     </group>
 </menu>

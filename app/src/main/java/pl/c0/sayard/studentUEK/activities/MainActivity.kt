@@ -295,6 +295,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun loadRewardAd(){
         mRewardedVideoAd.loadAd("",//TODO supply video ad id
+        if(!prefs.getBoolean(getString(R.string.PREFS_VIDEO_ADD_MESSAGE_SHOWN), false)){
+            AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.hide_ads))
+                    .setMessage(getString(R.string.support_creators_msg))
+                    .setPositiveButton(getString(R.string.buy_us_a_beer)){dialog, _ ->
+                        prefs.edit {
+                            putBoolean(getString(R.string.PREFS_VIDEO_ADD_MESSAGE_SHOWN), true)
+                        }
+                        dialog.dismiss()
+                    }
+                    .show()
+        }
+        mRewardedVideoAd.loadAd("ca-app-pub-4145044771989791/5285223374",//TODO supply video ad id
                 AdRequest.Builder().build())
     }
 
