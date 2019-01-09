@@ -190,12 +190,12 @@
     <string name="clear_filters">Clear filters</string>
     <string name="clear_event_filters">Clear event filters</string>
     <string name="events_for_day">Events for day:</string>
-    <string name="PREFS_ADS_DISABLED_DATE">pl.c0.sayard.studentUEK.PREFS_ADS_DISABLED_DATE</string>
+    <string name="PREFS_ADS_DISABLED_DATE" translatable="false">pl.c0.sayard.studentUEK.PREFS_ADS_DISABLED_DATE</string>
     <string name="video_ad_failed_to_load">Failed to load ad. Try again later.</string>
     <string name="log_out">Log out</string>
     <string name="log_in">Log in</string>
     <string name="do_you_want_to_log_out">Do you want to log out?</string>
-    <string name="PREFS_VIDEO_ADD_MESSAGE_SHOWN">pl.c0.sayard.studentUEK.PREFS_VIDEO_ADD_MESSAGE_SHOWN</string>
+    <string name="PREFS_VIDEO_ADD_MESSAGE_SHOWN" translatable="false">pl.c0.sayard.studentUEK.PREFS_VIDEO_ADD_MESSAGE_SHOWN</string>
     <string name="hide_ads">Hide Ads</string>
     <string name="support_creators_msg">Support app creators and watch a short video ad. In exchange we will not show you any ads for 3 days ;)</string>
     <string name="buy_us_a_beer">Buy us a beer</string>
