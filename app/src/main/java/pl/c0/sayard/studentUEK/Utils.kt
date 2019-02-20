@@ -34,7 +34,7 @@ class Utils {
             return if(isLongSchedule){
                 "http://planzajec.uek.krakow.pl/index.php?xml&typ=G&id=" +
                         group.id.toString() +
-                        "&okres=4"
+                        "&okres=3"
             }else{
                 "http://planzajec.uek.krakow.pl/index.php?xml&typ=G&id=" +
                         group.id.toString() +
@@ -47,7 +47,7 @@ class Utils {
             return if(isLongSchedule){
                 "http://planzajec.uek.krakow.pl/index.php?xml&typ=N&id=" +
                         group?.id.toString() +
-                        "&okres=4"
+                        "&okres=3"
             }else{
                 "http://planzajec.uek.krakow.pl/index.php?xml&typ=N&id=" +
                         group?.id.toString() +

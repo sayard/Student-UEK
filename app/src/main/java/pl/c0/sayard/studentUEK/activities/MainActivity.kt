@@ -294,7 +294,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadRewardAd(){
-        mRewardedVideoAd.loadAd("",//TODO supply video ad id
+        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
         if(!prefs.getBoolean(getString(R.string.PREFS_VIDEO_ADD_MESSAGE_SHOWN), false)){
             AlertDialog.Builder(this)
                     .setTitle(getString(R.string.hide_ads))
