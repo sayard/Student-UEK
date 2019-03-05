@@ -42,7 +42,7 @@ class Building(val context: Context){
     val SIENKIEWICZA_4_ABBREVATION = "Sienk. 4 "
     val SIENKIEWICZA_5_ABBREVATION = "Sienk. 5 "
 
-    val MAIN_BUILDING_30 = "30 kóło kortów"
+    val MAIN_BUILDING_30 = "30 koło kortów"
     val SJO = "SJO"
     val HALL = "HALA SPORTOWA"
     val POOL = "PŁYWALNIA"
