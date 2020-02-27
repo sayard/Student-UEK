@@ -133,7 +133,4 @@
     <string name="log_out">Wyloguj się</string>
     <string name="log_in">Zaloguj się</string>
     <string name="do_you_want_to_log_out">Czy chcesz się wylogować?</string>
-    <string name="hide_ads">Ukryj reklamy.</string>
-    <string name="support_creators_msg">Wesprzyj twórców aplikacji oglądając krótką reklamę. W nagrodę nie zobaczysz ani jednej reklamy przez 3 dni ;)</string>
-    <string name="buy_us_a_beer">Postaw nam piwo</string>
 </resources>

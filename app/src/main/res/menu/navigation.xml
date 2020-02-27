@@ -36,10 +36,5 @@
             android:id="@+id/navigation_settings"
             android:icon="@drawable/ic_settings_24dp"
             android:title="@string/settings"/>
-
-        <item
-            android:id="@+id/navigation_hide_ads"
-            android:icon="@drawable/ic_card_giftcard_24dp"
-            android:title="@string/hide_ads"/>
     </group>
 </menu>

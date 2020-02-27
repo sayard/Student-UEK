@@ -34,7 +34,7 @@ class Utils {
             return if(isLongSchedule){
                 "http://planzajec.uek.krakow.pl/index.php?xml&typ=G&id=" +
                         group.id.toString() +
-                        "&okres=3"
+                        "&okres=2"
             }else{
                 "http://planzajec.uek.krakow.pl/index.php?xml&typ=G&id=" +
                         group.id.toString() +
@@ -47,7 +47,7 @@ class Utils {
             return if(isLongSchedule){
                 "http://planzajec.uek.krakow.pl/index.php?xml&typ=N&id=" +
                         group?.id.toString() +
-                        "&okres=3"
+                        "&okres=2"
             }else{
                 "http://planzajec.uek.krakow.pl/index.php?xml&typ=N&id=" +
                         group?.id.toString() +
@@ -207,12 +207,6 @@ class Utils {
             prefs.edit{
                 putLong(context.getString(R.string.PREFS_ADS_DISABLED_DATE), (System.currentTimeMillis() + 259200000L))//3 days in milliseconds
             }
-        }
-
-        fun isHideAdsEnabled(context: Context):Boolean{
-            val prefs = PreferenceManager.getDefaultSharedPreferences(context)
-            val adsDisabledDate = Date(prefs.getLong(context.getString(R.string.PREFS_ADS_DISABLED_DATE), 0))
-            return adsDisabledDate.after(Date(System.currentTimeMillis()))
         }
     }
 }

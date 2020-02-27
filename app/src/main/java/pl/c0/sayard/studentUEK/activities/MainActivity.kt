@@ -20,14 +20,10 @@ import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.reward.RewardedVideoAd
 import pl.c0.sayard.studentUEK.BillingHandler
-import pl.c0.sayard.studentUEK.HideAdsListener
 import pl.c0.sayard.studentUEK.R
-import pl.c0.sayard.studentUEK.Utils
 import pl.c0.sayard.studentUEK.Utils.Companion.FIRST_RUN_SHARED_PREFS_KEY
 import pl.c0.sayard.studentUEK.Utils.Companion.isDeviceOnline
-import pl.c0.sayard.studentUEK.Utils.Companion.isHideAdsEnabled
 import pl.c0.sayard.studentUEK.Utils.Companion.onActivityCreateSetTheme
 import pl.c0.sayard.studentUEK.Utils.Companion.subscribeToTopics
 import pl.c0.sayard.studentUEK.adapters.ViewPagerAdapter
@@ -36,7 +32,6 @@ import pl.c0.sayard.studentUEK.fragments.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mDrawerLayout: DrawerLayout
-    private lateinit var mRewardedVideoAd:RewardedVideoAd
 
     companion object {
         var bp: BillingProcessor? = null
@@ -104,9 +99,6 @@ class MainActivity : AppCompatActivity() {
                         viewPager.currentItem = 4
                         setTitle(R.string.settings)
                     }
-                    R.id.navigation_hide_ads -> {
-                        loadRewardAd()
-                    }
 
                 }
                 mDrawerLayout.closeDrawers()
@@ -114,8 +106,6 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             navigationView.menu.getItem(0).isChecked = true
-
-            navigationView.menu.findItem(R.id.navigation_hide_ads).isVisible = !(prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false) || isHideAdsEnabled(this))
 
             viewPager.addOnPageChangeListener(object: ViewPager.OnPageChangeListener{
                 override fun onPageScrollStateChanged(state: Int) {}
@@ -144,8 +134,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             if(isDeviceOnline(this) &&
-                    !prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false) &&
-                    !Utils.isHideAdsEnabled(this)){
+                    !prefs.getBoolean(getString(R.string.PREFS_PREMIUM_PURCHASED), false)){
                 MobileAds.initialize(this, "") //TODO supply adMob app id
                 val adView = findViewById<AdView>(R.id.banner_ad)
                 val adRequest = AdRequest.Builder().build()
@@ -161,8 +150,6 @@ class MainActivity : AppCompatActivity() {
                         adView.visibility = View.GONE
                     }
                 }
-                mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this)
-                mRewardedVideoAd.rewardedVideoAdListener = HideAdsListener(this, mRewardedVideoAd, navigationView, adView)
             }
             if(prefs.getBoolean(getString(R.string.PREFS_APP_NOT_RATED), true)){
                 val ratingCounter = prefs.getInt(getString(R.string.PREFS_APP_RATING_DIALOG_COUNTER), 20) - 1
@@ -291,24 +278,6 @@ class MainActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun loadRewardAd(){
-        val prefs = PreferenceManager.getDefaultSharedPreferences(this)
-        if(!prefs.getBoolean(getString(R.string.PREFS_VIDEO_ADD_MESSAGE_SHOWN), false)){
-            AlertDialog.Builder(this)
-                    .setTitle(getString(R.string.hide_ads))
-                    .setMessage(getString(R.string.support_creators_msg))
-                    .setPositiveButton(getString(R.string.buy_us_a_beer)){dialog, _ ->
-                        prefs.edit {
-                            putBoolean(getString(R.string.PREFS_VIDEO_ADD_MESSAGE_SHOWN), true)
-                        }
-                        dialog.dismiss()
-                    }
-                    .show()
-        }
-        mRewardedVideoAd.loadAd("ca-app-pub-4145044771989791/5285223374",//TODO supply video ad id
-                AdRequest.Builder().build())
     }
 
 }
