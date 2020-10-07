@@ -3,6 +3,7 @@ package pl.c0.sayard.studentUEK.adapters
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentActivity
 import android.support.v4.content.ContextCompat
@@ -72,7 +73,27 @@ class ScheduleAdapter(var context: Context, var activity: FragmentActivity?, var
         vh.scheduleHoursTv?.text = hoursString
         vh.scheduleTypeTv?.text = scheduleItemObj.type
         vh.scheduleTeacherTv?.text = scheduleItemObj.teacher
-        vh.scheduleClassroomTv?.text = scheduleItemObj.classroom
+
+        vh.scheduleClassroomTv?.visibility = View.GONE
+        vh.joinClassBtn?.visibility = View.GONE
+        val classroomRaw = scheduleItemObj.classroom
+        if (classroomRaw.startsWith("<a")) {
+            val splittedClassroom = classroomRaw.split("\"")
+            if (splittedClassroom.size > 1) {
+                vh.joinClassBtn?.visibility = View.VISIBLE
+                vh.joinClassBtn?.setOnClickListener {
+                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(splittedClassroom[1]))
+                    context.startActivity(browserIntent)
+                }
+            } else {
+                vh.scheduleClassroomTv?.visibility = View.VISIBLE
+                vh.scheduleClassroomTv?.text = classroomRaw
+            }
+        } else {
+            vh.scheduleClassroomTv?.visibility = View.VISIBLE
+            vh.scheduleClassroomTv?.text = classroomRaw
+        }
+
         if(scheduleItemObj.comments != ""){
             vh.scheduleLineFour?.visibility = View.VISIBLE
             vh.scheduleCommentsTv?.text = scheduleItemObj.comments
@@ -138,6 +159,7 @@ class ScheduleAdapter(var context: Context, var activity: FragmentActivity?, var
         val scheduleLineFour = row?.findViewById<LinearLayout>(R.id.schedule_line_four)
         val scheduleCommentsTv = row?.findViewById<TextView>(R.id.schedule_comments_tv)
         val noteIconTextView = row?.findViewById<TextView>(R.id.schedule_note_icon)
+        val joinClassBtn = row?.findViewById<Button>(R.id.join_to_class_btn)
     }
 
     override fun getItem(position: Int): Any {

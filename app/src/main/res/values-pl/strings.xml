@@ -133,4 +133,5 @@
     <string name="log_out">Wyloguj się</string>
     <string name="log_in">Zaloguj się</string>
     <string name="do_you_want_to_log_out">Czy chcesz się wylogować?</string>
+    <string name="join_your_class">Dołącz do zajęć</string>
 </resources>

@@ -85,6 +85,16 @@
                 android:visibility="gone"/>
 
             <Button
+                android:id="@+id/details_join_class_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                android:layout_marginTop="5dp"
+                android:text="@string/join_your_class"
+                android:textColor="?attr/colorTextButton"
+                android:visibility="gone"/>
+
+            <Button
                 android:id="@+id/add_or_edit_lesson_note"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

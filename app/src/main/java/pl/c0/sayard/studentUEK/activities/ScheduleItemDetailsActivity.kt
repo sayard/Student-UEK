@@ -3,6 +3,7 @@ package pl.c0.sayard.studentUEK.activities
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.v7.app.AppCompatActivity
@@ -93,7 +94,28 @@ class ScheduleItemDetailsActivity : AppCompatActivity(), OnMapReadyCallback {
         val endHour = hourFormat.format(scheduleItem?.endDate)
         val dateAndHourStr = "${scheduleItem?.dayOfTheWeekStr} $date $startHour-$endHour"
         dateAndHourTv.text = dateAndHourStr
+
         val classroomTv = findViewById<TextView>(R.id.schedule_item_details_classroom)
+        val joinClassBtn = findViewById<Button>(R.id.details_join_class_btn)
+        classroomTv.visibility = View.GONE
+        joinClassBtn.visibility = View.GONE
+        val classroomRaw = scheduleItem?.classroom
+        if (classroomRaw != null && classroomRaw.startsWith("<a")) {
+            val splittedClassroom = classroomRaw.split("\"")
+            if (splittedClassroom.size > 1) {
+                joinClassBtn.visibility = View.VISIBLE
+                joinClassBtn.setOnClickListener {
+                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(splittedClassroom[1]))
+                    startActivity(browserIntent)
+                }
+            } else {
+                classroomTv.visibility = View.VISIBLE
+                classroomTv.text = classroomRaw
+            }
+        } else {
+            classroomTv.visibility = View.VISIBLE
+            classroomTv.text = classroomRaw
+        }
         classroomTv.text = scheduleItem?.classroom
 
         val noteContentTextView = findViewById<TextView>(R.id.schedule_item_details_note_content)
