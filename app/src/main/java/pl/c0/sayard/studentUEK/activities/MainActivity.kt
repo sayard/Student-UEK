@@ -212,7 +212,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             if(prefs.getBoolean(getString(R.string.PREFS_PIGEON_TOPICS_SET), false)){
-                subscribeToTopics(this)
+//                subscribeToTopics(this)
             }
             if(intent.getBooleanExtra(getString(R.string.EXTRA_OPEN_MESSAGES), false)){
                 viewPager.currentItem = 4

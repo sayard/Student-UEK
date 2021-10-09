@@ -8,13 +8,13 @@ android {
     repositories {
         google()
     }
-    compileSdkVersion 28
+    compileSdkVersion 31
     defaultConfig {
         applicationId "pl.c0.sayard.studentUEK"
         minSdkVersion 21
-        targetSdkVersion 29
-        versionCode 49
-        versionName "1.6.4"
+        targetSdkVersion 31
+        versionCode 51
+        versionName "1.7.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }

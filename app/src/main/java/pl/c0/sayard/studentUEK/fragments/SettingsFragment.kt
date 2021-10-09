@@ -31,7 +31,7 @@ class SettingsFragment : Fragment() {
                     putBoolean(Utils.FIRST_RUN_SHARED_PREFS_KEY, true)
                     putBoolean(getString(R.string.PREFS_REFRESH_SCHEDULE), true)
                 }
-                unsubscribeFromTopics(context!!)
+                // unsubscribeFromTopics(context!!)
                 val intent = Intent(context, FirstRunStepOneActivity::class.java)
                 activity?.finish()
                 startActivity(intent)

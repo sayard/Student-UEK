@@ -115,7 +115,7 @@ class FirstRunStepThreeActivity : AppCompatActivity() {
             }
 
             val groups = listOf(dbManager.getGroups(), dbManager.getLanguageGroups())
-            subscribeToTopics(this)
+//            subscribeToTopics(this)
 
             val intent = Intent(this@FirstRunStepThreeActivity, MainActivity::class.java)
             startActivity(intent)

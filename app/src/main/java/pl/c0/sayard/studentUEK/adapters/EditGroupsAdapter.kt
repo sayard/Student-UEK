@@ -45,7 +45,7 @@ class EditGroupsAdapter(val context: Context, val activity: AppCompatActivity, p
                         prefs.edit {
                             putBoolean(context.getString(R.string.PREFS_REFRESH_SCHEDULE), true)
                         }
-                        unsubscribeFromTopic(groups[position].name)
+                        // unsubscribeFromTopic(groups[position].name)
                         activity.finish()
                     }else{
                         Toast.makeText(context, context.getString(R.string.group_delete_error), Toast.LENGTH_LONG).show()
